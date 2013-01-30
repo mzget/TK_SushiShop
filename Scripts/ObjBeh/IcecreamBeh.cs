@@ -8,12 +8,9 @@ public class IcecreamBeh : GoodsBeh {
 	protected override void Start ()
 	{
 		base.Start ();
-		
-		Debug.Log("Starting : IcecreamBeh");
 
 		base._canDragaable = true;
-		base.originalPosition = this.transform.position;
-        base.offsetPos = new Vector3(0, -0.075f, 0);
+        base.offsetPos = new Vector3(0, -70f, 0);
 	}
 
 	protected override void OnTouchEnded()

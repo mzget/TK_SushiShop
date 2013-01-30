@@ -6,6 +6,8 @@ public class GoodsBeh : ObjectsBeh {
     public const string ClassName = "GoodsBeh";
     
     public Vector3 offsetPos;	
+	string animationName_001 = string.Empty;
+	string animationName_002 = string.Empty;
 
 	//@-- WaitForIngredientEvent.
 	protected bool _isWaitFotIngredient = false;	
@@ -27,7 +29,7 @@ public class GoodsBeh : ObjectsBeh {
 	protected void OnPutOnTray_event (System.EventArgs eventArgs) {
 		if (putObjectOnTray_Event != null) {
 			putObjectOnTray_Event (this, eventArgs);
-			Debug.Log (putObjectOnTray_Event + " : " + this.name);
+            Debug.Log(putObjectOnTray_Event + ":: OnPutOnTray_event : " + this.name);
 
             if(MainMenu._HasNewGameEvent)
                 sceneManager.CheckingGoodsObjInTray("newgame_event");
@@ -91,9 +93,15 @@ public class GoodsBeh : ObjectsBeh {
             animatedSprite.Stop();
 		}
     }
-	
-	/// <!-- OnInput Events.
 
+	public void animationCompleteDelegate(tk2dAnimatedSprite sprite, int clipId) {
+		if(animationName_002 != "") {
+			animatedSprite.Play(animationName_002);
+			animatedSprite.animationCompleteDelegate -= animationCompleteDelegate;
+		}
+	}
+
+	/// <!-- OnInput Events.
 	protected override void OnTouchDown ()
 	{
 		if(_canActive && _isWaitFotIngredient) {
@@ -109,6 +117,7 @@ public class GoodsBeh : ObjectsBeh {
 
 		base.OnTouchDown();
 	}
+
 	protected override void OnTouchEnded ()
 	{
         base.OnTouchEnded();

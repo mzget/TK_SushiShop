@@ -4,22 +4,12 @@ using System.Collections;
 public class ObjectsBeh : Base_ObjectBeh {
 
     public const string Packages_ResourcePath = "Packages/";
-    //<!-- merchandise.
-    public const string SouseMachine_ResourcePath = "BakeryShopObjects/SouseMachine/";
-	public const string ToastAndJam_ResourcePath = "BakeryShopObjects/ToastandJam/";
-	public const string Icecream_ResourcePath = "BakeryShopObjects/Icecreams/";
-	public const string Cakes_ResourcePath = "BakeryShopObjects/Cakes/";
-	public const string Sandwich_ResourcePath = "BakeryShopObjects/Sandwichs/";
-    public const string Cookie_ResourcePath = "BakeryShopObjects/Cookies/";    
-    public const string Hotdog_ResourcePath = "BakeryShopObjects/Hotdogs/";
 
 
 	protected Mz_BaseScene baseScene;    
 	protected SushiShop sceneManager;
     protected tk2dAnimatedSprite animatedSprite;
-	
-	public string animationName_001;
-	public string animationName_002;
+
     public bool _canDragaable = false;
 	protected bool _isDraggable = false;
     protected bool _isDropObject = false;
@@ -63,13 +53,6 @@ public class ObjectsBeh : Base_ObjectBeh {
         }
 
         this.transform.position = new Vector3(screenPoint.x, screenPoint.y, -6f);
-	}
-
-	public void animationCompleteDelegate(tk2dAnimatedSprite sprite, int clipId) {
-		if(animationName_002 != "") {
-			animatedSprite.Play(animationName_002);
-			animatedSprite.animationCompleteDelegate -= animationCompleteDelegate;
-		}
 	}
 	
 	// Update is called once per frame

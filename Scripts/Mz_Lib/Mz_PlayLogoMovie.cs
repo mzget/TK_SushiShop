@@ -25,7 +25,6 @@ public class Mz_PlayLogoMovie : MonoBehaviour {
 
 	public GameObject introScene_Prefab;
 	private GameObject introScene_Instance;
-	private bool showLanguageSelect = false;
 	
 	
 	// Use this for initialization
@@ -47,8 +46,6 @@ public class Mz_PlayLogoMovie : MonoBehaviour {
 	
 	private IEnumerator Start() {
 		yield return new WaitForSeconds(0.5f);
-	
-		showLanguageSelect = true;
 	}
 	
 	// Update is called once per frame
@@ -85,7 +82,7 @@ public class Mz_PlayLogoMovie : MonoBehaviour {
 #if UNITY_IPHONE || UNITY_ANDROID
 //		Mz_SmartDeviceInput.ImplementTouchInput();
 		
-		if(showLanguageSelect && !introScene_Instance) {
+		if(!introScene_Instance) {
 			introScene_Instance = Instantiate(introScene_Prefab) as GameObject;
 		}
 #endif

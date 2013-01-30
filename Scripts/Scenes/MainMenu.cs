@@ -47,8 +47,12 @@ public class MainMenu : Mz_BaseScene {
 
     private string username = string.Empty;
 	private string shopName = string.Empty;
+#if UNITY_IPHONE || UNITY_ANDROID
+	
 	private TouchScreenKeyboard touchScreenKeyboard;
-
+	
+#endif
+	
     private bool _isNullUsernameNotification = false;
     private bool _isDuplicateUsername = false;
     private bool _isFullSaveGameSlot;
@@ -238,21 +242,22 @@ public class MainMenu : Mz_BaseScene {
     
     private void DrawNewShopGUI()
     {
+#if UNITY_WEBPLAYER || UNITY_EDITOR
 		
-		if (Application.isEditor || Application.isWebPlayer)
-		{
 			//<!-- "Please Insert Shopname !".
 			shopName = GUI.TextField(newShopName_rect, shopName, 13, saveSlot_buttonStyle);
+		
+#elif UNITY_IPHONE || UNITY_ANDROID
+		
+		if(GUI.Button(newShopName_rect, shopName, saveSlot_buttonStyle)) {
+			touchScreenKeyboard = TouchScreenKeyboard.Open(shopName, TouchScreenKeyboardType.ASCIICapable, false, false, false, true);
 		}
-		else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) { 
-			if(GUI.Button(newShopName_rect, shopName, saveSlot_buttonStyle)) {
-				touchScreenKeyboard = TouchScreenKeyboard.Open(shopName, TouchScreenKeyboardType.ASCIICapable, false, false, false, true);
-			}
-			if(touchScreenKeyboard != null && touchScreenKeyboard.active)
-				shopName = touchScreenKeyboard.text;
-			if(touchScreenKeyboard != null && touchScreenKeyboard.active == false)
-				touchScreenKeyboard.text = string.Empty;
-		}
+		if(touchScreenKeyboard != null && touchScreenKeyboard.active)
+			shopName = touchScreenKeyboard.text;
+		if(touchScreenKeyboard != null && touchScreenKeyboard.active == false)
+			touchScreenKeyboard.text = string.Empty;
+
+#endif
     }
 
     private void DrawNewGameTextField()
@@ -264,8 +269,7 @@ public class MainMenu : Mz_BaseScene {
             this.CheckUserNameFormInput();
         }
 
-        if (Application.isEditor || Application.isWebPlayer)
-        {
+#if UNITY_EDITOR || UNITY_WEBPLAYER
             //<!-- "Please Insert Username !".
             GUI.SetNextControlName("Username");
             username = GUI.TextField(newgame_Textfield_rect, username, 13, saveSlot_buttonStyle);
@@ -274,8 +278,7 @@ public class MainMenu : Mz_BaseScene {
             {
                 GUI.FocusControl("Username");
             }
-        }
-        else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) { 
+#elif UNITY_IPHONE || UNITY_ANDROID 
 			if(GUI.Button(newgame_Textfield_rect, username, saveSlot_buttonStyle)) {
 				touchScreenKeyboard = TouchScreenKeyboard.Open(username, TouchScreenKeyboardType.ASCIICapable, false, false, false, true);
 			}
@@ -283,7 +286,7 @@ public class MainMenu : Mz_BaseScene {
 				username = touchScreenKeyboard.text;
 			if(touchScreenKeyboard != null && touchScreenKeyboard.active == false)
 				touchScreenKeyboard.text = string.Empty;
-        }
+#endif
 	}
 
     private void CheckUserNameFormInput()

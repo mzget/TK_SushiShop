@@ -395,7 +395,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0,0]) 
 				{
-                    int item_id = (int)GoodDataStore.FoodMenuList.Tuna_sushi;
+                    int item_id = (int)GoodDataStore.FoodMenuList.Skipjack_tuna_sushi;
 					if(SushiShop.NumberOfCansellItem.Contains(item_id) == false) {
                         Debug.Log("buying : blueberry_jam");
                         currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = item_id, };

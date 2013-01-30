@@ -81,7 +81,7 @@ public class SushiShop : Mz_BaseScene {
     private GameObject cash_obj;
 	private tk2dSprite cash_sprite;
     private GameObject packaging_Obj;
-	public ShopTutor bakeryShopTutor;
+	public ShopTutor shopTutor;
 
     //<!-- Core data
     public enum GamePlayState { 
@@ -127,6 +127,7 @@ public class SushiShop : Mz_BaseScene {
 		Mz_ResizeScale.ResizingScale(shop_background);
 		
         yield return StartCoroutine(this.InitailizeSceneObject());
+		
         this.OpenShop();
 	}
 
@@ -160,22 +161,11 @@ public class SushiShop : Mz_BaseScene {
         iTween.MoveTo(rollingDoor_Obj, iTween.Hash("position", new Vector3(0, 220f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
         audioEffect.PlayOnecSound(base.soundEffect_clips[0]);
 				
-        nullCustomer_event += new EventHandler(BakeryShop_nullCustomer_event);
+        nullCustomer_event += new EventHandler(Handle_nullCustomer_event);
         OnNullCustomer_event(EventArgs.Empty);
-
-		if(MainMenu._HasNewGameEvent) {
-			darkShadowPlane.active = true;
-            darkShadowPlane.transform.position += Vector3.back * 2f;
-            this.CreateTutorObjectAtRuntime();
-            this.CreateGreetingCustomerTutorEvent();
-		}
-		else {
-			darkShadowPlane.active = false;
-            Destroy(bakeryShopTutor.greeting_textmesh);
-        }
     }
    
-	private IEnumerator SceneInitializeAudio ()
+	private IEnumerator SceneInitializeAudio()
 	{
         base.InitializeAudio();
 		
@@ -294,24 +284,24 @@ public class SushiShop : Mz_BaseScene {
 		
 		handTutor = Instantiate(Resources.Load("Tutor_Objs/Town/HandTutor", typeof(GameObject))) as GameObject;
 		handTutor.transform.parent = cameraTutor_Obj.transform;
-		handTutor.transform.localPosition = new Vector3(0.3f, 0.75f, 3f);
+		handTutor.transform.localPosition = new Vector3(30f, 75f, 3f);
 		handTutor.transform.localScale = Vector3.one;
 		
 		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/SheepBank/Tutor_description", typeof(GameObject))) as GameObject;
 		tutorText_0.transform.parent = cameraTutor_Obj.transform;
-		tutorText_0.transform.localPosition = new Vector3(0.65f, 0.8f, 3f);
+		tutorText_0.transform.localPosition = new Vector3(65f, 80f, 3f);
 		tutorText_0.transform.localScale = Vector3.one;
 
 		base.tutorDescriptions = new List<GameObject>();
 		tutorDescriptions.Add(tutorText_0);
 		//<@-- Animated hand with tweening.
-		iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 0.65f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+		iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 65f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
 	}
 
-	void CreateGreetingCustomerTutorEvent ()
+	void CreateGreetingCustomerTutorEvent()
     {
-		bakeryShopTutor.greeting_textSprite.active = false;
-        bakeryShopTutor.greeting_textmesh.active = true;
+		shopTutor.greeting_textSprite.active = false;
+        shopTutor.greeting_textmesh.active = true;
 
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "GREETING";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
@@ -322,15 +312,16 @@ public class SushiShop : Mz_BaseScene {
 	void CreateAcceptOrdersTutorEvent ()
     {
 		this.SetActivateTotorObject(true);
-		bakeryShopTutor.goaway_button_obj.active = false;
+		shopTutor.goaway_button_obj.active = false;
+		darkShadowPlane.transform.position += Vector3.forward * 3;
 		
-		handTutor.transform.localPosition = new Vector3(-0.62f, -0.13f, 3f);
+		handTutor.transform.localPosition = new Vector3(-62f, -13f, 3f);
 		
 		tutorDescriptions[0].transform.localPosition = new Vector3(0f, 0f, 3f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "ACCEPT ORDERS";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		//<@-- Animated hand with tweening.
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -0.2f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -20f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
 		
 		if(_isPlayAcceptOuderSound == false)
 			StartCoroutine(this.WaitForHelloCustomer());
@@ -377,7 +368,7 @@ public class SushiShop : Mz_BaseScene {
     private void CreateCheckingAccuracyTutorEvent()
     {
         this.SetActivateTotorObject(true);
-        bakeryShopTutor.goaway_button_obj.active = false;
+        shopTutor.goaway_button_obj.active = false;
         Vector3 originalFoodTrayPos = foodsTray_obj.transform.position;
         foodsTray_obj.transform.position = new Vector3(originalFoodTrayPos.x, originalFoodTrayPos.y, -2f);
 
@@ -392,7 +383,7 @@ public class SushiShop : Mz_BaseScene {
 
     private void CreateBillingTutorEvent()
     {
-        bakeryShopTutor.currentTutorState = ShopTutor.TutorStatus.Billing;
+        shopTutor.currentTutorState = ShopTutor.TutorStatus.Billing;
 
         base.SetActivateTotorObject(true);
 		darkShadowPlane.active = true;
@@ -463,7 +454,7 @@ public class SushiShop : Mz_BaseScene {
 
     #region <!-- Customer manage system.
 
-    private void BakeryShop_nullCustomer_event(object sender, EventArgs e) {
+    private void Handle_nullCustomer_event(object sender, EventArgs e) {
     	StartCoroutine(CreateCustomer());
     }
 
@@ -494,6 +485,17 @@ public class SushiShop : Mz_BaseScene {
 
 		currentGamePlayState = GamePlayState.GreetingCustomer;
 		this.SetActiveGreetingMessage(true);
+
+		if(MainMenu._HasNewGameEvent) {
+			darkShadowPlane.active = true;
+//            darkShadowPlane.transform.position += Vector3.back * 2f;
+            this.CreateTutorObjectAtRuntime();
+            this.CreateGreetingCustomerTutorEvent();
+		}
+		else {
+			darkShadowPlane.active = false;
+            Destroy(shopTutor.greeting_textmesh);
+        }
     }
 
     private IEnumerator ExpelCustomer() {
@@ -594,9 +596,11 @@ public class SushiShop : Mz_BaseScene {
 		if(MainMenu._HasNewGameEvent) {
 			iTween.MoveTo(baseOrderUI_Obj.gameObject, 
 			              iTween.Hash("position", new Vector3(-85f, 6f, -2.5f), "islocal", true, "time", .5f, "easetype", iTween.EaseType.spring));
-            if (bakeryShopTutor.currentTutorState == ShopTutor.TutorStatus.AcceptOrders)
+			
+            if (shopTutor.currentTutorState == ShopTutor.TutorStatus.AcceptOrders) {
                 this.CreateAcceptOrdersTutorEvent();
-            else if (bakeryShopTutor.currentTutorState == ShopTutor.TutorStatus.CheckAccuracy) {
+			}
+            else if (shopTutor.currentTutorState == ShopTutor.TutorStatus.CheckAccuracy) {
                 base.SetActivateTotorObject(false);
                 this.CreateCheckingAccuracyTutorEvent();
             }
@@ -614,7 +618,7 @@ public class SushiShop : Mz_BaseScene {
 		
 		foreach (var item in arr_orderingItems) {
 			iTween.Resume(item.gameObject);
-            iTween.MoveTo(item.gameObject, iTween.Hash("y", 0.1f, "islocal", true, "time", .3f, "looptype", iTween.LoopType.pingPong));
+            iTween.MoveTo(item.gameObject, iTween.Hash("y", 10f, "islocal", true, "time", .3f, "looptype", iTween.LoopType.pingPong));
 		}
 	}
 
@@ -627,7 +631,7 @@ public class SushiShop : Mz_BaseScene {
 			iTween.MoveTo(baseOrderUI_Obj.gameObject,
                       iTween.Hash("position", new Vector3(-85f, -200f, 0f), "islocal", true, "time", 0.5f, "easetype", iTween.EaseType.linear));
 
-            if (bakeryShopTutor.currentTutorState == ShopTutor.TutorStatus.AcceptOrders)
+            if (shopTutor.currentTutorState == ShopTutor.TutorStatus.AcceptOrders)
             {
                 this.GenerateGoodOrderTutorEvent();
                 yield return new WaitForSeconds(0.5f);
@@ -644,7 +648,7 @@ public class SushiShop : Mz_BaseScene {
                         iTween.Hash("x", 10f, "y", 10f, "delay", 1f, "time", .5f, "looptype", iTween.LoopType.pingPong));
                 }
             }
-            else if(bakeryShopTutor.currentTutorState == ShopTutor.TutorStatus.CheckAccuracy) {
+            else if(shopTutor.currentTutorState == ShopTutor.TutorStatus.CheckAccuracy) {
 				this.CreateBillingTutorEvent();
 			}
         }
@@ -807,9 +811,9 @@ public class SushiShop : Mz_BaseScene {
 
         if(MainMenu._HasNewGameEvent) {
             MainMenu._HasNewGameEvent = false;
-            Destroy(bakeryShopTutor.greeting_textmesh);
-            bakeryShopTutor.goaway_button_obj.active = true;
-            bakeryShopTutor = null;
+            Destroy(shopTutor.greeting_textmesh);
+            shopTutor.goaway_button_obj.active = true;
+            shopTutor = null;
             darkShadowPlane.transform.position += Vector3.forward * 2f;
 
             audioDescribe.PlayOnecSound(description_clips[5]);
@@ -860,7 +864,7 @@ public class SushiShop : Mz_BaseScene {
 			if(nameInput == "EN_001_textmesh") {
 				StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[0]));
 //                base.SetActivateTotorObject(false);
-                bakeryShopTutor.currentTutorState = ShopTutor.TutorStatus.AcceptOrders;
+                shopTutor.currentTutorState = ShopTutor.TutorStatus.AcceptOrders;
 
                 return;
 			}
@@ -966,8 +970,8 @@ public class SushiShop : Mz_BaseScene {
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.California_maki]);
             else if (nameInput == GoodDataStore.FoodMenuList.Ramen.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Ramen]);
-            else if (nameInput == GoodDataStore.FoodMenuList.Tuna_sushi.ToString())
-                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Tuna_sushi]);
+            else if (nameInput == GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString())
+                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Skipjack_tuna_sushi]);
             else if (nameInput == GoodDataStore.FoodMenuList.Eel_sushi.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Eel_sushi]);
             else if (nameInput == GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString())
@@ -1155,7 +1159,7 @@ public class SushiShop : Mz_BaseScene {
 
                         if (list_goodsTemp.Count == currentCustomer.customerOrderRequire.Count)
                         {
-                            bakeryShopTutor.currentTutorState = ShopTutor.TutorStatus.CheckAccuracy;
+                            shopTutor.currentTutorState = ShopTutor.TutorStatus.CheckAccuracy;
                             this.billingMachine.animation.Play();
                             StartCoroutine(this.ShowOrderingGUI());
                         }
