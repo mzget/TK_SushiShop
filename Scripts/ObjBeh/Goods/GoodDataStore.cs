@@ -14,7 +14,7 @@ public class GoodDataStore : ScriptableObject {
         Crab_sushi = 3,
         Spicy_shell_sushi = 4,
         Salmon_sushi = 5,
-        Skipjack_tuna_sushi = 6,
+        Skipjack_tuna_sushi = 6, // «ÙªÔ»ÅÒâÍ
         Eel_sushi = 7,
         Fatty_tuna_sushi = 8, // «ÙªÔ»ÅÒâ·âÃ
 		//<!--- Maki.

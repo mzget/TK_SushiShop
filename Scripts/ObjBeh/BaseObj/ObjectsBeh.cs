@@ -30,9 +30,7 @@ public class ObjectsBeh : Base_ObjectBeh {
 
 	
 	// Use this for initialization
-	protected virtual void Start () {
-		this.originalPosition = this.transform.position;
-		
+	protected virtual void Start () {		
         baseScene = GameObject.FindGameObjectWithTag("GameController").GetComponent<Mz_BaseScene>();
         sceneManager = baseScene as SushiShop;
 		

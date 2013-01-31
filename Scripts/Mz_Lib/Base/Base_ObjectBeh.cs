@@ -6,12 +6,6 @@ public class Base_ObjectBeh : MonoBehaviour {
     protected bool _OnTouchBegin = false;
 //	protected bool _OnTouchMove = false;
 	protected bool _OnTouchRelease = false;
-
-
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	protected virtual void Update() {       
         if (_OnTouchBegin && _OnTouchRelease) {

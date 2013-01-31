@@ -57,6 +57,7 @@ public class IcecreamTankBeh : ObjectsBeh {
 			obj.transform.position = obj.originalPosition;
 		}
 	}
+
     private void icecreamBeh_destroyObj_Event(object sender, System.EventArgs e) {
         sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
 		sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
