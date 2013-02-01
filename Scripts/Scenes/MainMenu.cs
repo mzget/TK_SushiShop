@@ -102,14 +102,11 @@ public class MainMenu : Mz_BaseScene {
         back_button.gameObject.active = false;
 		
         iTween.MoveTo(flyingBird_group, iTween.Hash("x", 190f, "time", 16f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.loop));
-        //iTween.MoveTo(cloudAndFog_Objs[0].gameObject, iTween.Hash("y", 0f, "time", 3f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
-        //iTween.MoveTo(cloudAndFog_Objs[1].gameObject, iTween.Hash("y", 0.2f, "time", 3.5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
-        //iTween.MoveTo(cloudAndFog_Objs[2].gameObject, iTween.Hash("y", 0.5f, "time", 4f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
 		iTween.MoveTo(movingCloud_Objs, iTween.Hash("x", -200f, "time", 16f, "easetype", iTween.EaseType.easeInOutSine, "looptype", iTween.LoopType.pingPong)); 
 
 		//<@-- Add new game eventhandle. 
 		_HasNewGameEvent = false;
-		this.NewGame_event += Handle_NewGame_event;
+//		this.NewGame_event += Handle_NewGame_event;
 	}
 	
 	protected IEnumerator PreparingAudio ()

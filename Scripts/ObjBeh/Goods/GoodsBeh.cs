@@ -9,7 +9,7 @@ public class GoodsBeh : ObjectsBeh {
 	string animationName_001 = string.Empty;
 	string animationName_002 = string.Empty;
 
-	//@-- WaitForIngredientEvent.
+	//<!-- WaitForIngredientEvent.
 	protected bool _isWaitFotIngredient = false;	
 	protected event System.EventHandler waitForIngredientEvent;
     protected void CheckingDelegationOfWaitFotIngredientEvent(object sender, EventArgs e) {
@@ -24,7 +24,7 @@ public class GoodsBeh : ObjectsBeh {
 		Debug.Log("WaitForIngredient :: " + ingredientName);
 	}
 	
-	/// Put goods objects intance on food tray.
+	//<!-- Put goods objects intance on food tray.
 	public event System.EventHandler putObjectOnTray_Event;
 	protected void OnPutOnTray_event (System.EventArgs eventArgs) {
 		if (putObjectOnTray_Event != null) {

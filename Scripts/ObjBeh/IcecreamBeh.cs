@@ -10,7 +10,7 @@ public class IcecreamBeh : GoodsBeh {
 		base.Start ();
 
 		base._canDragaable = true;
-        base.offsetPos = new Vector3(0, -70f, 0);
+//        base.offsetPos = Vector3.down * 7f;
 	}
 
 	protected override void OnTouchEnded()

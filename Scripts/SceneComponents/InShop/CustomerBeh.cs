@@ -69,7 +69,7 @@ public class CustomerBeh : MonoBehaviour {
 	}
 
 	internal void GenerateTutorGoodOrderEvent() {
-		customerOrderRequire.Add(new CustomerOrderRequire() { food = new Food(GoodDataStore.FoodMenuList.Prawn_maki.ToString(), 13), });   // number = 1,	// Random.Range(1, 4),
+		customerOrderRequire.Add(new CustomerOrderRequire() { food = new Food(GoodDataStore.FoodMenuList.roe_maki.ToString(), 13), });   // number = 1,	// Random.Range(1, 4),
 		amount = 13;
 		sceneManager.GenerateOrderGUI();
 	}

@@ -16,13 +16,21 @@ public class SushiProduction : ObjectsBeh {
 	public const string Salmon_sushi_face = "Salmon_sushi_face";
 	public const string Skipjack_tuna_sushi_face = "Skipjack_tuna_sushi_face";
 	public const string Spicy_shell_sushi_face = "Spicy_shell_sushi_face";
-	public const string Sweetened_egg_sushi = "Sweetened_egg_sushi";
+	public const string Sweetened_egg_sushi_face = "Sweetened_egg_sushi_face";
 
     public const string Sushi_rice_anim = "Sushi_rice_anim";
 	public const string CrabSushi_anim = "CrabSushi_anim";
-
-
+	public const string Eel_sushi_anim = "Eel_sushi_anim";
+    public const string Fatty_tuna_anim = "Fatty_tuna_anim";
+    public const string Octopus_sushi_anim = "Octopus_sushi_anim";
+    public const string Prawn_sushi_anim = "Prawn_sushi_anim";
+    public const string Salmon_sushi_anim = "Salmon_sushi_anim";
+    public const string Skipjack_tuna_sushi_anim = "Skipjack_tuna_sushi_anim";
+    public const string Spicy_shell_sushi_anim = "Spicy_shell_sushi_anim";
+    public const string Sweetened_egg_anim = "Sweetened_egg_anim";
+    
     public const string PATH_OF_Sushi_product = "Goods/Sushi_product";
+	
 
 	public enum ProductionState {
 		None = 0,
@@ -59,9 +67,6 @@ public class SushiProduction : ObjectsBeh {
             sceneManager.foodTrayBeh.goodsOnTray_List.Add(obj);
             sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
-            //<!-- Setting original position.
-            obj.originalPosition = obj.transform.position;
-
             sushiBeh = null;
         }
         else
@@ -87,7 +92,7 @@ public class SushiProduction : ObjectsBeh {
 			this.sushiPopup.gameObject.SetActiveRecursively(false);
 		}
 		else if(nameInput == "BucketOfRice") {
-			if(sushi_rice_solution == null) {
+			if(sushi_rice_solution == null && sushiBeh == null) {
 				this.currentProductionState = ProductionState.CreateSushiRice;
 
 				sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
@@ -104,27 +109,360 @@ public class SushiProduction : ObjectsBeh {
 			}
 		}
 
-		if(this.currentProductionState == ProductionState.WaitForIngredient) {
-			if(nameInput == Crab_sushi_face) {
-                if (sushi_rice_solution == null && sushiBeh == null)
-                {
-                    this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+		if(nameInput == Crab_sushi_face)
+        {
+            #region <!-- Crab_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient) {
+				if (sushi_rice_solution == null && sushiBeh == null)
+				{
+					this.currentProductionState = ProductionState.CompleteProduction;
+
+		            this.sushiPopup.gameObject.SetActiveRecursively(false);
+		            sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
 
 					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + CrabSushi_anim, typeof(GameObject))) as GameObject;
 					sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
 					tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
 					sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 						Destroy(sushi_rice_solution);
 
-                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
-                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
-                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+		                GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+		                sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+						sushi_product_obj.name = GoodDataStore.FoodMenuList.Crab_sushi.ToString();
+
+		                sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Crab_sushi.ToString());
+		                sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+		                sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 					};
 				}
 			}
-		}
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+		else if(nameInput == Eel_sushi_face)
+        {
+            #region <!-- Eel_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient) {
+				if(sushi_rice_solution == null && sushiBeh == null) {	
+					this.currentProductionState = ProductionState.CompleteProduction;
+
+		            this.sushiPopup.gameObject.SetActiveRecursively(false);
+		            sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Eel_sushi_anim, typeof(GameObject))) as GameObject;
+					sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+					tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+					sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
+						Destroy(sushi_rice_solution);
+
+		                GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+		                sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+						sushi_product_obj.name = GoodDataStore.FoodMenuList.Eel_sushi.ToString();
+
+		                sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Eel_sushi.ToString());
+		                sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+		                sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+					};
+				}
+			}
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Fatty_tuna_sushi_face)
+        {
+            #region <!-- Fatty_tuna_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Fatty_tuna_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Octopus_sushi_face)
+        {
+            #region <!-- Octopus_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Octopus_sushi_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Octopus_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Octopus_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Prawn_sushi_face)
+        {
+            #region <!-- Prawn_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Prawn_sushi_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Prawn_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Salmon_sushi_face)
+        {
+            #region <!-- Salmon_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Salmon_sushi_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Salmon_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Salmon_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Skipjack_tuna_sushi_face)
+        {
+            #region <!-- Skipjack_tuna_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Skipjack_tuna_sushi_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Spicy_shell_sushi_face)
+        {
+            #region <!-- Spicy_shell_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Spicy_shell_sushi_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
+        else if (nameInput == Sweetened_egg_sushi_face)
+        {
+            #region <!-- Sweetened_egg_sushi_face.
+
+            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    this.currentProductionState = ProductionState.CompleteProduction;
+
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Sweetened_egg_anim, typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
+                    tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+
+                        GameObject sushi_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        sushi_product_obj.transform.position = new Vector3(0, -44, -2);
+                        sushi_product_obj.name = GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString();
+
+                        sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                    };
+                }
+            }
+            else
+            {
+                sceneManager.WarningPlayerToSeeManual();
+                this.sushiPopup.SetActiveRecursively(false);
+            }
+
+            #endregion
+        }
 	}
 }

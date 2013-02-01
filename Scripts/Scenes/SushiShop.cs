@@ -313,7 +313,7 @@ public class SushiShop : Mz_BaseScene {
     {
 		this.SetActivateTotorObject(true);
 		shopTutor.goaway_button_obj.active = false;
-		darkShadowPlane.transform.position += Vector3.forward * 3;
+//		darkShadowPlane.transform.position += Vector3.forward * 3;
 		
 		handTutor.transform.localPosition = new Vector3(-62f, -13f, 3f);
 		
@@ -488,12 +488,12 @@ public class SushiShop : Mz_BaseScene {
 
 		if(MainMenu._HasNewGameEvent) {
 			darkShadowPlane.active = true;
-//            darkShadowPlane.transform.position += Vector3.back * 2f;
+            darkShadowPlane.transform.position += Vector3.back * 2f;
             this.CreateTutorObjectAtRuntime();
             this.CreateGreetingCustomerTutorEvent();
 		}
 		else {
-			darkShadowPlane.active = false;
+			darkShadowPlane.active = true;
             Destroy(shopTutor.greeting_textmesh);
         }
     }
@@ -820,10 +820,12 @@ public class SushiShop : Mz_BaseScene {
         }
     }
 
-    private IEnumerator PackagingGoods()
+	private const string Packages_ResourcePath = "Packages/";
+
+	private IEnumerator PackagingGoods()
     {
         if(packaging_Obj == null) {
-            packaging_Obj = Instantiate(Resources.Load(ObjectsBeh.Packages_ResourcePath + "Packages_Sprite", typeof(GameObject))) as GameObject;
+            packaging_Obj = Instantiate(Resources.Load(Packages_ResourcePath + "Packages_Sprite", typeof(GameObject))) as GameObject;
             packaging_Obj.transform.parent = foodsTray_obj.transform;
             packaging_Obj.transform.localPosition = new Vector3(0, .1f, -.1f);
         }
@@ -944,8 +946,8 @@ public class SushiShop : Mz_BaseScene {
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Miso_soup]);
             else if (nameInput == GoodDataStore.FoodMenuList.Kimji.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Kimji]);
-            else if (nameInput == GoodDataStore.FoodMenuList.Prawn_maki.ToString())
-                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Prawn_maki]);
+            else if (nameInput == GoodDataStore.FoodMenuList.roe_maki.ToString())
+                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.roe_maki]);
             else if (nameInput == GoodDataStore.FoodMenuList.Yaki_soba.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Yaki_soba]);
             else if (nameInput == GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString())
@@ -1021,13 +1023,16 @@ public class SushiShop : Mz_BaseScene {
 				   nameInput == SushiProduction.Fatty_tuna_sushi_face || nameInput == SushiProduction.Octopus_sushi_face ||
 				   nameInput == SushiProduction.Prawn_sushi_face || nameInput == SushiProduction.Salmon_sushi_face ||
 				   nameInput == SushiProduction.Skipjack_tuna_sushi_face || nameInput == SushiProduction.Spicy_shell_sushi_face ||
-				   nameInput == SushiProduction.Sweetened_egg_sushi)
+				   nameInput == SushiProduction.Sweetened_egg_sushi_face)
 				{
 					sushiProduction.OnInput(ref nameInput);
 				}
 				else if(nameInput == SushiProduction.SushiIngredientTray || nameInput == SushiProduction.ClosePopup || nameInput == SushiProduction.BucketOfRice) 
 				{
 					sushiProduction.OnInput(ref nameInput);
+				}
+				else if(nameInput == "HotSoupTank") {
+					
 				}
             }
         }
@@ -1263,5 +1268,10 @@ public class SushiShop : Mz_BaseScene {
     public override void OnDispose()
     {
         base.OnDispose();
+    }
+
+    internal void WarningPlayerToSeeManual()
+    {
+        audioEffect.PlayOnecWithOutStop(audioEffect.wrong_Clip);
     }
 }

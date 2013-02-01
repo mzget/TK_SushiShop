@@ -8,7 +8,7 @@ public class FoodTrayBeh : ScriptableObject {
 	
 	public List<GoodsBeh> goodsOnTray_List = new List<GoodsBeh>(MaxGoodsCapacity);
     private Vector3[] arr_GoodsPositionOnTray = new Vector3[MaxGoodsCapacity] {
-        new Vector3(-.17f, -.7f, -2.5f), new Vector3(.15f, -.7f, -2.5f),  new Vector3(-.5f, -.7f, -2.5f),
+        new Vector3(0f, -70f, -2.5f), new Vector3(30f, -70f, -2.5f),  new Vector3(-30f, -70f, -2.5f),
     };
 	public GameObject[] emptyObjSlot = new GameObject[MaxGoodsCapacity];
 	

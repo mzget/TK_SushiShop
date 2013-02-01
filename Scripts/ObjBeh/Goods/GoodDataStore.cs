@@ -18,7 +18,7 @@ public class GoodDataStore : ScriptableObject {
         Eel_sushi = 7,
         Fatty_tuna_sushi = 8, // ซูชิปลาโทโร
 		//<!--- Maki.
-        Prawn_maki = 9, // ข้าวห่อสาหร่ายไข่ปลา
+        roe_maki = 9, // ข้าวห่อสาหร่ายไข่ปลา
         Prawn_brown_maki = 10, // ข้าวห่อสาหร่ายไข่กุ้ง
         Pickling_cucumber_filled_maki = 11, // ข้าวห่อสาหร่ายแตงกวาดอง
         California_maki = 12,   // ข้าวห่อสาหร่ายแคลิฟอร์เนียมากิ
@@ -49,7 +49,7 @@ public class GoodDataStore : ScriptableObject {
         new Food(FoodMenuList.Eel_sushi.ToString(), 10),
         new Food(FoodMenuList.Fatty_tuna_sushi.ToString(), 10), 
         
-	    new Food(FoodMenuList.Prawn_maki.ToString(), 13), 
+	    new Food(FoodMenuList.roe_maki.ToString(), 13), 
         new Food(FoodMenuList.Prawn_brown_maki.ToString(), 13),
         new Food(FoodMenuList.Pickling_cucumber_filled_maki.ToString(), 20),
         new Food(FoodMenuList.California_maki.ToString(), 13),

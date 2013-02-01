@@ -10,7 +10,7 @@ public class SushiBeh : GoodsBeh {
         base.Start();
 
         _canDragaable = true;
-        offsetPos = Vector3.down * 70f;
+//        offsetPos = Vector3.down * 7f;
     }
 	
 	// Update is called once per frame

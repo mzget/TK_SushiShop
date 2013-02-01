@@ -3,12 +3,10 @@ using System.Collections;
 
 public class ObjectsBeh : Base_ObjectBeh {
 
-    public const string Packages_ResourcePath = "Packages/";
-
-
 	protected Mz_BaseScene baseScene;    
 	protected SushiShop sceneManager;
-    protected tk2dAnimatedSprite animatedSprite;
+	internal tk2dSprite sprite;
+    internal tk2dAnimatedSprite animatedSprite;
 
     public bool _canDragaable = false;
 	protected bool _isDraggable = false;
@@ -28,16 +26,20 @@ public class ObjectsBeh : Base_ObjectBeh {
         }
     }
 
+	protected virtual void Awake() {
+		try {
+			sprite = this.gameObject.GetComponent<tk2dSprite>();
+			animatedSprite = this.gameObject.GetComponent<tk2dAnimatedSprite>();
+		}
+		catch { }
+	}
 	
 	// Use this for initialization
 	protected virtual void Start () {		
         baseScene = GameObject.FindGameObjectWithTag("GameController").GetComponent<Mz_BaseScene>();
         sceneManager = baseScene as SushiShop;
-		
-        try {
-            animatedSprite = this.gameObject.GetComponent<tk2dAnimatedSprite>();
-        }
-        catch { }
+
+		this.originalPosition = this.transform.position;
 	}
 	
 	protected virtual void ImplementDraggableObject() {
