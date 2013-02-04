@@ -21,6 +21,8 @@ public class ShopTutor {
 
 public class SushiShop : Mz_BaseScene {
 	
+	public const string WarningMessageToSeeManual = "Please see a manual if you don't known how to make a food";
+
 	public Transform shop_background;
     public GameObject bakeryShop_backgroup_group;
     public ExtendAudioDescribeData audioDescriptionData = new ExtendAudioDescribeData();
@@ -37,6 +39,7 @@ public class SushiShop : Mz_BaseScene {
 	//<!-- in game button.
 	public GameObject close_button;	
 	public GameObject billingMachine;
+	public tk2dSprite choppingBlock_sprite;
     private tk2dAnimatedSprite billingAnimatedSprite;
 	private AnimationState billingMachine_animState;
 	private const string TH_001 = "TH_001";
@@ -136,7 +139,8 @@ public class SushiShop : Mz_BaseScene {
     private IEnumerator InitailizeSceneObject()
     {
 //		Mz_ResizeScale.ResizingScale(bakeryShop_backgroup_group.transform);
-
+		choppingBlock_sprite.spriteId = choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+		
         StartCoroutine(this.ChangeShopLogoIcon());
         StartCoroutine(this.InitailizeShopLabelGUI());
         StartCoroutine(this.InitializeGameEffect());
@@ -946,8 +950,8 @@ public class SushiShop : Mz_BaseScene {
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Miso_soup]);
             else if (nameInput == GoodDataStore.FoodMenuList.Kimji.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Kimji]);
-            else if (nameInput == GoodDataStore.FoodMenuList.roe_maki.ToString())
-                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.roe_maki]);
+            else if (nameInput == GoodDataStore.FoodMenuList.Roe_maki.ToString())
+                audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Roe_maki]);
             else if (nameInput == GoodDataStore.FoodMenuList.Yaki_soba.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Yaki_soba]);
             else if (nameInput == GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString())
@@ -1005,7 +1009,7 @@ public class SushiShop : Mz_BaseScene {
                         billingMachine.animation.Play(billingMachine_animState.name);
                         StartCoroutine(this.CheckingUNITYAnimationComplete(billingMachine.animation, billingMachine_animState.name));
                         break;
-//                    case "SushiIngredientTray":
+//                  case "SushiIngredientTray":
 //                        // Create sushi popup creation.
 //					sushiProduction.OnInput(ref nameInput);
 //					break;
@@ -1027,7 +1031,9 @@ public class SushiShop : Mz_BaseScene {
 				{
 					sushiProduction.OnInput(ref nameInput);
 				}
-				else if(nameInput == SushiProduction.SushiIngredientTray || nameInput == SushiProduction.ClosePopup || nameInput == SushiProduction.BucketOfRice) 
+				else if(nameInput == SushiProduction.SushiIngredientTray || nameInput == SushiProduction.ClosePopup || 
+					nameInput == SushiProduction.BucketOfRice || nameInput == SushiProduction.Alga ||
+					nameInput == SushiProduction.PicklingCucumber || nameInput == SushiProduction.OrangeSpawn || nameInput == SushiProduction.RedSpawn) 
 				{
 					sushiProduction.OnInput(ref nameInput);
 				}
@@ -1260,6 +1266,7 @@ public class SushiShop : Mz_BaseScene {
 		audioEffect.PlayOnecWithOutStop(base.soundEffect_clips[0]);
         rollingDoor_Obj.SetActiveRecursively(true);
     }
+	
     private void RollingDoor_close() {
         Mz_LoadingScreen.LoadSceneName = SceneNames.Town.ToString();
         Application.LoadLevel(SceneNames.LoadingScene.ToString());	

@@ -7,6 +7,10 @@ public class SushiProduction : ObjectsBeh {
 	public const string SushiIngredientTray = "SushiIngredientTray";
 	public const string ClosePopup = "ClosePopup";
 	public const string BucketOfRice = "BucketOfRice";
+	public const string Alga = "Alga";
+	public const string PicklingCucumber = "PicklingCucumber";
+	public const string OrangeSpawn = "OrangeSpawn";
+	public const string RedSpawn = "RedSpawn";
 
 	public const string Crab_sushi_face = "Crab_sushi_face";
 	public const string Eel_sushi_face = "Eel_sushi_face";
@@ -35,7 +39,8 @@ public class SushiProduction : ObjectsBeh {
 	public enum ProductionState {
 		None = 0,
 		CreateSushiRice,
-		WaitForIngredient,
+		WaitForSushiIngredient,
+		WaitForMakiIngredient,
         CompleteProduction,
 	};
 	public ProductionState currentProductionState;
@@ -68,6 +73,7 @@ public class SushiProduction : ObjectsBeh {
             sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
             sushiBeh = null;
+			this.currentProductionState = ProductionState.None;
         }
         else
         {
@@ -81,18 +87,21 @@ public class SushiProduction : ObjectsBeh {
     {
         sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
         sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+
+		this.currentProductionState = ProductionState.None;
     }
 
 	public void OnInput (ref string nameInput)
 	{
-		if(nameInput == "SushiIngredientTray") {			
+		if(nameInput == SushiIngredientTray) {			
 			this.sushiPopup.gameObject.SetActiveRecursively(true);
 		}
-		else if(nameInput == "ClosePopup") {
+		else if(nameInput == ClosePopup) {
 			this.sushiPopup.gameObject.SetActiveRecursively(false);
 		}
-		else if(nameInput == "BucketOfRice") {
+		else if(nameInput == BucketOfRice) {
 			if(sushi_rice_solution == null && sushiBeh == null) {
+				sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 				this.currentProductionState = ProductionState.CreateSushiRice;
 
 				sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
@@ -104,16 +113,112 @@ public class SushiProduction : ObjectsBeh {
 					Destroy(sushi_rice_solution);
 					sushi_rice_obj_base.SetActiveRecursively(true);
 
-					this.currentProductionState = ProductionState.WaitForIngredient;
+					this.currentProductionState = ProductionState.WaitForSushiIngredient;
 				};
 			}
+		}
+		else if(nameInput == Alga) {
+			if(this.currentProductionState == ProductionState.None) {
+				this.currentProductionState = ProductionState.WaitForMakiIngredient;
+
+				sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock_maki");
+			}
+		}
+		else if(nameInput == PicklingCucumber) {
+			if(this.currentProductionState == ProductionState.WaitForMakiIngredient) {
+				if(sushi_rice_solution == null && sushiBeh == null) {
+					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "PicklingCucumberFilledMaki_anim", typeof(GameObject))) as GameObject;
+					sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
+					sceneManager.choppingBlock_sprite.gameObject.active = false;
+
+					tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+					new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
+						Destroy(sushi_rice_solution);
+						sceneManager.choppingBlock_sprite.gameObject.active = true;
+						sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+
+						GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+						maki_product_obj.transform.position = new Vector3(0, -44, -2);
+						maki_product_obj.name = GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString();
+						
+						sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
+						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString());
+						sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+						sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+
+						this.currentProductionState = ProductionState.CompleteProduction;
+					};
+				}
+			}
+			else {
+				Debug.Log(SushiShop.WarningMessageToSeeManual);
+			}
+		}
+		else if(nameInput == OrangeSpawn) {
+            if(this.currentProductionState == ProductionState.WaitForMakiIngredient) {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "PrawnBrownMaki_anim", typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
+                    sceneManager.choppingBlock_sprite.gameObject.active = false;
+
+                    tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+                        sceneManager.choppingBlock_sprite.gameObject.active = true;
+                        sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+
+                        GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        maki_product_obj.transform.position = new Vector3(0, -44, -2);
+                        maki_product_obj.name = GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString();
+
+                        sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+
+                        this.currentProductionState = ProductionState.CompleteProduction;
+                    };
+                }
+            }
+		} 
+		else if(nameInput == RedSpawn) {
+            if (this.currentProductionState == ProductionState.WaitForMakiIngredient)
+            {
+                if (sushi_rice_solution == null && sushiBeh == null)
+                {
+                    sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "RoeMaki_anim", typeof(GameObject))) as GameObject;
+                    sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
+                    sceneManager.choppingBlock_sprite.gameObject.active = false;
+
+                    tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
+                    new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
+                    {
+                        Destroy(sushi_rice_solution);
+                        sceneManager.choppingBlock_sprite.gameObject.active = true;
+                        sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+
+                        GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
+                        maki_product_obj.transform.position = new Vector3(0, -44, -2);
+                        maki_product_obj.name = GoodDataStore.FoodMenuList.Roe_maki.ToString();
+
+                        sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
+                        sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Roe_maki.ToString());
+                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+
+                        this.currentProductionState = ProductionState.CompleteProduction;
+                    };
+                }
+            }
 		}
 
 		if(nameInput == Crab_sushi_face)
         {
             #region <!-- Crab_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient) {
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient) {
 				if (sushi_rice_solution == null && sushiBeh == null)
 				{
 					this.currentProductionState = ProductionState.CompleteProduction;
@@ -151,7 +256,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Eel_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient) {
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient) {
 				if(sushi_rice_solution == null && sushiBeh == null) {	
 					this.currentProductionState = ProductionState.CompleteProduction;
 
@@ -188,7 +293,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Fatty_tuna_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -228,7 +333,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Octopus_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -268,7 +373,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Prawn_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -308,7 +413,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Salmon_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -348,7 +453,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Skipjack_tuna_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -388,7 +493,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Spicy_shell_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
@@ -428,7 +533,7 @@ public class SushiProduction : ObjectsBeh {
         {
             #region <!-- Sweetened_egg_sushi_face.
 
-            if (this.currentProductionState == ProductionState.WaitForIngredient)
+            if (this.currentProductionState == ProductionState.WaitForSushiIngredient)
             {
                 if (sushi_rice_solution == null && sushiBeh == null)
                 {
