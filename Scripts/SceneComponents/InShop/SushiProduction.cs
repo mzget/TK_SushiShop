@@ -46,7 +46,8 @@ public class SushiProduction : ObjectsBeh {
 	public ProductionState currentProductionState;
 
 	public GameObject sushiPopup;
-	public GameObject sushi_rice_obj_base;
+    private ObjectsBeh sushiRice;
+    private Vector3 sushiRice_Pos = new Vector3(0, -44f, -1f);
 	internal GameObject sushi_rice_solution;
     internal SushiBeh sushiBeh;
 
@@ -56,7 +57,6 @@ public class SushiProduction : ObjectsBeh {
         base.Start();
 
         this.sushiPopup.gameObject.SetActiveRecursively(false);
-        this.sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
     }
 	
 	// Update is called once per frame
@@ -100,18 +100,21 @@ public class SushiProduction : ObjectsBeh {
 			this.sushiPopup.gameObject.SetActiveRecursively(false);
 		}
 		else if(nameInput == BucketOfRice) {
-			if(sushi_rice_solution == null && sushiBeh == null) {
+			if(sushiRice == null && sushi_rice_solution == null && sushiBeh == null) {
 				sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 				this.currentProductionState = ProductionState.CreateSushiRice;
-
-				sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
 
 				sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Sushi_rice_anim, typeof(GameObject))) as GameObject;
 				sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
 				tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
 				sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 					Destroy(sushi_rice_solution);
-					sushi_rice_obj_base.SetActiveRecursively(true);
+                    GameObject sushiRiceInstance = Instantiate(Resources.Load("FoodSolution/Sushi_rice", typeof(GameObject))) as GameObject;
+                    sushiRiceInstance.transform.position = sushiRice_Pos;
+
+                    sushiRice = sushiRiceInstance.GetComponent<ObjectsBeh>();
+                    sushiRice._canDragaable = true;
+                    sushiRice.originalPosition = sushiRice_Pos;
 
 					this.currentProductionState = ProductionState.WaitForSushiIngredient;
 				};
@@ -224,7 +227,7 @@ public class SushiProduction : ObjectsBeh {
 					this.currentProductionState = ProductionState.CompleteProduction;
 
 		            this.sushiPopup.gameObject.SetActiveRecursively(false);
-		            sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
 					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + CrabSushi_anim, typeof(GameObject))) as GameObject;
 					sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -260,8 +263,8 @@ public class SushiProduction : ObjectsBeh {
 				if(sushi_rice_solution == null && sushiBeh == null) {	
 					this.currentProductionState = ProductionState.CompleteProduction;
 
-		            this.sushiPopup.gameObject.SetActiveRecursively(false);
-		            sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+                    this.sushiPopup.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
 					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Eel_sushi_anim, typeof(GameObject))) as GameObject;
 					sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -300,7 +303,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Fatty_tuna_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -340,7 +343,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Octopus_sushi_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -380,7 +383,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Prawn_sushi_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -420,7 +423,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Salmon_sushi_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -460,7 +463,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Skipjack_tuna_sushi_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -500,7 +503,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Spicy_shell_sushi_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
@@ -540,7 +543,7 @@ public class SushiProduction : ObjectsBeh {
                     this.currentProductionState = ProductionState.CompleteProduction;
 
                     this.sushiPopup.gameObject.SetActiveRecursively(false);
-                    sushi_rice_obj_base.gameObject.SetActiveRecursively(false);
+					Destroy(sushiRice.gameObject);
 
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Sweetened_egg_anim, typeof(GameObject))) as GameObject;
                     sushi_rice_solution.transform.position = new Vector3(0, -25, -2);

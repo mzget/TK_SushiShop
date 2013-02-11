@@ -9,6 +9,11 @@ public class TownTutorDataStore {
 
     public GameObject roof_00_button_obj;
 
+	public Transform topRightAnchor_transform;
+	public GameObject decoration_audioTip;
+	public GameObject dress_audioTip;
+	public GameObject trophy_audioTip;
+
     public TownTutorDataStore() { }
 
     public void OnDestroy() { }
@@ -29,11 +34,13 @@ public class Town : Mz_BaseScene {
 	const string SHOP_DOOR_NAME = "Shop_door";
     public tk2dAnimatedSprite shopDoor_anim;
     public tk2dAnimatedSprite sheepBank_door_animated;
-	public GameObject GUIMidcenter_anchor;
+    public Transform midcenter_anchor;
+	public GameObject upgradeOutside_baseAnchor;
 	public UpgradeOutsideManager upgradeOutsideManager;
     public CharacterAnimationManager characterAnimatedManage;
 	public DogBeh bullDog;
     public TownTutorDataStore townTutorData;
+    internal GameObject pet;
 
     private bool _updatable = true;
 	public enum OnGUIState { none = 0, DrawEditShopname, };
@@ -75,11 +82,102 @@ public class Town : Mz_BaseScene {
 
 	#endregion
 
+    protected override void Initialization()
+    {
+        base.Initialization();
+
+        StartCoroutine(this.CreatePetAtRuntime());
+    }
+
+    internal IEnumerator CreatePetAtRuntime()
+    {
+        if (pet != null)
+        {
+            Destroy(pet);
+            yield return new WaitForFixedUpdate();
+        }
+
+        switch (Mz_StorageManage.Pet_id)
+        {
+            case 0:
+                pet = Instantiate(Resources.Load("Pets/Bulldog", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 1:
+                pet = Instantiate(Resources.Load("Pets/Dog", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 2:
+                pet = Instantiate(Resources.Load("Pets/Ewe", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 3:
+                pet = Instantiate(Resources.Load("Pets/Ram", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 4:
+                pet = Instantiate(Resources.Load("Pets/Nanny", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 5:
+                pet = Instantiate(Resources.Load("Pets/BillyGoat", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            case 6:
+                pet = Instantiate(Resources.Load("Pets/Cow", typeof(GameObject))) as GameObject;
+                pet.transform.parent = midcenter_anchor;
+				pet.transform.position = PetBeh.InitializePosition;
+                break;
+            default:
+                break;
+        }
+
+        yield return 0;
+    }
+
 	// Use this for initialization
+//	void Start ()
+//    {
+//        
+//		
+//		StartCoroutine(this.InitializeAudio());
+//        StartCoroutine(base.InitializeIdentityGUI());
+//
+//        this.upgradeOutsideManager.InitializeDecorationObjects();
+//		if (SheepBank.HaveUpgradeOutSide) {
+//            StartCoroutine(this.ActiveDecorationBar());
+//		}
+//		else
+//			StartCoroutine(this.UnActiveDecorationBar());
+//
+//        iTween.MoveTo(flyingBird_group, iTween.Hash("x", 550f, "time", 24f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.loop));
+//		iTween.MoveTo(movingCloud.gameObject, iTween.Hash("x", -85f, "islocal", true, "time", 20f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+//
+//        if(MainMenu._HasNewGameEvent == false)
+//            this.Checking_HasNewStartingTruckEvent();
+//        else if(MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide == false) {
+//            plane_darkShadow.active = true;
+//            SheepbankDoor.transform.position += Vector3.back * 10;
+//            this.CreateTutorObjectAtRuntime();
+//        }
+//        else if (MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide) {           
+//            plane_darkShadow.active = true;
+//            plane_darkShadow.transform.position -= Vector3.forward * 2.5f;
+//            townTutorData.roof_00_button_obj.transform.position -= Vector3.forward * 2;
+//            this.CreateBuyDecoratuionTutorEvent();
+//        }
+//	}	
 	void Start ()
     {
         Mz_ResizeScale.ResizingScale(town_bg_group.transform);
-		
+
+		StartCoroutine(ReInitializeAudioClipData());
 		StartCoroutine(this.InitializeAudio());
         StartCoroutine(base.InitializeIdentityGUI());
 
@@ -89,27 +187,36 @@ public class Town : Mz_BaseScene {
 		}
 		else
 			StartCoroutine(this.UnActiveDecorationBar());
-
-        iTween.MoveTo(flyingBird_group, iTween.Hash("x", 550f, "time", 24f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.loop));
-//		iTween.MoveTo(cloudAndFog_Objs[0].gameObject, iTween.Hash("y", -20f, "islocal", true, "time", 5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
-//		iTween.MoveTo(cloudAndFog_Objs[1].gameObject, iTween.Hash("y", -15f, "islocal", true, "time", 5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
-//		iTween.MoveTo(cloudAndFog_Objs[2].gameObject, iTween.Hash("y", -15f, "islocal", true, "time", 5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
+      
+		iTween.MoveTo(flyingBird_group, iTween.Hash("x", 550f, "time", 24f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.loop));
 		iTween.MoveTo(movingCloud.gameObject, iTween.Hash("x", -85f, "islocal", true, "time", 20f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
 
-        if(MainMenu._HasNewGameEvent == false)
-            this.Checking_HasNewStartingTruckEvent();
-        else if(MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide == false) {
+
+        if(MainMenu._HasNewGameEvent == false) {
+         	if(Town.IntroduceGameUI_Event == null) {
+				this.Checking_HasNewStartingTruckEvent();
+
+				townTutorData = null;
+			}
+			else  {
+				this.audioDescribe.PlayOnecSound(description_clips[5]);
+				this.OnIntroduceGameUI_Event(EventArgs.Empty);
+				this.CreateAudioTipObj();
+			}
+		}
+        else if(MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide == false && Town.IntroduceGameUI_Event == null) {
             plane_darkShadow.active = true;
             SheepbankDoor.transform.position += Vector3.back * 10;
             this.CreateTutorObjectAtRuntime();
         }
-        else if (MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide) {           
+        else if (MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide && Town.IntroduceGameUI_Event == null) {           
             plane_darkShadow.active = true;
             plane_darkShadow.transform.position -= Vector3.forward * 2.5f;
             townTutorData.roof_00_button_obj.transform.position -= Vector3.forward * 2;
             this.CreateBuyDecoratuionTutorEvent();
         }
 	}
+
 
     #region <@-- Tutor system.
 
@@ -179,6 +286,45 @@ public class Town : Mz_BaseScene {
 		audioDescribe.PlayOnecSound(description_clips[1]);
         iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 0.1f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
     }
+		
+	public static event EventHandler IntroduceGameUI_Event;
+	private void OnIntroduceGameUI_Event (EventArgs e)
+	{
+		Debug.Log("OnIntroduceGameUI_Event");
+
+		if (IntroduceGameUI_Event != null)
+			IntroduceGameUI_Event (this, e);
+	}	
+	internal static void Handle_IntroduceGameUI_Event (object sender, EventArgs e)
+	{
+		IntroduceGameUI_Event -= Handle_IntroduceGameUI_Event;
+	}	
+	
+	private void CreateAudioTipObj ()
+	{		
+		GameObject decoration_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Decoration_audioTip", typeof(GameObject))) as GameObject;
+		decoration_tip.name = "Decoration_audioTip";
+		decoration_tip.transform.parent = townTutorData.topRightAnchor_transform;
+		decoration_tip.transform.localPosition = new Vector3(-.2f, -.25f, 0);
+		townTutorData.decoration_audioTip = decoration_tip;
+		iTween.PunchScale(townTutorData.decoration_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
+		
+		GameObject trophy_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Trophy_audioTip", typeof(GameObject))) as GameObject;
+		trophy_tip.name = "Trophy_audioTip";
+		trophy_tip.transform.parent = townTutorData.topRightAnchor_transform;
+		trophy_tip.transform.localPosition = new Vector3(-.58f, -.25f, 0);
+		townTutorData.trophy_audioTip = trophy_tip;			
+		iTween.PunchScale(townTutorData.trophy_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
+		
+		GameObject dress_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Dress_audioTip", typeof(GameObject))) as GameObject;
+		dress_tip.name = "Dress_audioTip";
+		dress_tip.transform.parent = townTutorData.topRightAnchor_transform;
+		dress_tip.transform.localPosition = new Vector3(-.9f, -.25f, 0);
+		townTutorData.dress_audioTip = dress_tip;			
+		iTween.PunchScale(townTutorData.dress_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
+	}
+
+	
 
     #endregion
 
@@ -197,13 +343,44 @@ public class Town : Mz_BaseScene {
 
         yield return null;
 	}
+	
+	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/Town/";
+    private IEnumerator ReInitializeAudioClipData()
+    {
+        description_clips.Clear();
+		if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) {
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_tutor_01", typeof(AudioClip)) as AudioClip);
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_Letplay", typeof(AudioClip)) as AudioClip);
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_decoration", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_trophy", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_dress", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_touchmove", typeof(AudioClip)) as AudioClip);
+		}
+		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_tutor_01", typeof(AudioClip)) as AudioClip);
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_Letplay", typeof(AudioClip)) as AudioClip);
+        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_decoration", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_trophy", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_dress", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_touchmove", typeof(AudioClip)) as AudioClip);
+		}		
+		
+        yield return 0;
+    }
 
 	#region <!-- Decoration upgrade bar.
 
 	IEnumerator ActiveDecorationBar ()
 	{
 		yield return StartCoroutine(this.SettingGUIMidcenter(true));
-		iTween.MoveTo(GUIMidcenter_anchor.gameObject, iTween.Hash("position", new Vector3(0, 0, 8), "islocal", true, "time", 1f, "easetype", iTween.EaseType.spring));
+
+		if(ConservationAnimals.Level >= 1 && LoveDogConsortium.Level >= 1 && ExtendsStorageManager.TK_clothe_id == 13 && ExtendsStorageManager.TK_hat_id == 13)
+			upgradeOutsideManager.pet_button_obj.active = true;
+		else 
+			upgradeOutsideManager.pet_button_obj.active = false;
+		
+		iTween.MoveTo(upgradeOutside_baseAnchor.gameObject, iTween.Hash("position", new Vector3(0, 0, 8), "islocal", true, "time", 1f, "easetype", iTween.EaseType.spring));
+
         upgradeOutsideManager.ActiveRoof();
 
         SheepBank.HaveUpgradeOutSide = false;
@@ -212,7 +389,7 @@ public class Town : Mz_BaseScene {
 	IEnumerator UnActiveDecorationBar ()
 	{
 		yield return new WaitForEndOfFrame();
-		iTween.MoveTo(GUIMidcenter_anchor.gameObject,
+		iTween.MoveTo(upgradeOutside_baseAnchor.gameObject,
 			iTween.Hash("position", new Vector3(0, -200, 8), "islocal", true, "time", 1f, "easetype", iTween.EaseType.spring,
 			"oncomplete", "TweenDownComplete", "oncompletetarget", this.gameObject));		 
 	}
@@ -224,21 +401,17 @@ public class Town : Mz_BaseScene {
 	IEnumerator SettingGUIMidcenter (bool active)
 	{
 		yield return new WaitForEndOfFrame();
-		GUIMidcenter_anchor.SetActiveRecursively(active);
+		upgradeOutside_baseAnchor.SetActiveRecursively(active);
 	}
 
 	#endregion
-	
-	// Update is called once per frame
-	protected override void Update ()
-    {
-        base.Update();
 
+    private void LateUpdate() {
         if (_updatable)
         {
             base.ImplementTouchPostion();
-		}
-	}
+        }
+    }
 
 	protected override void MovingCameraTransform ()
 	{	
@@ -246,7 +419,7 @@ public class Town : Mz_BaseScene {
 
 		if(Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
 		{
-			float speed = Time.deltaTime * Time.fixedDeltaTime;			
+            float speed = (500) * Time.deltaTime * Time.fixedDeltaTime;
 			// Get movement of the finger since last frame   
 			Vector2 touchDeltaPosition = touch.deltaPosition;
 			// Move object across XY plane       
@@ -333,7 +506,7 @@ public class Town : Mz_BaseScene {
 
 	public override void OnInput (string nameInput)
 	{
-		if (GUIMidcenter_anchor.active) {
+		if (upgradeOutside_baseAnchor.active) {
 			switch (nameInput) {
 			case "Close_button": StartCoroutine(this.UnActiveDecorationBar());
 				break;
@@ -345,6 +518,8 @@ public class Town : Mz_BaseScene {
 				break;
 			case UpgradeOutsideManager.Accessories_button: upgradeOutsideManager.ActiveAccessories();
 				break;
+            case UpgradeOutsideManager.Pet_button: upgradeOutsideManager.ActivePet();
+                break;
 			case "None_button" : upgradeOutsideManager.HaveNoneCommand();
 				break;
 			case "Previous_button" : upgradeOutsideManager.HavePreviousPageCommand();

@@ -23,30 +23,30 @@ public class CharacterCustomization : MonoBehaviour {
         "Hat_0022", "Hat_0023", 
     };
 	private Vector3[] arr_hatLocalPos = new Vector3[AvailableHatNumber] {
-		new Vector3(0, -.095f, -.4f),		
-		new Vector3(0, -.095f, -.4f),	
-		new Vector3(0, -.095f, -.4f),
-		new Vector3(0, -.095f, -.4f),	
-		new Vector3(0, -.095f, -.4f),	
-		new Vector3(0, -.095f, -.4f),   // 5.
-		new Vector3(0, -.095f, -.4f),	
-		new Vector3(0, -.095f, -.4f),	
-		new Vector3(0, -.095f, -.4f),
-		new Vector3(0.025f, -0.095f, -0.4f),	
+		new Vector3(0, -.095f, -4.5f),		
+		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, -4.5f),
+		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, -4.5f),   // 5.
+		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, -4.5f),
+		new Vector3(0.025f, -0.095f, -4.5f),	
         //new Vector3(0.003f, -0.08f, -0.4f),	    // 10.        
-		new Vector3(0.008f, -0.095f, -0.4f),	
-		new Vector3(0.01f, -0.04f, -0.4f),
-		new Vector3(0.01f, -0.04f, -0.4f),	
-		new Vector3(0.01f, -0.04f, -0.4f),
-		new Vector3(-0.03f, -0.028f, -0.4f),
-		new Vector3(0, -0.22f, -0.4f),	        // 15.
-		new Vector3(0.002f, 0f, -0.4f),	 
-		new Vector3(-0.003f, 0f, -0.4f),
-		new Vector3(-0.003f, 0f, -0.4f),
-		new Vector3(-0.003f, 0f, -0.4f),	
-		new Vector3(0.033f, -0.04f, -0.4f),  // 20.
-		new Vector3(-0.003f, 0f, -0.4f),
-		new Vector3(-0.003f, 0f, -0.4f),
+		new Vector3(0.008f, -0.095f, -4.5f),	
+		new Vector3(0.01f, -0.04f, -4.5f),
+		new Vector3(0.01f, -0.04f, -4.5f),	
+		new Vector3(0.01f, -0.04f, -4.5f),
+		new Vector3(-0.03f, -0.028f, -4.5f),
+		new Vector3(0, -0.22f, -4.5f),	        // 15.
+		new Vector3(0.002f, 0f, -4.5f),	 
+		new Vector3(-0.003f, 0f, -4.5f),
+		new Vector3(-0.003f, 0f, -4.5f),
+		new Vector3(-0.003f, 0f, -4.5f),	
+		new Vector3(0.033f, -0.04f, -4.5f),  // 20.
+		new Vector3(-0.003f, 0f, -4.5f),
+		new Vector3(-0.003f, 0f, -4.5f),
 	};
 
     public tk2dSprite TK_clothe;

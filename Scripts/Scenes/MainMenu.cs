@@ -47,6 +47,7 @@ public class MainMenu : Mz_BaseScene {
 
     private string username = string.Empty;
 	private string shopName = string.Empty;
+	
 #if UNITY_IPHONE || UNITY_ANDROID
 	
 	private TouchScreenKeyboard touchScreenKeyboard;
@@ -390,6 +391,10 @@ public class MainMenu : Mz_BaseScene {
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_TABLE_LIST, table_temp_array);
 		int[] accessories_temp_array = new int[1] {255};
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ACCESSORIES_LIST, accessories_temp_array);
+        // <@-- Initailizing pet data.
+        PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + ExtendsStorageManager.KEY_PET_ID, 0);
+        int[] defaultPetAliment_id = new int[] { 0 };
+        PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + ExtendsStorageManager.KEY_CAN_ALIMENT_PET_LIST, defaultPetAliment_id);
 
         Debug.Log("Store new player data complete.");
 

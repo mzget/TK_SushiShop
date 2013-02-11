@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class ExtendsStorageManager : Mz_StorageManage
 {	
+    public const String KEY_CAN_ALIMENT_PET_LIST = "KEY_CAN_ALIMENT_PET_LIST";
+    public const string KEY_PET_ID = "PET_ID";
+	
 	#region <@-- Load secsion.
 
 	public void LoadCanSellGoodsListData ()
@@ -128,6 +131,8 @@ public class ExtendsStorageManager : Mz_StorageManage
 		
 		Mz_StorageManage.TK_clothe_id = PlayerPrefs.GetInt(SaveSlot + KEY_TK_CLOTHE_ID);
 		Mz_StorageManage.TK_hat_id = PlayerPrefs.GetInt(SaveSlot + KEY_TK_HAT_ID);
+        // Pet.
+        Mz_StorageManage.Pet_id = PlayerPrefs.GetInt(SaveSlot + KEY_PET_ID);
 		
 		//@!-- Load Donation data.
 		ConservationAnimals.Level = PlayerPrefs.GetInt(SaveSlot + KEY_CONSERVATION_ANIMAL_LV, 0);
@@ -140,7 +145,18 @@ public class ExtendsStorageManager : Mz_StorageManage
         this.LoadCanSellGoodsListData();
         this.LoadCostumeData();
         this.LoadDecorationShopOutside();
+        this.LoadCanAlimentPetList();
 	}
+	
+    private void LoadCanAlimentPetList()
+    {
+        int[] array_temp = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_ALIMENT_PET_LIST);
+        UpgradeOutsideManager.CanAlimentPet_id_list.Clear();
+        foreach (int item in array_temp)
+        {
+            UpgradeOutsideManager.CanAlimentPet_id_list.Add(item);
+        }
+    }
 
 	#endregion
 
@@ -164,6 +180,8 @@ public class ExtendsStorageManager : Mz_StorageManage
 
         PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_TK_CLOTHE_ID, Mz_StorageManage.TK_clothe_id);
         PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_TK_HAT_ID, Mz_StorageManage.TK_hat_id);
+        // pet.
+        PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + KEY_PET_ID, Pet_id);
 
         //@!-- Donation data.
         PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CONSERVATION_ANIMAL_LV, ConservationAnimals.Level);
@@ -179,6 +197,9 @@ public class ExtendsStorageManager : Mz_StorageManage
             this.SaveCanEquipClothesData();
 		if(Dressing.CanEquipHat_list.Count != 0) 
 			this.SaveCanEquipHatData();
+
+		if(UpgradeOutsideManager.CanAlimentPet_id_list.Count != 0)
+			this.SaveCanAlimentPetList();
 
 		this.SaveCanDecorateShopOutside();
 		
@@ -201,7 +222,7 @@ public class ExtendsStorageManager : Mz_StorageManage
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_HAT_LIST, arr_hat);
 	}
 
-	void SaveCanDecorateShopOutside ()
+	private void SaveCanDecorateShopOutside ()
 	{
 		if(UpgradeOutsideManager.CanDecorateRoof_list.Count != 0) {
 			int[] roof_temp_arr = UpgradeOutsideManager.CanDecorateRoof_list.ToArray();
@@ -223,6 +244,12 @@ public class ExtendsStorageManager : Mz_StorageManage
 			PlayerPrefsX.SetIntArray(SaveSlot + KEY_CAN_DECORATE_ACCESSORIES_LIST, accessories_temp_array);
 		}
 	}
+	
+    private void SaveCanAlimentPetList()
+    {
+        int[] array_temp = UpgradeOutsideManager.CanAlimentPet_id_list.ToArray();
+        PlayerPrefsX.SetIntArray(SaveSlot + KEY_CAN_ALIMENT_PET_LIST, array_temp);
+    }
  
 	#endregion
 }

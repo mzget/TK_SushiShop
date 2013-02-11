@@ -7,6 +7,8 @@ public class PetBeh : MonoBehaviour {
     protected const string FUNC_WALKRIGHT = "WalkRight";
     protected const string FUNC_RANDOM_BEH = "RandomBeh";
 
+	public static Vector3 InitializePosition = new Vector3(120f, -78f, -2f);
+	
     public enum NameAnimationList { None = 0, WalkRight, WalkLeft, Glad, Glad2, Eat, };
     protected tk2dAnimatedSprite animatedSprite;
 

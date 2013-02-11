@@ -672,6 +672,8 @@ public class DonationManager : MonoBehaviour
                 this.ReActiveColorBarPicker();
 				sceneController.ManageAvailabelMoneyBillBoard();
 
+				UpgradeOutsideManager.CanAlimentPet_id_list.Add(ConservationAnimals.Level + 1);
+
                 print("DonationProcessing... complete !");
             }
             else
@@ -710,6 +712,9 @@ public class DonationManager : MonoBehaviour
 				this.ReActiveColorBarPicker();
 				sceneController.ManageAvailabelMoneyBillBoard();
 
+				if(UpgradeOutsideManager.CanAlimentPet_id_list.Contains(1) == false)
+					UpgradeOutsideManager.CanAlimentPet_id_list.Add(1);
+
                 print("DonationProcessing... complete !");
             }
             else
@@ -727,6 +732,9 @@ public class DonationManager : MonoBehaviour
                 StartCoroutine(this.ActiveCongratulationEffect(LoveKidsFoundation.Level));
 				this.ReActiveColorBarPicker();
 				sceneController.ManageAvailabelMoneyBillBoard();
+
+				if(UpgradeOutsideManager.CanAlimentPet_id_list.Contains(6) == false)
+					UpgradeOutsideManager.CanAlimentPet_id_list.Add(6);
 
                 print("DonationProcessing... complete !");
             }

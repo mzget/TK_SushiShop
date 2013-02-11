@@ -77,7 +77,10 @@ public class Mz_BaseScene : MonoBehaviour {
 //		hudFPS_Trace = this.gameObject.GetComponent<HUDFPS>();
 
 		this.gameObject.AddComponent<ExtendsStorageManager> ();
-		extendsStorageManager = this.GetComponent<ExtendsStorageManager> ();
+        extendsStorageManager = this.GetComponent<ExtendsStorageManager>();
+
+        this.gameObject.AddComponent<Mz_SmartDeviceInput>();
+        smartDeviceInput = this.gameObject.GetComponent<Mz_SmartDeviceInput>();
 
 #if UNITY_IPHONE
 
@@ -185,20 +188,14 @@ public class Mz_BaseScene : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
-		if (smartDeviceInput == null) {
-			this.gameObject.AddComponent<Mz_SmartDeviceInput>();
-			smartDeviceInput = this.gameObject.GetComponent<Mz_SmartDeviceInput>();
-		}
-
 		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
-				smartDeviceInput.ImplementTouchInput ();
+            smartDeviceInput.ImplementTouchInput();
 		} 
 		else if (Application.isEditor || Application.isWebPlayer) {
-				smartDeviceInput.ImplementMouseInput ();
+            smartDeviceInput.ImplementMouseInput();
 		}
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Menu))
-        {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Menu)) {
             _hasQuitCommand = true;
         }
 	}
@@ -218,70 +215,78 @@ public class Mz_BaseScene : MonoBehaviour {
 	#endregion
 
     protected void ImplementTouchPostion ()
-	{		
-        if(Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
-            if(Input.touchCount > 0) {				
-            	touch = Input.GetTouch(0);
-				
-	            if(touch.phase == TouchPhase.Began) {			
-					originalPos = touch.position;
-					currentPos = touch.position;
-	            }
+	{
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            if (Input.touchCount > 0)
+            {
+                touch = Input.GetTouch(0);
 
-	            if(touch.phase == TouchPhase.Moved) {
-					currentPos = touch.position;
-                    this.MovingCameraTransform();   					
-	            }
-				
-	            if(touch.phase == TouchPhase.Ended) {
-					float distance = Vector2.Distance (currentPos, originalPos);
-					float vector = currentPos.x - originalPos.x;
-//					float speed = Time.deltaTime * (distance / touch.deltaTime);
-					if (vector < 0) {
-						if(distance > 200)
-							currentCameraPos = mainCameraPos[1];
-					}
-					else if (vector > 0) {
-						if(distance > 200)
-							currentCameraPos = mainCameraPos[0];
-					}
-						
-					iTween.MoveTo (Camera.main.gameObject, iTween.Hash("position", currentCameraPos, "time", 0.5f, "easetype", iTween.EaseType.linear));
-					
-					currentPos = Vector2.zero;
-					originalPos = Vector2.zero;
-	            }
+                if (touch.phase == TouchPhase.Began)
+                {
+                    originalPos = touch.position;
+                    currentPos = touch.position;
+                }
+
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    currentPos = touch.position;
+                    this.MovingCameraTransform();
+                }
+
+                if (touch.phase == TouchPhase.Ended)
+                {
+                    float distance = Vector2.Distance(currentPos, originalPos);
+                    float vector = currentPos.x - originalPos.x;
+                    //					float speed = Time.deltaTime * (distance / touch.deltaTime);
+                    if (vector < 0)
+                    {
+                        if (distance > 200)
+                            currentCameraPos = mainCameraPos[1];
+                    }
+                    else if (vector > 0)
+                    {
+                        if (distance > 200)
+                            currentCameraPos = mainCameraPos[0];
+                    }
+
+                    iTween.MoveTo(Camera.main.gameObject, iTween.Hash("position", currentCameraPos, "time", 0.5f, "easetype", iTween.EaseType.linear));
+
+                    currentPos = Vector2.zero;
+                    originalPos = Vector2.zero;
+                }
             }
         }
-		else if(Application.isWebPlayer || Application.isEditor) {
-			mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-				
-			if(Input.GetMouseButtonDown(0)) {
-				originalPos = mousePos;
-                //Debug.Log("originalPos == " + originalPos);
-			}
-				
-			if(Input.GetMouseButton(0)) {
-				currentPos = mousePos;
-                _isDragMove = true;
-				this.MovingCameraTransform();
-                //Debug.Log("currentPos == " + currentPos);
-			}
+        else if (Application.isWebPlayer || Application.isEditor)
+        {
+            mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-            if (Input.GetMouseButtonUp(0)) {
+            if (Input.GetMouseButtonDown(0))
+            {
+                originalPos = mousePos;
+                //Debug.Log("originalPos == " + originalPos);
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                currentPos = mousePos;
+                _isDragMove = true;
+                this.MovingCameraTransform();
+                //Debug.Log("currentPos == " + currentPos);
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
                 _isDragMove = true;
                 originalPos = Vector3.zero;
                 currentPos = Vector3.zero;
             }
-		}
+        }
     }
-	protected virtual void MovingCameraTransform ()
-	{
-
-	}
+	protected virtual void MovingCameraTransform ()	{ }
 
     public virtual void OnInput(string nameInput) {
-    	Debug.Log("OnInput :: " + nameInput);
+    	print("OnInput :: " + nameInput);
     }
 
     public virtual void OnPointerOverName(string nameInput) {

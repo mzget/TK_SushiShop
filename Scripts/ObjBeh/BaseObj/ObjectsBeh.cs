@@ -25,6 +25,10 @@ public class ObjectsBeh : Base_ObjectBeh {
             Debug.Log(destroyObj_Event + ": destroyObj_Event : " + this.name);
         }
     }
+    protected void Base_Handle_destroyObj_Event(object sender, System.EventArgs e)
+    {
+        Destroy(this.gameObject);
+    }
 
 	protected virtual void Awake() {
 		try {
@@ -59,14 +63,16 @@ public class ObjectsBeh : Base_ObjectBeh {
 	protected override void Update ()
 	{
 		base.Update ();
-
-		if(_isDraggable) {
-			this.ImplementDraggableObject();
-		}
 		
-		if(sceneManager.touch.phase == TouchPhase.Ended || sceneManager.touch.phase == TouchPhase.Canceled) {			
-			if(this._isDraggable)
-				_isDropObject = true;
+		if(_canDragaable) {
+			if(_isDraggable) {
+				this.ImplementDraggableObject();
+			}
+			
+			if(sceneManager.touch.phase == TouchPhase.Ended || sceneManager.touch.phase == TouchPhase.Canceled) {			
+				if(this._isDraggable)
+					_isDropObject = true;
+			}
 		}
 	}
 	
@@ -78,4 +84,12 @@ public class ObjectsBeh : Base_ObjectBeh {
 			this._isDraggable = true;
         }
     }
+	
+	protected override void OnTouchEnded ()
+	{
+		base.OnTouchEnded();
+		
+		if(this._isDraggable)
+			_isDropObject = true;
+	}
 }

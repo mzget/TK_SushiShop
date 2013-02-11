@@ -13,11 +13,12 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 	const string NEXT_BUTTON_NAME = "Next_button";
 	const string PREVIOUS_BUTTON_NAME = "Previous_button";
 
-	public Transform sceneBackground_transform;
+    public Transform sceneBackground_transform;
+    public GameObject[] cloudAndFog_Objs;
+
 
 	public RewardManager rewardManager;
 	public CharacterAnimationManager tk_animationManager;
-
 
 
 	// Use this for initialization
@@ -25,7 +26,10 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 		StartCoroutine(this.InitializeAudio());
 		StartCoroutine(base.InitializeIdentityGUI());
 
-		Mz_ResizeScale.ResizingScale(sceneBackground_transform);
+        Mz_ResizeScale.ResizingScale(sceneBackground_transform);
+        iTween.MoveTo(cloudAndFog_Objs[0].gameObject, iTween.Hash("y", 0f, "islocal", true, "time", 3f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(cloudAndFog_Objs[1].gameObject, iTween.Hash("y", 20f, "islocal", true, "time", 4f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(cloudAndFog_Objs[2].gameObject, iTween.Hash("y", 40f, "islocal", true, "time", 5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
 	}
 	
 	private new IEnumerator InitializeAudio() {

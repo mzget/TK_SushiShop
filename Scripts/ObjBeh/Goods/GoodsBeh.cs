@@ -118,14 +118,6 @@ public class GoodsBeh : ObjectsBeh {
 		base.OnTouchDown();
 	}
 
-	protected override void OnTouchEnded ()
-	{
-        base.OnTouchEnded();
-
-		if(base._isDraggable)
-			_isDropObject = true;
-	}
-
     public override void OnDispose()
     {
         base.OnDispose();

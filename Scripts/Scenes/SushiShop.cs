@@ -60,7 +60,6 @@ public class SushiShop : Mz_BaseScene {
 	public BinBeh bin_behavior_obj;
 	public GameObject foodsTray_obj;
 	internal FoodTrayBeh foodTrayBeh;
-	public SushiProduction sushiProduction;
     public GameObject calculator_group_instance;
     public GameObject receiptGUIForm_groupObj;
     public GameObject giveTheChangeGUIForm_groupObj;
@@ -71,7 +70,8 @@ public class SushiShop : Mz_BaseScene {
     public GameObject baseOrderUI_Obj;
 	public GameObject greetingMessage_ObjGroup;
 	public GameObject darkShadowPlane;
-	public GameObject rollingDoor_Obj;
+	public GameObject slidingDoorLeft;
+	public GameObject slidingDoorRight;
 	
 	public GameObject[] arr_addNotations = new GameObject[2];
 	public GameObject[] arr_goodsLabel = new GameObject[3];
@@ -80,7 +80,10 @@ public class SushiShop : Mz_BaseScene {
     public tk2dSprite[] arr_orderingBaseItems = new tk2dSprite[3];
 	private const string BASE_ORDER_ITEM_NORMAL = "Order_BaseItem";
 	private const string BASE_ORDER_ITEM_COMPLETE = "Order_BaseItem_complete";
-	public tk2dSprite[] arr_orderingItems = new tk2dSprite[3];
+    public tk2dSprite[] arr_orderingItems = new tk2dSprite[3];
+
+    private SushiProduction sushiProduction;
+    public BeltMachineBeh beltMachine;
 	private Mz_CalculatorBeh calculatorBeh;
     private GameObject cash_obj;
 	private tk2dSprite cash_sprite;
@@ -96,6 +99,7 @@ public class SushiShop : Mz_BaseScene {
 		receiveMoney,
 		giveTheChange, 
 		TradeComplete,
+        PreparingFood,
 	};
     public GamePlayState currentGamePlayState;
 
@@ -162,7 +166,9 @@ public class SushiShop : Mz_BaseScene {
 
     private void OpenShop() 
     {
-        iTween.MoveTo(rollingDoor_Obj, iTween.Hash("position", new Vector3(0, 220f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
+        iTween.MoveTo(slidingDoorLeft, iTween.Hash("position", new Vector3(-225f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
+        iTween.MoveTo(slidingDoorRight, iTween.Hash("position", new Vector3(225f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
+		
         audioEffect.PlayOnecSound(base.soundEffect_clips[0]);
 				
         nullCustomer_event += new EventHandler(Handle_nullCustomer_event);
@@ -831,7 +837,7 @@ public class SushiShop : Mz_BaseScene {
         if(packaging_Obj == null) {
             packaging_Obj = Instantiate(Resources.Load(Packages_ResourcePath + "Packages_Sprite", typeof(GameObject))) as GameObject;
             packaging_Obj.transform.parent = foodsTray_obj.transform;
-            packaging_Obj.transform.localPosition = new Vector3(0, .1f, -.1f);
+            packaging_Obj.transform.localPosition = new Vector3(0, 12f, -0.5f);
         }
 		
 		TK_animationManager.RandomPlayGoodAnimation();
@@ -866,6 +872,8 @@ public class SushiShop : Mz_BaseScene {
 	
 	public override void OnInput(string nameInput)
 	{	
+		base.OnInput(nameInput);
+		
 		if(MainMenu._HasNewGameEvent) {
 			if(nameInput == "EN_001_textmesh") {
 				StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[0]));
@@ -906,40 +914,48 @@ public class SushiShop : Mz_BaseScene {
 			calculatorBeh.GetInput(nameInput);
 		}
 
-		if(currentGamePlayState == GamePlayState.GreetingCustomer) {
-			switch (nameInput) {
+		if(currentGamePlayState == GamePlayState.GreetingCustomer)
+        {
+            #region <@-- GamePlayState.GreetingCustomer.
+
+            switch (nameInput)
+            {
                 case TH_001: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[0]));
-				break;
-            case TH_002: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[1]));
-				break;
-            case TH_003: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[2]));
-				break;
-            case TH_004: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[3]));
-				break;
-            case TH_005: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[4]));
-				break;
-            case TH_006: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[5]));
-				break;
-            case EN_001: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[0]));
-				break;
-            case EN_002: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[1]));
-				break;
-            case EN_003: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[2]));
-				break;
-            case EN_004: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[3]));
-				break;
-            case EN_005: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[4]));
-				break;
-            case EN_006: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[5]));
-				break;
-            case EN_007: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[6]));
-				break;
-			default:
-			break;
-			}
-		}
+                    break;
+                case TH_002: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[1]));
+                    break;
+                case TH_003: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[2]));
+                    break;
+                case TH_004: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[3]));
+                    break;
+                case TH_005: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[4]));
+                    break;
+                case TH_006: StartCoroutine(this.PlayGreetingAudioClip(th_greeting_clip[5]));
+                    break;
+                case EN_001: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[0]));
+                    break;
+                case EN_002: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[1]));
+                    break;
+                case EN_003: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[2]));
+                    break;
+                case EN_004: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[3]));
+                    break;
+                case EN_005: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[4]));
+                    break;
+                case EN_006: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[5]));
+                    break;
+                case EN_007: StartCoroutine(this.PlayGreetingAudioClip(en_greeting_clip[6]));
+                    break;
+                default:
+                    break;
+            }
+
+            #endregion
+        }
         else if (currentGamePlayState == GamePlayState.Ordering)
         {
+            #region <@-- GamePlayState.Ordering.
+
             if (nameInput == GoodDataStore.FoodMenuList.Octopus_sushi.ToString())
                 audioDescribe.PlayOnecWithOutStop(audioDescriptionData.merchandiseNameDescribes[(int)GoodDataStore.FoodMenuList.Octopus_sushi]);
             else if (nameInput == GoodDataStore.FoodMenuList.Tempura.ToString())
@@ -1030,16 +1046,37 @@ public class SushiShop : Mz_BaseScene {
 				   nameInput == SushiProduction.Sweetened_egg_sushi_face)
 				{
 					sushiProduction.OnInput(ref nameInput);
+                    return;
 				}
 				else if(nameInput == SushiProduction.SushiIngredientTray || nameInput == SushiProduction.ClosePopup || 
 					nameInput == SushiProduction.BucketOfRice || nameInput == SushiProduction.Alga ||
 					nameInput == SushiProduction.PicklingCucumber || nameInput == SushiProduction.OrangeSpawn || nameInput == SushiProduction.RedSpawn) 
 				{
 					sushiProduction.OnInput(ref nameInput);
+                    return;
 				}
-				else if(nameInput == "HotSoupTank") {
-					
-				}
+                else if (nameInput == BeltMachineBeh.BeltMachineObjectName) {
+                    beltMachine.HandleOnInput(ref nameInput);
+                    currentGamePlayState = GamePlayState.PreparingFood;
+                    return;
+                }
+            }
+
+            #endregion
+        }
+        else if (currentGamePlayState == GamePlayState.PreparingFood) {
+            if (nameInput == BeltMachineBeh.CloseButtonName) {
+                beltMachine.DeActiveBeltMachinePopup();
+                return;
+            }
+            else if (nameInput == BeltMachineBeh.Ramen_UI || nameInput == BeltMachineBeh.CurryWithRice_UI || nameInput == BeltMachineBeh.Tempura_UI ||
+                nameInput == BeltMachineBeh.YakiSoba_UI || nameInput == BeltMachineBeh.ZaruSoba_UI) {
+                    beltMachine.HandleOnInput(ref nameInput);
+                return;
+            }
+            else if (nameInput == BeltMachineBeh.BeltMachineObjectName) {
+                beltMachine.HandleOnInput(ref nameInput);
+                return;
             }
         }
 	}
@@ -1260,11 +1297,14 @@ public class SushiShop : Mz_BaseScene {
     private void PreparingToCloseShop()
     {
         this.OnDispose();
-
-        iTween.MoveTo(rollingDoor_Obj, iTween.Hash("position", new Vector3(0, 0, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeOutSine,
-            "oncomplete", "RollingDoor_close", "oncompletetarget", this.gameObject));
+		
+        iTween.MoveTo(slidingDoorLeft, iTween.Hash("position", new Vector3(-89f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
+        iTween.MoveTo(slidingDoorRight, iTween.Hash("position", new Vector3(89f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine,
+			"oncomplete", "RollingDoor_close", "oncompletetarget", this.gameObject));
+		
 		audioEffect.PlayOnecWithOutStop(base.soundEffect_clips[0]);
-        rollingDoor_Obj.SetActiveRecursively(true);
+        slidingDoorLeft.SetActiveRecursively(true);
+		slidingDoorRight.SetActiveRecursively(true);
     }
 	
     private void RollingDoor_close() {

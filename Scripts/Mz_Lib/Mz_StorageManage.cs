@@ -28,6 +28,7 @@ public class Mz_StorageManage : MonoBehaviour
 
     public static int TK_clothe_id = 255;
     public static int TK_hat_id = 255;
+    public static int Pet_id = 0;
 
 	/// <summary>
 	/// Storage data key.
