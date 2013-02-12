@@ -181,9 +181,9 @@ public class Mz_BaseScene : MonoBehaviour {
     
     /// <summary>
     /// Virtual method. Used to generate game effect at runtime.
-    /// Override this and implement your derived class. 
+    /// Override this and implement your derived class.
     /// </summary>
-	protected virtual void InitializeGameEffectGenerator() {}
+	protected virtual void InitializeGameEffectGenerator() { }
 	
 	// Update is called once per frame
 	protected virtual void Update ()

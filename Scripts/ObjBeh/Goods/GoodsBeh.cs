@@ -4,7 +4,9 @@ using System.Collections;
 
 public class GoodsBeh : ObjectsBeh {    
     public const string ClassName = "GoodsBeh";
-    
+
+    protected SushiShop sceneManager;
+
     public Vector3 offsetPos;	
 	string animationName_001 = string.Empty;
 	string animationName_002 = string.Empty;
@@ -25,17 +27,25 @@ public class GoodsBeh : ObjectsBeh {
 	}
 	
 	//<!-- Put goods objects intance on food tray.
-	public event System.EventHandler putObjectOnTray_Event;
-	protected void OnPutOnTray_event (System.EventArgs eventArgs) {
-		if (putObjectOnTray_Event != null) {
-			putObjectOnTray_Event (this, eventArgs);
+    public class PutGoodsToTrayEventArgs : EventArgs
+    {
+//        public GoodsBeh food;
+        public GameObject foodInstance;
+    };
+	private event EventHandler<PutGoodsToTrayEventArgs> putObjectOnTray_Event;
+    internal EventHandler<PutGoodsToTrayEventArgs> GoodsBeh_putObjectOnTray_Event;
+	protected void OnPutOnTray_event (PutGoodsToTrayEventArgs e) {
+		if (putObjectOnTray_Event != null) 
+        {
+			putObjectOnTray_Event (this, e);
+
             Debug.Log(putObjectOnTray_Event + ":: OnPutOnTray_event : " + this.name);
 
             if(MainMenu._HasNewGameEvent)
                 sceneManager.CheckingGoodsObjInTray("newgame_event");
 		}
 	}
-    
+
 	protected override void ImplementDraggableObject ()
 	{
 		base.ImplementDraggableObject ();
@@ -46,9 +56,9 @@ public class GoodsBeh : ObjectsBeh {
 		
 		if(Physics.Raycast(cursorRay, out hit)) 
         {
-			if(hit.collider.name == sceneManager.bin_behavior_obj.name) {			
+			if(hit.collider.name == sceneManager.binBeh.name) {			
 				if(this._isDropObject == true) {
-					sceneManager.bin_behavior_obj.PlayOpenAnimation();
+                    sceneManager.binBeh.PlayOpenAnimation();
                     this.OnDispose();
                     OnDestroyObject_event(System.EventArgs.Empty);
 				}
@@ -61,7 +71,7 @@ public class GoodsBeh : ObjectsBeh {
 					this._isWaitFotIngredient = false;
 					this.waitForIngredientEvent -= this.Handle_waitForIngredientEvent;
 
-                    OnPutOnTray_event(System.EventArgs.Empty);
+                    OnPutOnTray_event(new PutGoodsToTrayEventArgs() { foodInstance = this.gameObject });
                 }
             }
         	else {
@@ -100,6 +110,20 @@ public class GoodsBeh : ObjectsBeh {
 			animatedSprite.animationCompleteDelegate -= animationCompleteDelegate;
 		}
 	}
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        sceneManager = baseScene.GetComponent<SushiShop>();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        putObjectOnTray_Event += new EventHandler<PutGoodsToTrayEventArgs>(GoodsBeh_putObjectOnTray_Event);
+    }
 
 	/// <!-- OnInput Events.
 	protected override void OnTouchDown ()

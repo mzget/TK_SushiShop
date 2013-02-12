@@ -4,7 +4,6 @@ using System.Collections;
 public class ObjectsBeh : Base_ObjectBeh {
 
 	protected Mz_BaseScene baseScene;    
-	protected SushiShop sceneManager;
 	internal tk2dSprite sprite;
     internal tk2dAnimatedSprite animatedSprite;
 
@@ -17,7 +16,7 @@ public class ObjectsBeh : Base_ObjectBeh {
     /// <summary>
     /// destroyObj_Event.
     /// </summary>	
-	public event System.EventHandler destroyObj_Event;
+	private event System.EventHandler destroyObj_Event;
     protected void OnDestroyObject_event(System.EventArgs e) {
         if (destroyObj_Event != null)
         {
@@ -25,12 +24,17 @@ public class ObjectsBeh : Base_ObjectBeh {
             Debug.Log(destroyObj_Event + ": destroyObj_Event : " + this.name);
         }
     }
+    internal System.EventHandler ObjectsBeh_destroyObj_Event;
     protected void Base_Handle_destroyObj_Event(object sender, System.EventArgs e)
     {
         Destroy(this.gameObject);
     }
 
-	protected virtual void Awake() {
+    protected virtual void Awake()
+    {
+        GameObject sceneObj = GameObject.FindGameObjectWithTag("GameController");
+        baseScene = sceneObj.GetComponent<Mz_BaseScene>();
+
 		try {
 			sprite = this.gameObject.GetComponent<tk2dSprite>();
 			animatedSprite = this.gameObject.GetComponent<tk2dAnimatedSprite>();
@@ -39,9 +43,8 @@ public class ObjectsBeh : Base_ObjectBeh {
 	}
 	
 	// Use this for initialization
-	protected virtual void Start () {		
-        baseScene = GameObject.FindGameObjectWithTag("GameController").GetComponent<Mz_BaseScene>();
-        sceneManager = baseScene as SushiShop;
+	protected virtual void Start () {
+        destroyObj_Event += new System.EventHandler(ObjectsBeh_destroyObj_Event);
 
 		this.originalPosition = this.transform.position;
 	}
@@ -68,8 +71,9 @@ public class ObjectsBeh : Base_ObjectBeh {
 			if(_isDraggable) {
 				this.ImplementDraggableObject();
 			}
-			
-			if(sceneManager.touch.phase == TouchPhase.Ended || sceneManager.touch.phase == TouchPhase.Canceled) {			
+
+            if (baseScene.touch.phase == TouchPhase.Ended || baseScene.touch.phase == TouchPhase.Canceled)
+            {			
 				if(this._isDraggable)
 					_isDropObject = true;
 			}

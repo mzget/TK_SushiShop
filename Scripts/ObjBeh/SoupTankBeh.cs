@@ -8,11 +8,14 @@ public class SoupTankBeh : ObjectsBeh {
     private tk2dAnimatedSprite animatedInstance;
     private GoodsBeh soup;
     private Vector3 instancePosition = new Vector3(-110f, 34f, 0f);
+    private FoodTrayBeh foodTrayBeh;
 
 	// Use this for initialization
     protected override void Start()
     {
         base.Start();
+
+        foodTrayBeh = baseScene.GetComponent<SushiShop>().foodTrayBeh;
     }
 	
 	// Update is called once per frame
@@ -23,7 +26,7 @@ public class SoupTankBeh : ObjectsBeh {
 
     protected override void OnTouchDown()
     {
-        if (soup_instance == null)
+        if (soup_instance == null && soup == null)
         {
             soup_instance = Instantiate(Resources.Load(PATH_OF_SOUP_INSTANCE, typeof(GameObject))) as GameObject;
             soup_instance.transform.position = instancePosition;
@@ -33,25 +36,24 @@ public class SoupTankBeh : ObjectsBeh {
             animatedInstance.Play();
 
             soup = soup_instance.GetComponent<GoodsBeh>();
+			soup.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
+			soup.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;
 
             animatedInstance.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
             {
                 soup._canDragaable = true;
-                soup.originalPosition = instancePosition;
-                soup.putObjectOnTray_Event += Handle_putObjectOnTray_Event;
-                soup.destroyObj_Event += Handle_destroyObj_Event;
             };
         }
 
         base.OnTouchDown();
     }
 
-    void Handle_putObjectOnTray_Event(object sender, System.EventArgs e) {
+    void Handle_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e) {
         GoodsBeh obj = sender as GoodsBeh;
-        if (sceneManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && sceneManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (foodTrayBeh.goodsOnTray_List.Contains(obj) == false && foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            sceneManager.foodTrayBeh.goodsOnTray_List.Add(obj);
-            sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+            foodTrayBeh.goodsOnTray_List.Add(obj);
+            foodTrayBeh.ReCalculatatePositionOfGoods();
 
             //<!-- Setting original position.
             obj.originalPosition = obj.transform.position;
@@ -68,7 +70,7 @@ public class SoupTankBeh : ObjectsBeh {
     }
 
     void Handle_destroyObj_Event(object sender, System.EventArgs e) {
-        sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+        foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
+        foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 }

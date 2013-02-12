@@ -57,7 +57,7 @@ public class SushiShop : Mz_BaseScene {
 	private const string EN_007 = "EN_007";
 	
 	//<!-- Miscellaneous game objects.	
-	public BinBeh bin_behavior_obj;
+	public BinBeh binBeh;
 	public GameObject foodsTray_obj;
 	internal FoodTrayBeh foodTrayBeh;
     public GameObject calculator_group_instance;
@@ -84,6 +84,7 @@ public class SushiShop : Mz_BaseScene {
 
     private SushiProduction sushiProduction;
     public BeltMachineBeh beltMachine;
+    private InstantFoodManager instantfoodManager = null;
 	private Mz_CalculatorBeh calculatorBeh;
     private GameObject cash_obj;
 	private tk2dSprite cash_sprite;
@@ -131,37 +132,47 @@ public class SushiShop : Mz_BaseScene {
 	
 	
 	// Use this for initialization
-	IEnumerator Start () {		
-		Mz_ResizeScale.ResizingScale(shop_background);
-		this.sushiProduction = this.GetComponent<SushiProduction>();
-		
+	IEnumerator Start () {				
         yield return StartCoroutine(this.InitailizeSceneObject());
-		
+
         this.OpenShop();
+        close_button.active = true;
 	}
 
     private IEnumerator InitailizeSceneObject()
     {
-//		Mz_ResizeScale.ResizingScale(bakeryShop_backgroup_group.transform);
-		choppingBlock_sprite.spriteId = choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
-		
+        Mz_ResizeScale.ResizingScale(shop_background);
+        foodTrayBeh = new FoodTrayBeh();
+        goodDataStore = new GoodDataStore();
+        calculator_group_instance.SetActiveRecursively(false);
+        sushiProduction = this.GetComponent<SushiProduction>();
+        instantfoodManager = this.GetComponent<InstantFoodManager>();
+		choppingBlock_sprite.spriteId = choppingBlock_sprite.GetSpriteIdByName("choppingBlock");		
+
+        StartCoroutine_Auto(this.Externalfactor());
+
+        // Debug can sell list.
+        StartCoroutine_Auto(this.InitializeCanSellGoodslist());
+        Debug.Log("CanSellGoodLists.Count : " + CanSellGoodLists.Count + " :: " + "NumberOfCansellItem.Count : " + NumberOfCansellItem.Count);
+        yield return StartCoroutine_Auto(this.CreateInstantFoodObject());
+    }
+
+    private IEnumerator Externalfactor()
+    {
         StartCoroutine(this.ChangeShopLogoIcon());
         StartCoroutine(this.InitailizeShopLabelGUI());
         StartCoroutine(this.InitializeGameEffect());
         StartCoroutine(this.SceneInitializeAudio());
         StartCoroutine(this.InitializeObjectAnimation());
 
-        yield return null;
+        yield return 0;
+    }
 
-		foodTrayBeh = new FoodTrayBeh();
-        goodDataStore = new GoodDataStore();        
-        calculator_group_instance.SetActiveRecursively(false);
+    private IEnumerator CreateInstantFoodObject()
+    {
+        StartCoroutine_Auto(instantfoodManager.Create_InstantFoodObject());
 
-        // Debug can sell list.
-        StartCoroutine(this.InitializeCanSellGoodslist());
-		Debug.Log("CanSellGoodLists.Count : " + CanSellGoodLists.Count + " :: " + "NumberOfCansellItem.Count : " + NumberOfCansellItem.Count);
-		
-		close_button.active = true;
+        yield return 0;
     }
 
     private void OpenShop() 

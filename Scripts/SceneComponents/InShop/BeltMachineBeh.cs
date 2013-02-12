@@ -11,8 +11,9 @@ public class BeltMachineBeh : ObjectsBeh
     public const string CurryWithRice_UI = "CurryWithRice_UI";
     public const string Tempura_UI = "Tempura_UI";
     public const string YakiSoba_UI = "YakiSoba_UI";
-    public const string ZaruSoba_UI = "ZaruSoba_UI";	
-	
+    public const string ZaruSoba_UI = "ZaruSoba_UI";
+    
+    private SushiShop sceneManager;
     public GameObject beltMachinePopup_obj;
     public Transform ramen_transform;
     public Transform curryWithRice_transform;
@@ -32,6 +33,8 @@ public class BeltMachineBeh : ObjectsBeh
 	protected override void Start ()
 	{
 		base.Start ();
+
+        sceneManager = baseScene.GetComponent<SushiShop>();
 		
         beltMachinePopup_obj.transform.localScale = Vector3.one * 0.4f;
         beltMachinePopup_obj.SetActiveRecursively(false);
@@ -93,8 +96,8 @@ public class BeltMachineBeh : ObjectsBeh
             food = foodInstance.GetComponent<GoodsBeh>();
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
-            food.putObjectOnTray_Event += new System.EventHandler(food_putObjectOnTray_Event);
-            food.destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event = new System.EventHandler(food_destroyObj_Event);
         }
         else if (nameInput == CurryWithRice_UI)
         {
@@ -109,8 +112,8 @@ public class BeltMachineBeh : ObjectsBeh
             food = foodInstance.GetComponent<GoodsBeh>();
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
-            food.putObjectOnTray_Event += new System.EventHandler(food_putObjectOnTray_Event);
-            food.destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
         }
         else if (nameInput == Tempura_UI)
         {
@@ -125,8 +128,8 @@ public class BeltMachineBeh : ObjectsBeh
             food = foodInstance.GetComponent<GoodsBeh>();
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
-            food.putObjectOnTray_Event += new System.EventHandler(food_putObjectOnTray_Event);
-            food.destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
         }
         else if (nameInput == YakiSoba_UI)
         {
@@ -141,8 +144,8 @@ public class BeltMachineBeh : ObjectsBeh
             food = foodInstance.GetComponent<GoodsBeh>();
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
-            food.putObjectOnTray_Event += new System.EventHandler(food_putObjectOnTray_Event);
-            food.destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
         }
         else if (nameInput == ZaruSoba_UI)
         {
@@ -157,8 +160,8 @@ public class BeltMachineBeh : ObjectsBeh
             food = foodInstance.GetComponent<GoodsBeh>();
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
-            food.putObjectOnTray_Event += new System.EventHandler(food_putObjectOnTray_Event);
-            food.destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
         }
 	}
 
@@ -167,7 +170,7 @@ public class BeltMachineBeh : ObjectsBeh
         sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 
-    private void food_putObjectOnTray_Event(object sender, System.EventArgs e) {
+    private void food_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e) {
         GoodsBeh obj = sender as GoodsBeh;
         if (sceneManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && sceneManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {

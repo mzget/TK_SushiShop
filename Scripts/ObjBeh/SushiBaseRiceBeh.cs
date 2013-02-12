@@ -3,13 +3,16 @@ using System.Collections;
 
 public class SushiBaseRiceBeh : ObjectsBeh {
 
+    private BinBeh bin_behavior_obj;
 
 	// Use this for initialization
 	protected override void Start ()
 	{
 		base.Start ();
 
-        base.destroyObj_Event += new System.EventHandler(Base_Handle_destroyObj_Event);
+        bin_behavior_obj = base.baseScene.GetComponent<SushiShop>().binBeh;
+
+        base.ObjectsBeh_destroyObj_Event += new System.EventHandler(Base_Handle_destroyObj_Event);
 	}
 	
 	// Update is called once per frame
@@ -28,11 +31,11 @@ public class SushiBaseRiceBeh : ObjectsBeh {
 
         if (Physics.Raycast(cursorRay, out hit))
         {
-            if (hit.collider.name == sceneManager.bin_behavior_obj.name)
+            if (hit.collider.name == bin_behavior_obj.name)
             {
                 if (this._isDropObject == true)
                 {
-                    sceneManager.bin_behavior_obj.PlayOpenAnimation();
+                    bin_behavior_obj.PlayOpenAnimation();
                     this.OnDispose();
                     OnDestroyObject_event(System.EventArgs.Empty);
                 }

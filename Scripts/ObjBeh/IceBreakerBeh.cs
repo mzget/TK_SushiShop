@@ -9,6 +9,7 @@ public class IceBreakerBeh : ObjectsBeh
     private tk2dAnimatedSprite animatedInstance;
     private GoodsBeh food;
     private Vector3 instancePosition = new Vector3(-60f, 30f, 0f);
+    private FoodTrayBeh foodTrayBeh;
 
 
 	// Use this for initialization
@@ -21,11 +22,14 @@ public class IceBreakerBeh : ObjectsBeh
     protected override void Update()
     {
         base.Update();
+		
+		if(foodTrayBeh == null)
+			foodTrayBeh = baseScene.GetComponent<SushiShop>().foodTrayBeh;
     }
 
     protected override void OnTouchDown()
     {
-        if (instance == null)
+        if (instance == null && food == null)
         {
             instance = Instantiate(Resources.Load(PATH_OF_ICEDJAM_INSTANCE, typeof(GameObject))) as GameObject;
             instance.transform.position = instancePosition;
@@ -35,25 +39,24 @@ public class IceBreakerBeh : ObjectsBeh
             animatedInstance.Play();
 
             food = instance.GetComponent<GoodsBeh>();
+            food.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
+            food.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;
 
             animatedInstance.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
             {
                 food._canDragaable = true;
-                food.originalPosition = instancePosition;
-                food.putObjectOnTray_Event += Handle_putObjectOnTray_Event;
-                food.destroyObj_Event += Handle_destroyObj_Event;
             };
         }
      
         base.OnTouchDown();
     }
 
-    private void Handle_putObjectOnTray_Event(object sender, System.EventArgs e) {
+    private void Handle_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e) {
         GoodsBeh obj = sender as GoodsBeh;
-        if (sceneManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && sceneManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (foodTrayBeh.goodsOnTray_List.Contains(obj) == false && foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            sceneManager.foodTrayBeh.goodsOnTray_List.Add(obj);
-            sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+            foodTrayBeh.goodsOnTray_List.Add(obj);
+            foodTrayBeh.ReCalculatatePositionOfGoods();
 
             //<!-- Setting original position.
             obj.originalPosition = obj.transform.position;
@@ -70,7 +73,7 @@ public class IceBreakerBeh : ObjectsBeh
     }
 
     private void Handle_destroyObj_Event(object sender, System.EventArgs e) {
-        sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+        foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
+        foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 }

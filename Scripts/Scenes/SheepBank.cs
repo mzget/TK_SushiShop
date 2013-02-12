@@ -234,9 +234,10 @@ public class SheepBank : Mz_BaseScene {
 		
 		yield return 0;
     }
+	
 	protected override void InitializeGameEffectGenerator ()
 	{
-//		base.InitializeGameEffectGenerator ();
+		base.InitializeGameEffectGenerator ();
 
 		this.gameObject.AddComponent<GameEffectManager>();
 		base.gameEffectManager = this.gameObject.GetComponent<GameEffectManager>();

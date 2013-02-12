@@ -50,11 +50,14 @@ public class SushiProduction : ObjectsBeh {
     private Vector3 sushiRice_Pos = new Vector3(0, -44f, -1f);
 	internal GameObject sushi_rice_solution;
     internal SushiBeh sushiBeh;
+    private SushiShop sceneManager;
 
 	// Use this for initialization
     protected override void Start()
     {
         base.Start();
+
+        sceneManager = baseScene.GetComponent<SushiShop>();
 
         this.sushiPopup.gameObject.SetActiveRecursively(false);
     }
@@ -146,8 +149,8 @@ public class SushiProduction : ObjectsBeh {
 						
 						sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
 						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString());
-						sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-						sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+						sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 
 						this.currentProductionState = ProductionState.CompleteProduction;
 					};
@@ -178,8 +181,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
@@ -208,8 +211,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = maki_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Roe_maki.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
@@ -242,8 +245,8 @@ public class SushiProduction : ObjectsBeh {
 
 		                sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
 						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Crab_sushi.ToString());
-		                sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-		                sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+		                sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 					};
 				}
 			}
@@ -279,8 +282,8 @@ public class SushiProduction : ObjectsBeh {
 
 		                sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
 						sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Eel_sushi.ToString());
-		                sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-		                sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+		                sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 					};
 				}
 			}
@@ -319,8 +322,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -359,8 +362,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Octopus_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -399,8 +402,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -439,8 +442,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Salmon_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -479,8 +482,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -519,8 +522,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
@@ -559,8 +562,8 @@ public class SushiProduction : ObjectsBeh {
 
                         sushiBeh = sushi_product_obj.GetComponent<SushiBeh>();
                         sushiBeh.sprite.spriteId = sushiBeh.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString());
-                        sushiBeh.putObjectOnTray_Event += Handle_SushiBeh_putObjectOnTray_Event;
-                        sushiBeh.destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushiBeh.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
+                        sushiBeh.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
                 }
             }
