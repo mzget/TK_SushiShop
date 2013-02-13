@@ -74,7 +74,8 @@ public class IceTeaTankBeh : ObjectsBeh {
     }
 
     void Handle_destroyObj_Event(object sender, System.EventArgs e)
-    {
-		
+    {		
+		foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
+		foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 }

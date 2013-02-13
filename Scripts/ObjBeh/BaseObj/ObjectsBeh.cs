@@ -25,15 +25,13 @@ public class ObjectsBeh : Base_ObjectBeh {
         }
     }
     internal System.EventHandler ObjectsBeh_destroyObj_Event;
-    protected void Base_Handle_destroyObj_Event(object sender, System.EventArgs e)
-    {
-        Destroy(this.gameObject);
-    }
 
     protected virtual void Awake()
     {
         GameObject sceneObj = GameObject.FindGameObjectWithTag("GameController");
         baseScene = sceneObj.GetComponent<Mz_BaseScene>();
+
+		this.originalPosition = this.transform.position;
 
 		try {
 			sprite = this.gameObject.GetComponent<tk2dSprite>();
@@ -45,8 +43,6 @@ public class ObjectsBeh : Base_ObjectBeh {
 	// Use this for initialization
 	protected virtual void Start () {
         destroyObj_Event += new System.EventHandler(ObjectsBeh_destroyObj_Event);
-
-		this.originalPosition = this.transform.position;
 	}
 	
 	protected virtual void ImplementDraggableObject() {

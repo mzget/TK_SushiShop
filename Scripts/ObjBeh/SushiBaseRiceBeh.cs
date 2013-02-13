@@ -5,14 +5,22 @@ public class SushiBaseRiceBeh : ObjectsBeh {
 
     private BinBeh bin_behavior_obj;
 
+
+	protected override void Awake ()
+	{
+		base.Awake ();
+
+		ObjectsBeh_destroyObj_Event = delegate(object sender, System.EventArgs e) {
+			Destroy(this.gameObject);
+		};
+	}
+
 	// Use this for initialization
 	protected override void Start ()
 	{
 		base.Start ();
 
-        bin_behavior_obj = base.baseScene.GetComponent<SushiShop>().binBeh;
-
-        base.ObjectsBeh_destroyObj_Event += new System.EventHandler(Base_Handle_destroyObj_Event);
+        bin_behavior_obj = base.baseScene.GetComponent<SushiShop>().binBeh;        
 	}
 	
 	// Update is called once per frame

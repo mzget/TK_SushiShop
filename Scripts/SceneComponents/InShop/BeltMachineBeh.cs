@@ -43,7 +43,7 @@ public class BeltMachineBeh : ObjectsBeh
         scaleUp_hash.Add("time", 1f);
 
         scaleDown_hash.Add("scale", Vector3.one * 0.4f);
-        scaleDown_hash.Add("time", 1f);
+        scaleDown_hash.Add("time", 0.5f);
         scaleDown_hash.Add("easetype", iTween.EaseType.easeInSine);
         scaleDown_hash.Add("oncompletetarget", this.gameObject);
         scaleDown_hash.Add("oncomplete", OnScaleDownComplete);

@@ -59,7 +59,7 @@ public class SushiShop : Mz_BaseScene {
 	//<!-- Miscellaneous game objects.	
 	public BinBeh binBeh;
 	public GameObject foodsTray_obj;
-	internal FoodTrayBeh foodTrayBeh;
+    internal FoodTrayBeh foodTrayBeh;
     public GameObject calculator_group_instance;
     public GameObject receiptGUIForm_groupObj;
     public GameObject giveTheChangeGUIForm_groupObj;
@@ -82,8 +82,9 @@ public class SushiShop : Mz_BaseScene {
 	private const string BASE_ORDER_ITEM_COMPLETE = "Order_BaseItem_complete";
     public tk2dSprite[] arr_orderingItems = new tk2dSprite[3];
 
-    private SushiProduction sushiProduction;
     public BeltMachineBeh beltMachine;
+    public ManualBeh manualManager;
+    private SushiProduction sushiProduction;
     private InstantFoodManager instantfoodManager = null;
 	private Mz_CalculatorBeh calculatorBeh;
     private GameObject cash_obj;
@@ -101,6 +102,7 @@ public class SushiShop : Mz_BaseScene {
 		giveTheChange, 
 		TradeComplete,
         PreparingFood,
+        DisplayCookbook,
 	};
     public GamePlayState currentGamePlayState;
 
@@ -1071,11 +1073,19 @@ public class SushiShop : Mz_BaseScene {
                     currentGamePlayState = GamePlayState.PreparingFood;
                     return;
                 }
+                else if (nameInput == manualManager.name) {
+                    currentGamePlayState = GamePlayState.DisplayCookbook;
+                    this.manualManager.OnActiveCookbook();
+                    return;
+                }
             }
 
             #endregion
         }
-        else if (currentGamePlayState == GamePlayState.PreparingFood) {
+        else if (currentGamePlayState == GamePlayState.PreparingFood)
+        {
+            #region <!-- GamePlayState.PreparingFood.
+
             if (nameInput == BeltMachineBeh.CloseButtonName) {
                 beltMachine.DeActiveBeltMachinePopup();
                 return;
@@ -1089,6 +1099,11 @@ public class SushiShop : Mz_BaseScene {
                 beltMachine.HandleOnInput(ref nameInput);
                 return;
             }
+
+            #endregion
+        }
+        else if (currentGamePlayState == GamePlayState.DisplayCookbook) {
+            manualManager.Handle_onInput(ref nameInput);
         }
 	}
 
