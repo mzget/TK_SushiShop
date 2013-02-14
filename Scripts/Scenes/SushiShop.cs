@@ -106,6 +106,15 @@ public class SushiShop : Mz_BaseScene {
 	};
     public GamePlayState currentGamePlayState;
 
+	public GameObject soupTank_obj;
+	public GameObject icedBreaker_obj;
+	public GameObject icecreamTank_obj;
+	public GameObject icedTeaTank_obj;
+	public GameObject beltMachine_obj;
+	public GameObject pickles;
+	public GameObject flyingFishRoe;
+	public GameObject roe;
+
 	#region <!-- Customer data group.
 
     public GameObject customerMenu_group_Obj;
@@ -151,7 +160,7 @@ public class SushiShop : Mz_BaseScene {
         instantfoodManager = this.GetComponent<InstantFoodManager>();
 		choppingBlock_sprite.spriteId = choppingBlock_sprite.GetSpriteIdByName("choppingBlock");		
 
-        StartCoroutine_Auto(this.Externalfactor());
+        StartCoroutine_Auto(this.InitializeExternalfactor());
 
         // Debug can sell list.
         StartCoroutine_Auto(this.InitializeCanSellGoodslist());
@@ -159,7 +168,7 @@ public class SushiShop : Mz_BaseScene {
         yield return StartCoroutine_Auto(this.CreateInstantFoodObject());
     }
 
-    private IEnumerator Externalfactor()
+    private IEnumerator InitializeExternalfactor()
     {
         StartCoroutine(this.ChangeShopLogoIcon());
         StartCoroutine(this.InitailizeShopLabelGUI());
@@ -299,6 +308,76 @@ public class SushiShop : Mz_BaseScene {
             yield return null;
     }
 
+	IEnumerator ChangeShopLogoIcon ()
+	{
+		shopLogo_sprite.spriteId = shopLogo_sprite.GetSpriteIdByName(InitializeNewShop.shopLogo_NameSpecify[Mz_StorageManage.ShopLogo]);
+		shopLogo_sprite.color = InitializeNewShop.shopLogos_Color[Mz_StorageManage.ShopLogoColor];
+		
+		yield return 0;
+	}
+	
+	IEnumerator InitailizeShopLabelGUI ()
+	{		
+		if(Mz_StorageManage.Username != string.Empty) {
+			base.shopnameTextmesh.text = Mz_StorageManage.ShopName;
+			base.shopnameTextmesh.Commit();
+			
+			base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
+			base.availableMoney.Commit();
+		}
+		yield return null;
+	}
+	
+	IEnumerator InitializeObjectAnimation ()
+	{
+		billingMachine_animState = billingMachine.animation["billingMachine_anim"];
+		billingMachine_animState.wrapMode = WrapMode.Once;
+		billingAnimatedSprite = billingMachine.GetComponent<tk2dAnimatedSprite>();
+		
+		yield return 0;
+	}
+	
+	private IEnumerator InitializeCanSellGoodslist()
+	{
+		if(Mz_StorageManage.Username == string.Empty) {
+			SushiShop.NumberOfCansellItem.Clear();
+			for (int i = 0; i < GoodDataStore.FoodDatabaseCapacity; i++)
+			{
+				SushiShop.NumberOfCansellItem.Add(i);
+			}
+			base.extendsStorageManager.SaveCanSellGoodListData();
+		}
+		
+		if(SushiShop.NumberOfCansellItem.Count == 0)
+			base.extendsStorageManager.LoadCanSellGoodsListData();		
+		
+		yield return new WaitForFixedUpdate();
+		
+		foreach (int id in NumberOfCansellItem)
+		{
+			CanSellGoodLists.Add(goodDataStore.FoodDatabase_list[id]);
+		}
+
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Miso_soup)) {
+			soupTank_obj.gameObject.SetActiveRecursively(true);
+		}
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Bean_ice_jam_on_crunching)) {
+			icedBreaker_obj.gameObject.SetActiveRecursively(true);
+		}
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.GreenTea_icecream)) {
+			icecreamTank_obj.gameObject.SetActiveRecursively(true);
+		}
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Iced_greenTea)) {
+			icedTeaTank_obj.gameObject.SetActiveRecursively(true);
+		}
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki))
+			pickles.SetActiveRecursively(true);
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Prawn_brown_maki))
+			flyingFishRoe.SetActiveRecursively(true);
+		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Roe_maki)) 
+			roe.SetActiveRecursively(true);
+	}
+
 	#region <!-- Tutor systems.
 	
 	void CreateTutorObjectAtRuntime ()
@@ -424,56 +503,6 @@ public class SushiShop : Mz_BaseScene {
     }
 
 	#endregion
-
-	IEnumerator ChangeShopLogoIcon ()
-	{
-		shopLogo_sprite.spriteId = shopLogo_sprite.GetSpriteIdByName(InitializeNewShop.shopLogo_NameSpecify[Mz_StorageManage.ShopLogo]);
-		shopLogo_sprite.color = InitializeNewShop.shopLogos_Color[Mz_StorageManage.ShopLogoColor];
-
-		yield return 0;
-	}
-
-	IEnumerator InitailizeShopLabelGUI ()
-	{		
-		if(Mz_StorageManage.Username != string.Empty) {
-			base.shopnameTextmesh.text = Mz_StorageManage.ShopName;
-			base.shopnameTextmesh.Commit();
-
-			base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-			base.availableMoney.Commit();
-		}
-		yield return null;
-	}
-
-	IEnumerator InitializeObjectAnimation ()
-	{
-        billingMachine_animState = billingMachine.animation["billingMachine_anim"];
-        billingMachine_animState.wrapMode = WrapMode.Once;
-        billingAnimatedSprite = billingMachine.GetComponent<tk2dAnimatedSprite>();
-
-		yield return 0;
-	}
-
-    private IEnumerator InitializeCanSellGoodslist()
-    {
-		if(Mz_StorageManage.Username == string.Empty) {
-	        SushiShop.NumberOfCansellItem.Clear();
-            for (int i = 0; i < GoodDataStore.FoodDatabaseCapacity; i++)
-            {
-                SushiShop.NumberOfCansellItem.Add(i);
-            }
-            base.extendsStorageManager.SaveCanSellGoodListData();
-		}
-        if(SushiShop.NumberOfCansellItem.Count == 0)
-            base.extendsStorageManager.LoadCanSellGoodsListData();		
-
-        yield return new WaitForFixedUpdate();
-
-        foreach (int id in NumberOfCansellItem)
-        {
-            CanSellGoodLists.Add(goodDataStore.FoodDatabase_list[id]);
-        }
-    }
 
     #region <!-- Customer manage system.
 
@@ -1038,16 +1067,6 @@ public class SushiShop : Mz_BaseScene {
                         billingMachine.animation.Play(billingMachine_animState.name);
                         StartCoroutine(this.CheckingUNITYAnimationComplete(billingMachine.animation, billingMachine_animState.name));
                         break;
-//                  case "SushiIngredientTray":
-//                        // Create sushi popup creation.
-//					sushiProduction.OnInput(ref nameInput);
-//					break;
-//                    case "ClosePopup":
-//					sushiProduction.OnInput(ref nameInput);
-//					break;
-//                    case "BucketOfRice": 
-//					sushiProduction.OnInput(ref nameInput);
-//					break;
                     default:
                         break;
                 }
@@ -1063,7 +1082,7 @@ public class SushiShop : Mz_BaseScene {
 				}
 				else if(nameInput == SushiProduction.SushiIngredientTray || nameInput == SushiProduction.ClosePopup || 
 					nameInput == SushiProduction.BucketOfRice || nameInput == SushiProduction.Alga ||
-					nameInput == SushiProduction.PicklingCucumber || nameInput == SushiProduction.OrangeSpawn || nameInput == SushiProduction.RedSpawn) 
+					nameInput == SushiProduction.Pickles || nameInput == SushiProduction.FlyingFishRoe || nameInput == SushiProduction.Roe) 
 				{
 					sushiProduction.OnInput(ref nameInput);
                     return;

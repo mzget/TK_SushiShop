@@ -9,10 +9,6 @@ public class SushiBaseRiceBeh : ObjectsBeh {
 	protected override void Awake ()
 	{
 		base.Awake ();
-
-		ObjectsBeh_destroyObj_Event = delegate(object sender, System.EventArgs e) {
-			Destroy(this.gameObject);
-		};
 	}
 
 	// Use this for initialization

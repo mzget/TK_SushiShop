@@ -389,10 +389,7 @@ public class SheepBank : Mz_BaseScene {
 		base.Update ();
 	}
 	
-	private new void OnGUI ()
-	{
-		
-	}
+	private new void OnGUI () {	}
 	
     public override void OnInput (string nameInput)	
 	{

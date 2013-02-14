@@ -37,6 +37,7 @@ public class CaliforniaMakiBar : ObjectsBeh {
 
                 food = instance.GetComponent<GoodsBeh>();
                 food.originalPosition = instancePosition;
+				food.offsetPos = Vector3.up * 4;
                 food._canDragaable = true;
                 food.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
                 food.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;

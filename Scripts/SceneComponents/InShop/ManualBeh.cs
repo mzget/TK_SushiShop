@@ -9,6 +9,7 @@ public class ManualBeh : ObjectsBeh {
     };
 
     public GameObject manualCookbook;
+	private tk2dAnimatedSprite cookbook_animatedSprite;
     public tk2dSprite form_0;
     public tk2dSprite form_1;
     public tk2dSprite form_2;
@@ -23,6 +24,8 @@ public class ManualBeh : ObjectsBeh {
     protected override void Start()
     {
         base.Start();
+
+        cookbook_animatedSprite = manualCookbook.GetComponent<tk2dAnimatedSprite>();
     }
 	
 	// Update is called once per frame
@@ -57,30 +60,46 @@ public class ManualBeh : ObjectsBeh {
         cookbookPage_textmesh.text = displayId + "/" + MaxPageNumber;
         cookbookPage_textmesh.Commit();
     }
+	
+	private void ActivateCookbookFormOrder(bool p_active) {
+		form_0.gameObject.active = p_active;
+		form_1.gameObject.active = p_active;
+		form_2.gameObject.active = p_active;
+	}
 
     internal void Handle_onInput(ref string nameInput)
     {
         if (nameInput == "Previous_button") {
-            if (currentPage_id > 0)
-            {
-                currentPage_id--;
-                Setting_CookbookOrder();
-            }
-            else {
-                currentPage_id = MaxPageNumber - 1;
-                Setting_CookbookOrder();
-            }
+            cookbook_animatedSprite.Play("Playback");
+            this.ActivateCookbookFormOrder(false);
+            cookbook_animatedSprite.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
+                this.ActivateCookbookFormOrder(true);
+                if (currentPage_id > 0)
+                {
+                    currentPage_id--;
+                    Setting_CookbookOrder();
+                }
+                else
+                {
+                    currentPage_id = MaxPageNumber - 1;
+                    Setting_CookbookOrder();
+                }
+            };
         }
         else if (nameInput == "Next_button") {
-            if (currentPage_id < MaxPageNumber - 1)
-            {
-                currentPage_id++;
-                Setting_CookbookOrder();
-            }
-            else {
-                currentPage_id = 0;
-                Setting_CookbookOrder();
-            }
+			cookbook_animatedSprite.Play("Play");
+            this.ActivateCookbookFormOrder(false);
+            cookbook_animatedSprite.animationCompleteDelegate = (sprite, clipId) => {
+                this.ActivateCookbookFormOrder(true);
+	            if (currentPage_id < MaxPageNumber - 1) {
+	                currentPage_id++;
+	                Setting_CookbookOrder();
+	            }
+	            else {
+	                currentPage_id = 0;
+	                Setting_CookbookOrder();
+	            }
+			};
         }
         else if (nameInput == "Close_button") {
             SushiShop shop = baseScene.GetComponent<SushiShop>();

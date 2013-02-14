@@ -36,6 +36,7 @@ public class SoupTankBeh : ObjectsBeh {
             animatedInstance.Play();
 
             soup = soup_instance.GetComponent<GoodsBeh>();
+			soup.offsetPos = Vector3.up * 4.5f;
 			soup.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
 			soup.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;
 

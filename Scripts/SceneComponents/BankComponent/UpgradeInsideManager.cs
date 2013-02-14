@@ -391,13 +391,13 @@ public class UpgradeInsideManager : MonoBehaviour {
 			
             if(upgradeName == "upgrade_00")
             {
-                #region <@-- "buying : blueberry_jam".
+                #region <@-- "buying : Eel_sushi".
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0,0]) 
 				{
-                    int item_id = (int)GoodDataStore.FoodMenuList.Skipjack_tuna_sushi;
+                    int item_id = (int)GoodDataStore.FoodMenuList.Eel_sushi;
 					if(SushiShop.NumberOfCansellItem.Contains(item_id) == false) {
-                        Debug.Log("buying : blueberry_jam");
+                        Debug.Log("buying : Eel_sushi");
                         currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = item_id, };
                         this.ActiveComfirmationWindow();
 

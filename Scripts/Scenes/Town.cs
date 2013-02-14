@@ -27,6 +27,7 @@ public class Town : Mz_BaseScene {
 	const string MoveCameraToTutorPointComplete_FUNC = "MoveCameraToTutorPointComplete";
 
 	public GameObject town_bg_group;
+	public GameObject backgroup_group_transform;
 	public GameObject movingCloud;
     public GameObject flyingBird_group;
 	public GameObject shop_body_sprite;
@@ -142,37 +143,6 @@ public class Town : Mz_BaseScene {
     }
 
 	// Use this for initialization
-//	void Start ()
-//    {
-//        
-//		
-//		StartCoroutine(this.InitializeAudio());
-//        StartCoroutine(base.InitializeIdentityGUI());
-//
-//        this.upgradeOutsideManager.InitializeDecorationObjects();
-//		if (SheepBank.HaveUpgradeOutSide) {
-//            StartCoroutine(this.ActiveDecorationBar());
-//		}
-//		else
-//			StartCoroutine(this.UnActiveDecorationBar());
-//
-//        iTween.MoveTo(flyingBird_group, iTween.Hash("x", 550f, "time", 24f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.loop));
-//		iTween.MoveTo(movingCloud.gameObject, iTween.Hash("x", -85f, "islocal", true, "time", 20f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
-//
-//        if(MainMenu._HasNewGameEvent == false)
-//            this.Checking_HasNewStartingTruckEvent();
-//        else if(MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide == false) {
-//            plane_darkShadow.active = true;
-//            SheepbankDoor.transform.position += Vector3.back * 10;
-//            this.CreateTutorObjectAtRuntime();
-//        }
-//        else if (MainMenu._HasNewGameEvent && SheepBank.HaveUpgradeOutSide) {           
-//            plane_darkShadow.active = true;
-//            plane_darkShadow.transform.position -= Vector3.forward * 2.5f;
-//            townTutorData.roof_00_button_obj.transform.position -= Vector3.forward * 2;
-//            this.CreateBuyDecoratuionTutorEvent();
-//        }
-//	}	
 	void Start ()
     {
         Mz_ResizeScale.ResizingScale(town_bg_group.transform);
@@ -190,7 +160,7 @@ public class Town : Mz_BaseScene {
       
 		iTween.MoveTo(flyingBird_group, iTween.Hash("x", 550f, "time", 24f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.loop));
 		iTween.MoveTo(movingCloud.gameObject, iTween.Hash("x", -85f, "islocal", true, "time", 20f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
-
+		iTween.MoveTo(backgroup_group_transform, iTween.Hash("y", 64f, "time", 16f, "easetype", iTween.EaseType.linear, "looptype", iTween.LoopType.pingPong));
 
         if(MainMenu._HasNewGameEvent == false) {
          	if(Town.IntroduceGameUI_Event == null) {
