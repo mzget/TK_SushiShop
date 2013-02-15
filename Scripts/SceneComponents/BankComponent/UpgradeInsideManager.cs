@@ -13,16 +13,16 @@ public class UpgradeInsideManager : MonoBehaviour {
     public GameObject confirmationWindow;
 	
     private string[,] firstPage_spriteNames = new string[2, 4] {
-       {"blueberry_jam", "blueberry_cream", "miniCake", "Cake"},
-       {"vanilla_icecream", "tuna_sandwich", "chocolate_chip_cookie", "hotdog"},
+       {"Eel_sushi", "Fatty_tuna_sushi", "Octopus_sushi", "Prawn_sushi"},
+       {"Salmon_sushi", "Skipjack_tuna_sushi", "Spicy_shell_sushi", "Sweetened_egg_sushi"},
     };
     private string[,] secondPage_spriteNames = new string[2, 4] {
-        {"appleJuiceTank", "chocolateMilkTank", "butter_jam", "strawberry_cream"},
-        {"chocolate_icecream", "deep_fried_chicken_sandwich", "fruit_cookie", "orangeJuiceTank"},
+        {"Roe_maki", "Prawn_brown_maki", "Pickling_cucumber_filled_maki", "Ramen"},
+        {"Zaru_soba", "Yaki_soba", "Tempura", "Curry_with_rice"},
     };
     private string[,] thirdPage_spriteNames = new string[2, 4] {
-		{"freshMilkTank", "custard_jam", "ham_sandwich", "egg_sandwich"},
-		{"butter_cookie", "hotdog_cheese", "", ""},
+		{"Miso_soup", "Kimji", "Bean_ice_jam_on_crunching", "GreenTea_icecream"},
+		{"", "", "", ""},
 	};
     private int[,] firstPage_prices = new int[,] {
         {300, 300, 1500, 3000},
@@ -36,13 +36,14 @@ public class UpgradeInsideManager : MonoBehaviour {
         {150, 200, 1600, 700},
         {500, 1300,0,0},
     };
-	
+
+	public const string Message_Warning_NotEnoughMoney = "Connot upgrade this item because available money is not enough.";
 	private int currentPageIndex = 0;
     private const int MAX_PAGE_NUMBER = 3;
 	private const int ActiveUpgradeButtonID = 25;
 	private const int UnActiveUpgradeButtonID = 29;
     public tk2dTextMesh displayCurrentPageID_Textmesh;
-	private bool _isInitialize = false;
+	internal bool _isInitialize = false;
 
     private event EventHandler<OnUpdateEvenArgs> OnUpgrade_Event;
     private void OnUpgradeEvent_checkingDelegation(OnUpdateEvenArgs e) {
@@ -64,7 +65,6 @@ public class UpgradeInsideManager : MonoBehaviour {
 	/// Calss references.
 	/// </summary>
 	private SheepBank sceneController;
-	
 	
 	// Use this for initialization
 	void Start () {
@@ -88,8 +88,29 @@ public class UpgradeInsideManager : MonoBehaviour {
 		if(_isInitialize == false)
 			InitailizeDataFields();
 	}
-	
-	void InitailizeDataFields() {
+
+	private int eel_sushi_id;
+	private int fattyTuna_sushi_id;
+	private int octopus_sushi_id;
+	private int prawn_sushi_id;
+	private int salmon_sushi_id;
+	private int skipjackTuna_sushi_id;
+	private int spicyShell_sushi_id;
+	private int sweetenedEgg_sushi_id;
+	private int roe_maki_id;
+	private int flyingFishRoe_maki_id;
+	private int PicklesFilled_maki_id;
+    private int miso_soup_id;
+    private int kimji_id;
+    private int Bean_ice_jam_on_crunching_id;
+    private int GreenTea_icecream_id;
+    private int ramen_id;
+    private int zaru_soba_id;
+    private int yaki_soba_id;
+    private int tempura_id;
+    private int curry_with_rice_id;
+
+	private void InitailizeDataFields() {
 		if(upgradeInsideSprite2D[0,0] == null) 
 		{
 			for (int i = 0; i < 2; i++)
@@ -103,9 +124,34 @@ public class UpgradeInsideManager : MonoBehaviour {
 				}
 			}
 		}	
+
+		eel_sushi_id = (int)GoodDataStore.FoodMenuList.Eel_sushi;
+		fattyTuna_sushi_id = (int)GoodDataStore.FoodMenuList.Fatty_tuna_sushi;
+		octopus_sushi_id = (int)GoodDataStore.FoodMenuList.Octopus_sushi;
+        prawn_sushi_id = (int)GoodDataStore.FoodMenuList.Prawn_sushi;
+        salmon_sushi_id = (int)GoodDataStore.FoodMenuList.Salmon_sushi;
+        skipjackTuna_sushi_id = (int)GoodDataStore.FoodMenuList.Skipjack_tuna_sushi;
+        spicyShell_sushi_id = (int)GoodDataStore.FoodMenuList.Spicy_shell_sushi;
+        sweetenedEgg_sushi_id = (int)GoodDataStore.FoodMenuList.Sweetened_egg_sushi;
+
+		roe_maki_id = (int)GoodDataStore.FoodMenuList.Roe_maki;
+		flyingFishRoe_maki_id = (int)GoodDataStore.FoodMenuList.Prawn_brown_maki;
+		PicklesFilled_maki_id = (int)GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki;
+
+        ramen_id = (int)GoodDataStore.FoodMenuList.Ramen;
+        zaru_soba_id = (int)GoodDataStore.FoodMenuList.Zaru_soba;
+        yaki_soba_id = (int)GoodDataStore.FoodMenuList.Yaki_soba;
+        tempura_id = (int)GoodDataStore.FoodMenuList.Tempura;
+        curry_with_rice_id = (int)GoodDataStore.FoodMenuList.Curry_with_rice;
+
+        miso_soup_id = (int)GoodDataStore.FoodMenuList.Miso_soup;
+        kimji_id = (int)GoodDataStore.FoodMenuList.Kimji;
+        Bean_ice_jam_on_crunching_id = (int)GoodDataStore.FoodMenuList.Bean_ice_jam_on_crunching;
+        GreenTea_icecream_id = (int)GoodDataStore.FoodMenuList.GreenTea_icecream;
 		
 		_isInitialize  = true;
-//		CalculateObjectsToDisplay();
+
+        Debug.Log("UpgradeInsideManager._isInitialize == " + _isInitialize);
 	}
 	
 	public void GotoNextPage() {
@@ -154,61 +200,66 @@ public class UpgradeInsideManager : MonoBehaviour {
                 }
             }			
 			
-			if(SushiShop.NumberOfCansellItem.Contains(6) || Mz_StorageManage.AccountBalance < firstPage_prices[0,0]) {
+			if(SushiShop.NumberOfCansellItem.Contains(eel_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,0]) {
 				upgradeButton_Sprites[0,0].spriteId = UnActiveUpgradeButtonID;
 
-                if(SushiShop.NumberOfCansellItem.Contains(6)) {
+                if(SushiShop.NumberOfCansellItem.Contains(eel_sushi_id)) {
                     upgradeInsideSprite2D[0, 0].color = Color.grey;
 					upgradeButton_Objs[0,0].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(12) || SushiShop.NumberOfCansellItem.Contains(13) ||
-				SushiShop.NumberOfCansellItem.Contains(14) || Mz_StorageManage.AccountBalance < firstPage_prices[0,2]) 
-			{
+			if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,1]) {
+				upgradeButton_Sprites[0,1].spriteId = UnActiveUpgradeButtonID;
+
+                if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id)) {
+                    upgradeInsideSprite2D[0, 1].color = Color.grey;
+                    upgradeButton_Objs[0, 1].SetActiveRecursively(false);
+				}
+			}
+			if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,2]) {
 				upgradeButton_Sprites[0,2].spriteId = UnActiveUpgradeButtonID;
 
-                if(SushiShop.NumberOfCansellItem.Contains(12) || SushiShop.NumberOfCansellItem.Contains(13) || SushiShop.NumberOfCansellItem.Contains(14)) {
+                if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id)) {
                     upgradeInsideSprite2D[0, 2].color = Color.grey;
 					upgradeButton_Objs[0,2].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(15) || SushiShop.NumberOfCansellItem.Contains(16) || 
-				SushiShop.NumberOfCansellItem.Contains(17) || Mz_StorageManage.AccountBalance < firstPage_prices[0,3]) {
+			if(SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,3]) {
 				upgradeButton_Sprites[0,3].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(15) || SushiShop.NumberOfCansellItem.Contains(16) || SushiShop.NumberOfCansellItem.Contains(17)) {
+                if (SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id)) {
                     upgradeInsideSprite2D[0, 3].color = Color.grey;
 					upgradeButton_Objs[0,3].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(19) || Mz_StorageManage.AccountBalance < firstPage_prices[1,0]) {
+			if(SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,0]) {
 				upgradeButton_Sprites[1,0].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(19)) {
+                if (SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id)) {
                     upgradeInsideSprite2D[1, 0].color = Color.grey;
 					upgradeButton_Objs[1,0].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(21) || Mz_StorageManage.AccountBalance < firstPage_prices[1,1]) {
+			if(SushiShop.NumberOfCansellItem.Contains(skipjackTuna_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,1]) {
 				upgradeButton_Sprites[1,1].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(21)) {
+                if (SushiShop.NumberOfCansellItem.Contains(skipjackTuna_sushi_id)) {
                     upgradeInsideSprite2D[1, 1].color = Color.grey;
 					upgradeButton_Objs[1,1].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(25) || Mz_StorageManage.AccountBalance < firstPage_prices[1,2]) {
+			if(SushiShop.NumberOfCansellItem.Contains(spicyShell_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,2]) {
 				upgradeButton_Sprites[1,2].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(25)) {
+                if (SushiShop.NumberOfCansellItem.Contains(spicyShell_sushi_id)) {
                     upgradeInsideSprite2D[1, 2].color = Color.grey;
 					upgradeButton_Objs[1,2].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(28) || Mz_StorageManage.AccountBalance < firstPage_prices[1,3])	{
+			if(SushiShop.NumberOfCansellItem.Contains(sweetenedEgg_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,3])	{
 				upgradeButton_Sprites[1,3].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(28)) {
+                if (SushiShop.NumberOfCansellItem.Contains(sweetenedEgg_sushi_id)) {
                     upgradeInsideSprite2D[1, 3].color = Color.grey;
 					upgradeButton_Objs[1,3].SetActiveRecursively(false);
 				}
@@ -236,58 +287,66 @@ public class UpgradeInsideManager : MonoBehaviour {
                 }
             }
 			
-			if(SushiShop.NumberOfCansellItem.Contains(1) || Mz_StorageManage.AccountBalance < secondPage_prices[0,0]) {
+			if(SushiShop.NumberOfCansellItem.Contains(roe_maki_id) || Mz_StorageManage.AccountBalance < secondPage_prices[0,0]) {
 				upgradeButton_Sprites[0,0].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(1)) {
+                if (SushiShop.NumberOfCansellItem.Contains(roe_maki_id)) {
                     upgradeInsideSprite2D[0, 0].color = Color.grey;
 					upgradeButton_Objs[0,0].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(2) || Mz_StorageManage.AccountBalance < secondPage_prices[0,1]) {
+			if(SushiShop.NumberOfCansellItem.Contains(flyingFishRoe_maki_id) || Mz_StorageManage.AccountBalance < secondPage_prices[0,1]) {
 				upgradeButton_Sprites[0,1].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(2)) {
+                if (SushiShop.NumberOfCansellItem.Contains(flyingFishRoe_maki_id)) {
                     upgradeInsideSprite2D[0, 1].color = Color.grey;
 					upgradeButton_Objs[0,1].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(7) || Mz_StorageManage.AccountBalance < secondPage_prices[0,2]) {
+			if(SushiShop.NumberOfCansellItem.Contains(PicklesFilled_maki_id) || Mz_StorageManage.AccountBalance < secondPage_prices[0,2]) {
 				upgradeButton_Sprites[0,2].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(7)) {
+                if (SushiShop.NumberOfCansellItem.Contains(PicklesFilled_maki_id)) {
                     upgradeInsideSprite2D[0, 2].color = Color.grey;
 					upgradeButton_Objs[0,2].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(20) || Mz_StorageManage.AccountBalance < secondPage_prices[1,0]) {
+			if(SushiShop.NumberOfCansellItem.Contains(13) || Mz_StorageManage.AccountBalance < secondPage_prices[0,3]) {
+				upgradeButton_Sprites[0,3].spriteId = UnActiveUpgradeButtonID;
+				
+				if (SushiShop.NumberOfCansellItem.Contains(13)) {
+					upgradeInsideSprite2D[0,3].color = Color.grey;
+					upgradeButton_Objs[0,3].SetActiveRecursively(false);
+				}
+			}
+			if(SushiShop.NumberOfCansellItem.Contains(14) || Mz_StorageManage.AccountBalance < secondPage_prices[1,0]) {
 				upgradeButton_Sprites[1,0].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(20)) {
+                if (SushiShop.NumberOfCansellItem.Contains(14)) {
                     upgradeInsideSprite2D[1, 0].color = Color.grey;
 					upgradeButton_Objs[1,0].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(22) || Mz_StorageManage.AccountBalance < secondPage_prices[1,1])	{
+			if(SushiShop.NumberOfCansellItem.Contains(15) || Mz_StorageManage.AccountBalance < secondPage_prices[1,1])	{
 				upgradeButton_Sprites[1,1].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(22)) {
+                if (SushiShop.NumberOfCansellItem.Contains(15)) {
                     upgradeInsideSprite2D[1, 1].color = Color.grey;
 					upgradeButton_Objs[1,1].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(26) || Mz_StorageManage.AccountBalance < secondPage_prices[1,2]) {
+			if(SushiShop.NumberOfCansellItem.Contains(16) || Mz_StorageManage.AccountBalance < secondPage_prices[1,2]) {
 				upgradeButton_Sprites[1,2].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(26)) {
+                if (SushiShop.NumberOfCansellItem.Contains(16)) {
                     upgradeInsideSprite2D[1, 2].color = Color.grey;
 					upgradeButton_Objs[1,2].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(3) || Mz_StorageManage.AccountBalance < secondPage_prices[1,3]) {
+			if(SushiShop.NumberOfCansellItem.Contains(17) || Mz_StorageManage.AccountBalance < secondPage_prices[1,3]) {
 				upgradeButton_Sprites[1,3].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(3)) {
+                if (SushiShop.NumberOfCansellItem.Contains(17)) {
                     upgradeInsideSprite2D[1, 3].color = Color.grey;
 					upgradeButton_Objs[1,3].SetActiveRecursively(false);
 				}
@@ -327,54 +386,54 @@ public class UpgradeInsideManager : MonoBehaviour {
                 }
             }
 			
-			if(SushiShop.NumberOfCansellItem.Contains(4) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,0]) {
+			if(SushiShop.NumberOfCansellItem.Contains(miso_soup_id) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,0]) {
 				upgradeButton_Sprites[0,0].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(4)) {
+                if (SushiShop.NumberOfCansellItem.Contains(miso_soup_id)) {
                     upgradeInsideSprite2D[0, 0].color = Color.grey;
 					upgradeButton_Objs[0,0].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(8) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,1]) {
+			if(SushiShop.NumberOfCansellItem.Contains(kimji_id) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,1]) {
 				upgradeButton_Sprites[0,1].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(8)) {
+                if (SushiShop.NumberOfCansellItem.Contains(kimji_id)) {
                     upgradeInsideSprite2D[0, 1].color = Color.grey;
 					upgradeButton_Objs[0,1].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(23) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,2]) {
+			if(SushiShop.NumberOfCansellItem.Contains(Bean_ice_jam_on_crunching_id) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,2]) {
 				upgradeButton_Sprites[0,2].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(23)) {
+                if (SushiShop.NumberOfCansellItem.Contains(Bean_ice_jam_on_crunching_id)) {
                     upgradeInsideSprite2D[0, 2].color = Color.grey;
 					upgradeButton_Objs[0,2].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(24) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,3]) {
+			if(SushiShop.NumberOfCansellItem.Contains(GreenTea_icecream_id) || Mz_StorageManage.AccountBalance < thirdPage_prices[0,3]) {
 				upgradeButton_Sprites[0,3].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(24)) {
+                if (SushiShop.NumberOfCansellItem.Contains(GreenTea_icecream_id)) {
                     upgradeInsideSprite2D[0, 3].color = Color.grey;
 					upgradeButton_Objs[0,3].SetActiveRecursively(false);
 				}
 			}
-			if(SushiShop.NumberOfCansellItem.Contains(27) || Mz_StorageManage.AccountBalance < thirdPage_prices[1,0]) {
-				upgradeButton_Sprites[1,0].spriteId = UnActiveUpgradeButtonID;
+            //if(SushiShop.NumberOfCansellItem.Contains(27) || Mz_StorageManage.AccountBalance < thirdPage_prices[1,0]) {
+            //    upgradeButton_Sprites[1,0].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(27)) {
-                    upgradeInsideSprite2D[1, 0].color = Color.grey;
-					upgradeButton_Objs[1,0].SetActiveRecursively(false);
-				}
-			}
-			if(SushiShop.NumberOfCansellItem.Contains(29) || Mz_StorageManage.AccountBalance < thirdPage_prices[1,1]) {
-				upgradeButton_Sprites[1,1].spriteId = UnActiveUpgradeButtonID;
+            //    if (SushiShop.NumberOfCansellItem.Contains(27)) {
+            //        upgradeInsideSprite2D[1, 0].color = Color.grey;
+            //        upgradeButton_Objs[1,0].SetActiveRecursively(false);
+            //    }
+            //}
+            //if(SushiShop.NumberOfCansellItem.Contains(29) || Mz_StorageManage.AccountBalance < thirdPage_prices[1,1]) {
+            //    upgradeButton_Sprites[1,1].spriteId = UnActiveUpgradeButtonID;
 
-                if (SushiShop.NumberOfCansellItem.Contains(29)) {
-                    upgradeInsideSprite2D[1, 1].color = Color.grey;
-					upgradeButton_Objs[1,1].SetActiveRecursively(false);
-				}
-            }
+            //    if (SushiShop.NumberOfCansellItem.Contains(29)) {
+            //        upgradeInsideSprite2D[1, 1].color = Color.grey;
+            //        upgradeButton_Objs[1,1].SetActiveRecursively(false);
+            //    }
+            //}
 
             #endregion
         }
@@ -395,12 +454,12 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0,0]) 
 				{
-                    int item_id = (int)GoodDataStore.FoodMenuList.Eel_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(item_id) == false) {
+					if(SushiShop.NumberOfCansellItem.Contains(eel_sushi_id) == false) {
                         Debug.Log("buying : Eel_sushi");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = item_id, };
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = eel_sushi_id, };
                         this.ActiveComfirmationWindow();
-
+						
+						//<@-- Handle buying upgrade tutor.
                         if (MainMenu._HasNewGameEvent) {
                             sceneController.SetActivateTotorObject(false);
                         }
@@ -410,7 +469,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
                 }
 				else {
-					Debug.Log("Connot upgrade this item because availabel money is not enough.");
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -418,20 +477,21 @@ public class UpgradeInsideManager : MonoBehaviour {
             }
             else if(upgradeName == "upgrade_01")
             {
-                #region <@-- "buying : blueberry_cream"
+                #region <@-- "buying : Fatty_tuna_sushi"
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0,1])
-                {				
-//					if(CreamBeh.arr_CreamBehs[1] == string.Empty) 
-//					{
-//
-//					}
-//					else {
-//						this.PlaySoundWarning();
-//					}
+                {								
+					if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id) == false) {
+                        Debug.Log("buying : Fatty_tuna_sushi");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = fattyTuna_sushi_id, };
+                        this.ActiveComfirmationWindow();
+                    }
+					else{
+						this.PlaySoundWarning();
+					}
                 }
 				else {
-					Debug.Log("Connot upgrade this item because availabel money is not enough.");
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -439,22 +499,21 @@ public class UpgradeInsideManager : MonoBehaviour {
             }
 			else if(upgradeName == "upgrade_02")
             {
-                #region <@-- buying : Mini Cake.
+				#region <@-- buying : Octopus_sushi.
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0,2])
-				{
-//                    if (!BakeryShop.NumberOfCansellItem.Contains(chocolate_minicake)
-//                        && !BakeryShop.NumberOfCansellItem.Contains(Blueberry_minicake)
-//                        && !BakeryShop.NumberOfCansellItem.Contains(Strawberry_minicake))
-//                    {
-//						
-//                    }
-//                    else
-//                    {
-//                        this.PlaySoundWarning();
-//                    }
+				{							
+					if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id) == false) {
+						Debug.Log("buying : Octopus_sushi");
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = octopus_sushi_id, };
+						this.ActiveComfirmationWindow();
+					}
+					else{
+						this.PlaySoundWarning();
+					}
 				}
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -462,27 +521,21 @@ public class UpgradeInsideManager : MonoBehaviour {
             }
 			else if(upgradeName == "upgrade_03")
             {
-                #region <@-- "buying : Cake".
+				#region <@-- "buying : Prawn_sushi".
 
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[0, 3]) 
-                {
-                    int Chocolate_cake = (int)GoodDataStore.FoodMenuList.Kimji;
-                    int Blueberry_cake = (int)GoodDataStore.FoodMenuList.Tempura;
-                    int Strawberry_cake = (int)GoodDataStore.FoodMenuList.Zaru_soba;
-
-                    Debug.Log("buying : Cake");
-
-                    if(SushiShop.NumberOfCansellItem.Contains(Chocolate_cake) == false && 
-                        SushiShop.NumberOfCansellItem.Contains(Blueberry_cake) == false &&                    
-                        SushiShop.NumberOfCansellItem.Contains(Strawberry_cake) == false)
-                    {
-					    
-                    }
+                {					
+					if(SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id) == false) {
+						Debug.Log("buying : Prawn_sushi");
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = prawn_sushi_id, };
+						this.ActiveComfirmationWindow();
+					}
 					else{
 						this.PlaySoundWarning();
 					}
 				}
 				else {
+					print (Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -495,22 +548,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			
 			else if(upgradeName == "upgrade_10") 
 			{	
-				#region <@-- "buying : vanilla_icecream".
+				#region <@-- "buying : Salmon_sushi".
 
-                if (Mz_StorageManage.AccountBalance >= firstPage_prices[1, 0])
-                {
-                    int id = (int)GoodDataStore.FoodMenuList.Curry_with_rice;
-                    if (SushiShop.NumberOfCansellItem.Contains(id) == false)
-                    {
-                        Debug.Log("buying : vanilla_icecream");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = id, };
-                        this.ActiveComfirmationWindow();
-                    }
-                    else
-                        this.PlaySoundWarning();
+                if (Mz_StorageManage.AccountBalance >= firstPage_prices[1, 0]) {					
+					if(SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id) == false) {
+						Debug.Log("buying : Salmon_sushi");
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = salmon_sushi_id, };
+						this.ActiveComfirmationWindow();
+					}
+					else{
+						this.PlaySoundWarning();
+					}
                 }
-                else
-                {
+                else {
+					print(Message_Warning_NotEnoughMoney);
                     sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -518,15 +569,14 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_11") 
 			{		
-				#region <@-- "buying : tuna_sandwich".
+				#region <@-- "buying : Skipjack_tuna_sushi".
 				
 				if(Mz_StorageManage.AccountBalance >= firstPage_prices[1, 1]) 
                 {
-                    int id = (int)GoodDataStore.FoodMenuList.Bean_ice_jam_on_crunching;
-                    if (SushiShop.NumberOfCansellItem.Contains(id) == false)
+                    if (SushiShop.NumberOfCansellItem.Contains(skipjackTuna_sushi_id) == false)
                     {
-                        Debug.Log("buying : tuna_sandwich");
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = id, };
+						Debug.Log("buying : Skipjack_tuna_sushi");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = skipjackTuna_sushi_id, };
                         this.ActiveComfirmationWindow();
 					}
 					else{
@@ -534,6 +584,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 				
@@ -541,21 +592,21 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_12")
 			{				
-				#region <@-- "buying : chocolate_chip_cookie".
+				#region <@-- "buying : Spicy_shell_sushi".
 
 				if(Mz_StorageManage.AccountBalance >= firstPage_prices[1, 2])
                 {
-//                    int id = (int)GoodDataStore.FoodMenuList.Chocolate_cookie;
-//					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
-//						Debug.Log("buying : chocolate_chip_cookie");
-//                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 2, Item_id = id };
-//                        this.ActiveComfirmationWindow();
-//					}
-//					else {
-//						this.PlaySoundWarning();
-//					}
+					if(SushiShop.NumberOfCansellItem.Contains(spicyShell_sushi_id) == false) {
+						Debug.Log("buying : Spicy_shell_sushi");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 2, Item_id = spicyShell_sushi_id };
+                        this.ActiveComfirmationWindow();
+					}
+					else {
+						this.PlaySoundWarning();
+					}
 				}
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -563,21 +614,21 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_13") 
 			{
-				#region <@-- "buying : hotdog".
+				#region <@-- "buying : Sweetened_egg_sushi".
 
 				if(Mz_StorageManage.AccountBalance >= firstPage_prices[1, 3]) 
                 {
-//                    int id = (int)GoodDataStore.FoodMenuList.Hotdog;
-//					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
-//						Debug.Log("buying : hotdog");
-//                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 3, Item_id = id };
-//                        this.ActiveComfirmationWindow();
-//					}
-//					else {
-//						this.PlaySoundWarning();
-//					}
+					if(SushiShop.NumberOfCansellItem.Contains(sweetenedEgg_sushi_id) == false) {
+						Debug.Log("buying : Sweetened_egg_sushi");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 3, Item_id = sweetenedEgg_sushi_id };
+                        this.ActiveComfirmationWindow();
+					}
+					else {
+						this.PlaySoundWarning();
+					}
 				}
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -592,20 +643,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			
 			if(upgradeName == "upgrade_00")
 			{	
-				#region <@-- "buying : appleJuiceTank".
+				#region <@-- "buying : Roe_maki".
 
                 if(Mz_StorageManage.AccountBalance >= secondPage_prices[0,0]) 
                 {
-					Debug.Log("buying : appleJuiceTank");
-                    int id = (int)GoodDataStore.FoodMenuList.Octopus_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(roe_maki_id) == false) {
+						Debug.Log("buying : Roe_maki");
+						this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = roe_maki_id };
 						this.ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
                 }
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -613,20 +664,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_01") 
 			{
-				#region <@-- "buying : chocolateMilkTank".
+				#region <@-- "buying : Prawn_brown_maki".
 
                 if(Mz_StorageManage.AccountBalance >= secondPage_prices[0,1])
                 {
-                    int id = (int)GoodDataStore.FoodMenuList.Sweetened_egg_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : chocolateMilkTank");
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 1, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(flyingFishRoe_maki_id) == false) {
+						Debug.Log("buying : Prawn_brown_maki");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 1, Item_id = flyingFishRoe_maki_id };
                         this.ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
                 }
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -634,20 +685,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_02") 
 			{
-				#region <@-- "buying : butter_jam".
+				#region <@-- "buying : Pickling_cucumber_filled_maki".
 
 				if(Mz_StorageManage.AccountBalance >= secondPage_prices[0,2]) 
                 {
-                    int id = (int)GoodDataStore.FoodMenuList.Eel_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : butter_jam");
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(PicklesFilled_maki_id) == false) {
+						Debug.Log("buying : Pickling_cucumber_filled_maki");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = PicklesFilled_maki_id };
                         this.ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
 				}
 				else {
+					print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -655,18 +706,21 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_03") 
 			{
-				#region <@-- "buying : strawberry_cream".
+				#region <@-- "buying : Ramen".
 
                 if (Mz_StorageManage.AccountBalance >= secondPage_prices[0, 3])
                 {
-//                    if (CreamBeh.arr_CreamBehs[2] == string.Empty)
-//                    {
-//                    }
-//                    else
-//                        PlaySoundWarning();
+					if(SushiShop.NumberOfCansellItem.Contains(ramen_id) == false) {
+						Debug.Log("buying : Ramen");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = ramen_id };
+                        this.ActiveComfirmationWindow();
+					}
+					else
+						PlaySoundWarning();
                 }
                 else
                 {
+					print(Message_Warning_NotEnoughMoney);
                     sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
                 }
 
@@ -679,20 +733,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 
 			if(upgradeName == "upgrade_10")
 			{				
-				#region <@-- "buying : chocolate_icecream".
+				#region <@-- "buying : Zaru_soba".
 
 				if(Mz_StorageManage.AccountBalance >= secondPage_prices[1,0]) 
                 {
-                    int id = (int)GoodDataStore.FoodMenuList.Yaki_soba;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : chocolate_icecream");
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(zaru_soba_id) == false) {
+						Debug.Log("buying : Zaru_soba");
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = zaru_soba_id };
                         this.ActiveComfirmationWindow();
 					}
 					else 
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -700,20 +754,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_11")
 			{				
-				#region <@-- "buying : deep_fried_chicken_sandwich".
+				#region <@-- "buying : Yaki_soba".
 
 				if(Mz_StorageManage.AccountBalance >= secondPage_prices[1,1])
                 {		
-			        int id = (int)GoodDataStore.FoodMenuList.GreenTea_icecream;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : deep_fried_chicken_sandwich");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(yaki_soba_id) == false) {
+						Debug.Log("buying : Yaki_soba");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = yaki_soba_id };
                         ActiveComfirmationWindow();
 					}
 					else 
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -721,20 +775,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_12")
 			{				
-				#region <@-- "buying : fruit_cookie".
+				#region <@-- "buying : Tempura".
 
 				if(Mz_StorageManage.AccountBalance >= secondPage_prices[1,2]) 
                 {
-//                    int id = (int)GoodDataStore.FoodMenuList.Fruit_cookie;
-//					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
-//						Debug.Log("buying : fruit_cookie");
-//                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 2, Item_id = id };
-//                        ActiveComfirmationWindow();
-//                    }
-//					else
-//						PlaySoundWarning();
+					if(SushiShop.NumberOfCansellItem.Contains(tempura_id) == false) {
+						Debug.Log("buying : Tempura");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 2, Item_id = tempura_id };
+                        ActiveComfirmationWindow();
+                    }
+					else
+						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -742,20 +796,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_13")
 			{				
-				#region <@-- "buying : orangeJuiceTank".
+				#region <@-- "buying : Curry_with_rice".
 
 				if(Mz_StorageManage.AccountBalance >= secondPage_prices[1,3]) 
 				{
-                    int id = (int)GoodDataStore.FoodMenuList.Crab_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : orangeJuiceTank");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 3, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(curry_with_rice_id) == false) {
+						Debug.Log("buying : Curry_with_rice");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 3, Item_id = curry_with_rice_id };
                         ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
                 }
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -770,19 +824,19 @@ public class UpgradeInsideManager : MonoBehaviour {
 			
 			if(upgradeName == "upgrade_00")
 			{				
-				#region <@-- "buying : freshMilkTank".
+				#region <@-- "buying : Miso_soup".
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[0,0]) {
-                    int id = (int)GoodDataStore.FoodMenuList.Spicy_shell_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : freshMilkTank");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(miso_soup_id) == false) {
+						Debug.Log("buying : Miso_soup");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = miso_soup_id };
                         ActiveComfirmationWindow();
 					}
 					else 
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -790,19 +844,19 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_01")
 			{		
-				#region <@-- "buying : custard_jam".
+				#region <@-- "buying : Kimji".
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[0,1]) {
-                    int id = (int)GoodDataStore.FoodMenuList.Fatty_tuna_sushi;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : custard_jam");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 1, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(kimji_id) == false) {
+						Debug.Log("buying : Kimji");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 1, Item_id = kimji_id };
                         ActiveComfirmationWindow();
 					}
 					else 
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -810,19 +864,19 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_02") 
 			{
-				#region <@-- "buying : ham_sandwich".
+				#region <@-- "buying : Bean_ice_jam_on_crunching".
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[0,2]) {
-                    int id = (int)GoodDataStore.FoodMenuList.Hot_greenTea;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false) {
-						Debug.Log("buying : ham_sandwich");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(Bean_ice_jam_on_crunching_id) == false) {
+						Debug.Log("buying : Bean_ice_jam_on_crunching");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = Bean_ice_jam_on_crunching_id };
                         ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -830,20 +884,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			}
 			else if(upgradeName == "upgrade_03") 
 			{
-				#region <@-- "buying : egg_sandwich".
+				#region <@-- "buying : GreenTea_icecream".
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[0,3]) 
 				{
-                    int id = (int)GoodDataStore.FoodMenuList.Iced_greenTea;
-					if(SushiShop.NumberOfCansellItem.Contains(id) == false)  {
-						Debug.Log("buying : egg_sandwich");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 3, Item_id = id };
+					if(SushiShop.NumberOfCansellItem.Contains(GreenTea_icecream_id) == false)  {
+						Debug.Log("buying : GreenTea_icecream");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 3, Item_id = GreenTea_icecream_id };
                         ActiveComfirmationWindow();
 					}
 					else
 						PlaySoundWarning();
 				}
 				else {
+                    print(Message_Warning_NotEnoughMoney);
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 				}
 
@@ -853,20 +907,20 @@ public class UpgradeInsideManager : MonoBehaviour {
 			#endregion
 
 			#region <!-- page2 low 1.
-
+/*
 			if(upgradeName == "upgrade_10")
 			{	
 				#region <@-- "buying : butter_cookie".
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[1,0]) {
-//                    int id = (int)GoodDataStore.FoodMenuList.Butter_cookie;
-//					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
-//						Debug.Log("buying : butter_cookie");
-//                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = id };
-//                        ActiveComfirmationWindow();
-//					}
-//					else
-//						PlaySoundWarning();
+                    int id = (int)GoodDataStore.FoodMenuList.Butter_cookie;
+					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
+						Debug.Log("buying : butter_cookie");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = id };
+                        ActiveComfirmationWindow();
+					}
+					else
+						PlaySoundWarning();
 				}
 				else {
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
@@ -880,14 +934,14 @@ public class UpgradeInsideManager : MonoBehaviour {
 
 				if(Mz_StorageManage.AccountBalance >= thirdPage_prices[1,1]) 
 				{
-//                    int id = (int)GoodDataStore.FoodMenuList.HotdogWithCheese;
-//					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
-//						Debug.Log("buying : hotdog_cheese");
-//                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = id };
-//                        ActiveComfirmationWindow();
-//					}
-//					else
-//						PlaySoundWarning();
+                    int id = (int)GoodDataStore.FoodMenuList.HotdogWithCheese;
+					if(BakeryShop.NumberOfCansellItem.Contains(id) == false) {
+						Debug.Log("buying : hotdog_cheese");
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 1, Item_id = id };
+                        ActiveComfirmationWindow();
+					}
+					else
+						PlaySoundWarning();
 				}
 				else {
 					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
@@ -895,7 +949,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
 				#endregion
 			}
-
+*/
 			#endregion
 		}
     }

@@ -31,8 +31,6 @@ public class ObjectsBeh : Base_ObjectBeh {
         GameObject sceneObj = GameObject.FindGameObjectWithTag("GameController");
         baseScene = sceneObj.GetComponent<Mz_BaseScene>();
 
-		this.originalPosition = this.transform.position;
-
 		try {
 			sprite = this.gameObject.GetComponent<tk2dSprite>();
 			animatedSprite = this.gameObject.GetComponent<tk2dAnimatedSprite>();
@@ -41,7 +39,9 @@ public class ObjectsBeh : Base_ObjectBeh {
 	}
 	
 	// Use this for initialization
-	protected virtual void Start () {
+	protected virtual void Start () {		
+		this.originalPosition = this.transform.position;
+
         destroyObj_Event += new System.EventHandler(ObjectsBeh_destroyObj_Event);
 	}
 	

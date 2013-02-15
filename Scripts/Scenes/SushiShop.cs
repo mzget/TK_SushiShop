@@ -82,6 +82,7 @@ public class SushiShop : Mz_BaseScene {
 	private const string BASE_ORDER_ITEM_COMPLETE = "Order_BaseItem_complete";
     public tk2dSprite[] arr_orderingItems = new tk2dSprite[3];
 
+    public static bool _CanCreateFoodBeltMachine = false;
     public BeltMachineBeh beltMachine;
     public ManualBeh manualManager;
     private SushiProduction sushiProduction;
@@ -376,6 +377,13 @@ public class SushiShop : Mz_BaseScene {
 			flyingFishRoe.SetActiveRecursively(true);
 		if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Roe_maki)) 
 			roe.SetActiveRecursively(true);
+        if(NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Ramen) ||
+            NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Yaki_soba) ||
+            NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Zaru_soba) ||
+            NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Curry_with_rice) ||
+            NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Tempura)) {
+                beltMachine_obj.gameObject.SetActiveRecursively(true);
+        }
 	}
 
 	#region <!-- Tutor systems.
@@ -503,9 +511,11 @@ public class SushiShop : Mz_BaseScene {
     }
 
 	#endregion
-
-    #region <!-- Customer manage system.
-
+	
+	/// <summary>
+	/// <!-- Customer manage system.
+	/// Handle_nulls the customer_event.
+	/// </summary>
     private void Handle_nullCustomer_event(object sender, EventArgs e) {
     	StartCoroutine(CreateCustomer());
     }
@@ -568,8 +578,9 @@ public class SushiShop : Mz_BaseScene {
 		OnNullCustomer_event(EventArgs.Empty);
     }
 
-	#endregion
-
+	/// <summary>
+	/// Handle_manages the goods complete_event.
+	/// </summary>
     public void Handle_manageGoodsComplete_event(object sender, System.EventArgs eventArgs)
     {
         //		int r = UE.Random.Range(0, appreciate_clips.Length);

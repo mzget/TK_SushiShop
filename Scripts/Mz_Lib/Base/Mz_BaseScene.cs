@@ -286,7 +286,7 @@ public class Mz_BaseScene : MonoBehaviour {
 	protected virtual void MovingCameraTransform ()	{ }
 
     public virtual void OnInput(string nameInput) {
-    	print("OnInput :: " + nameInput);
+//    	print("OnInput :: " + nameInput);
     }
 
     public virtual void OnPointerOverName(string nameInput) {

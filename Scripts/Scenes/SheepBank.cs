@@ -345,7 +345,7 @@ public class SheepBank : Mz_BaseScene {
 			availabelMoneyBillboard_Obj.gameObject.SetActiveRecursively(true);
 			this.ManageAvailabelMoneyBillBoard();
 
-			upgradeInsideManager.ReInitializeData();
+//            upgradeInsideManager.ReInitializeData();
         }
 		
 		if(MainMenu._HasNewGameEvent) {
@@ -507,6 +507,7 @@ public class SheepBank : Mz_BaseScene {
 				}
                 else
                 {
+				    //<@-- Handle other name input.
                     for (int i = 0; i < upgradeButtons.Length; i++)
                     {
                         if (nameInput == upgradeButtons[i].name)
@@ -549,13 +550,21 @@ public class SheepBank : Mz_BaseScene {
         }
     }
 
-    private void ActiveUpgradeInsideForm()
+    private IEnumerator ActiveUpgradeInsideForm()
     {
 		upgradeInside_window_Obj.SetActiveRecursively (true);
+
+        while (upgradeInsideManager._isInitialize == false)
+        {
+            yield return null;
+        }
+
+        upgradeInsideManager.ReInitializeData();
 		iTween.MoveTo (upgradeInside_window_Obj.gameObject, moveDownUpgradeInside);
 
         audioEffect.PlayOnecWithOutStop(audioEffect.calc_clip);
     }  
+
     private void ActiveUpgradeOutside()
     {
 		SheepBank.HaveUpgradeOutSide = true;

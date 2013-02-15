@@ -35,8 +35,8 @@ public class GoodDataStore : ScriptableObject {
         Bean_ice_jam_on_crunching = 20, // ∂—Ë«·¥ßπÈ”·¢Áß„ 
         GreenTea_icecream = 21,
 
-        Hot_greenTea = 22,
-        Iced_greenTea = 23,
+        Hot_greenTea = 22, // free.
+        Iced_greenTea = 23, // free.
     };
 	
    	public Food[] FoodDatabase_list = new Food[FoodDatabaseCapacity] {                               
