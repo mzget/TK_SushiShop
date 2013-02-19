@@ -382,7 +382,7 @@ public class SushiShop : Mz_BaseScene {
             NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Zaru_soba) ||
             NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Curry_with_rice) ||
             NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Tempura)) {
-                beltMachine_obj.gameObject.SetActiveRecursively(true);
+            beltMachine_obj.gameObject.SetActiveRecursively(true);
         }
 	}
 

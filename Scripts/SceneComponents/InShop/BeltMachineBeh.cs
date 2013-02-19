@@ -20,6 +20,11 @@ public class BeltMachineBeh : ObjectsBeh
     public Transform tempura_transform;
     public Transform yakisoba_transform;
     public Transform zarusoba_transform;
+    public GameObject ramen_lockIcon;
+    public GameObject curryWithRice_lockIcon;
+    public GameObject tempura_lockIcon;
+    public GameObject yakisoba_lockIcon;
+    public GameObject zarusoba_lockIcon;
 
     private GameObject foodInstance;
     private GoodsBeh food;
@@ -49,15 +54,58 @@ public class BeltMachineBeh : ObjectsBeh
         scaleDown_hash.Add("oncomplete", OnScaleDownComplete);
 	}
 	
-	// Update is called once per frame
-//	protected override void Update ()
-//	{
-//		base.Update ();
-//	}
+    private void Initializing()
+    {
+        if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Ramen)) {
+            ramen_lockIcon.active = false;
+            ramen_transform.collider.enabled = true;
+        }
+        else {
+            ramen_lockIcon.active = true;
+            ramen_transform.collider.enabled = false;
+        }
+
+        if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Curry_with_rice)) {
+            curryWithRice_lockIcon.active = false;
+            curryWithRice_transform.collider.enabled = true;
+        }
+        else {
+            curryWithRice_lockIcon.active = true;
+            curryWithRice_transform.collider.enabled = false;
+        }
+
+        if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Yaki_soba)) {
+            yakisoba_lockIcon.active = false;
+            yakisoba_transform.collider.enabled = true;
+        }
+        else {
+            yakisoba_lockIcon.active = true;
+            yakisoba_transform.collider.enabled = false;
+        }
+
+        if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Zaru_soba)) {
+            zarusoba_lockIcon.active = false;
+            zarusoba_transform.collider.enabled = true;
+        }
+        else {
+            zarusoba_lockIcon.active = true;
+            zarusoba_transform.collider.enabled = false;
+        }
+
+        if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Tempura)) {
+            tempura_lockIcon.active = false;
+            tempura_transform.collider.enabled = true;
+        }
+        else {
+            tempura_lockIcon.active = true;
+            tempura_transform.collider.enabled = false;
+        }
+    }
 
     internal void ActiveBeltMachinePopup()
     {
         beltMachinePopup_obj.SetActiveRecursively(true);
+        this.Initializing();
 		base.animatedSprite.Pause();
         iTween.ScaleTo(beltMachinePopup_obj, scaleUp_hash);
     }

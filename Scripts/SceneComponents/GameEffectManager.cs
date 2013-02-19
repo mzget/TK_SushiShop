@@ -15,7 +15,7 @@ public class GameEffectManager : MonoBehaviour {
 	public void Create2DSpriteAnimationEffect(string targetName, Transform transform) {
         GameObject effect = Instantiate(Resources.Load(targetName, typeof(GameObject)), transform.position, Quaternion.identity) as GameObject;
         effect.transform.parent = transform;
-        effect.transform.localScale = Vector3.one * Camera.main.orthographicSize;
+        effect.transform.localScale = Vector3.one;
         effect.transform.position += Vector3.back;
 		
 
