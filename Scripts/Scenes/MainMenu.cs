@@ -12,10 +12,11 @@ public class MainMenu : Mz_BaseScene {
     public Transform mainmenu_Group;
     public Transform newgame_Group;
     public Transform initializeNewGame_Group;
+	public Transform options_group_transform;
     private InitializeNewShop initializeNewShop;
 
     public GUIOptionsManager optionsManager = new GUIOptionsManager();
-    void SetActivateGUIOptionsGroup(bool activeState)
+    private void SetActivateGUIOptionsGroup(bool activeState)
     {
         if (activeState)
         {
@@ -42,7 +43,13 @@ public class MainMenu : Mz_BaseScene {
     public GUISkin mainmenu_Skin;
     public GUIStyle saveSlot_buttonStyle;
     public GUIStyle notification_TextboxStyle;
-    public enum SceneState { none = 0, showOption, showNewGame, showNewShop, showLoadGame, };
+    public enum SceneState { 
+        none = 0,
+        showOption,
+        showNewGame,
+        showNewShop,
+        showLoadGame, 
+    };
     private SceneState sceneState;
 
     private string username = string.Empty;
@@ -67,9 +74,7 @@ public class MainMenu : Mz_BaseScene {
     Rect notification_Rect;
 	float group_width = 400;
 	Rect showSaveGameSlot_GroupRect;
-	Rect slot_1Rect;
-	Rect slot_2Rect;
-	Rect slot_3Rect;
+    Rect slot_1Rect, slot_2Rect, slot_3Rect;
 
 	#region <@-- Events
 
@@ -95,6 +100,7 @@ public class MainMenu : Mz_BaseScene {
         Mz_ResizeScale.ResizingScale(baseBuilding_Obj.transform);
 
         iTween.MoveTo(mainmenu_Group.gameObject, moveDownTransform_Data);
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 90f, "time", 1f, "easetype",  iTween.EaseType.easeOutSine));
 
         newgame_Group.gameObject.SetActiveRecursively(false);
 		initializeNewShop = initializeNewGame_Group.GetComponent<InitializeNewShop>();
@@ -151,11 +157,11 @@ public class MainMenu : Mz_BaseScene {
 		moveUpTransform_Data.Add("time", 1f);
 		moveUpTransform_Data.Add("easetype", iTween.EaseType.linear);
 
-        newgame_Textfield_rect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) - (70 * Mz_OnGUIManager.Extend_heightScale), Mz_OnGUIManager.viewPort_rect.height / 2 + 58, 300 * Mz_OnGUIManager.Extend_heightScale, 82);
-        newShopName_rect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) - (63 * Mz_OnGUIManager.Extend_heightScale), Mz_OnGUIManager.viewPort_rect.height / 2 - 110, 400 * Mz_OnGUIManager.Extend_heightScale, 80);
+        newgame_Textfield_rect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) - (110 * Mz_OnGUIManager.Extend_heightScale), Mz_OnGUIManager.viewPort_rect.height / 2 + 58, 300 * Mz_OnGUIManager.Extend_heightScale, 82);
+        newShopName_rect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) - (133 * Mz_OnGUIManager.Extend_heightScale), Mz_OnGUIManager.viewPort_rect.height / 2 - 110, 400 * Mz_OnGUIManager.Extend_heightScale, 80);
         notification_Rect = new Rect(Mz_OnGUIManager.viewPort_rect.width / 2 - (300 * Mz_OnGUIManager.Extend_heightScale), 0, 600 * Mz_OnGUIManager.Extend_heightScale, 64);
         group_width = 400 * Mz_OnGUIManager.Extend_heightScale;
-        showSaveGameSlot_GroupRect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) + (75 * Mz_OnGUIManager.Extend_heightScale) - (group_width / 2), (Main.GAMEHEIGHT / 2) - 70, group_width, 300);
+        showSaveGameSlot_GroupRect = new Rect((Mz_OnGUIManager.viewPort_rect.width / 2) + (0 * Mz_OnGUIManager.Extend_heightScale) - (group_width / 2), (Main.GAMEHEIGHT / 2) - 70, group_width, 300);
         slot_1Rect = new Rect(32*Mz_OnGUIManager.Extend_heightScale, 12, group_width - (60 * Mz_OnGUIManager.Extend_heightScale), 80);
 		slot_2Rect = new Rect(slot_1Rect.x, 112, group_width - (60 * Mz_OnGUIManager.Extend_heightScale), 80);
 		slot_3Rect = new Rect(slot_1Rect.x, 212, group_width - (60 * Mz_OnGUIManager.Extend_heightScale), 80);
@@ -270,7 +276,7 @@ public class MainMenu : Mz_BaseScene {
 #if UNITY_EDITOR || UNITY_WEBPLAYER
             //<!-- "Please Insert Username !".
             GUI.SetNextControlName("Username");
-            username = GUI.TextField(newgame_Textfield_rect, username, 13, saveSlot_buttonStyle);
+            username = GUI.TextField(newgame_Textfield_rect, username, 13, GUI.skin.textField);  //saveSlot_buttonStyle);
 
             if (GUI.GetNameOfFocusedControl() == string.Empty || GUI.GetNameOfFocusedControl() == "")
             {
@@ -380,8 +386,11 @@ public class MainMenu : Mz_BaseScene {
         //<@-- CAN_EQUIP_CLOTHE_LIST
         int[] newPlayerClothes = new int[] { 0, 1, 2 };
         PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_CLOTHE_LIST, newPlayerClothes);
-		//<@-- Can decoration shop outside.
+		//<@-- Can equip hat-list.
+		int[] defaultHat_id = new int[] { 0, 1, 2 };
+		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_HAT_LIST, defaultHat_id);
 
+		//<@-- Can decoration shop outside.
 		int[] roof_temp_arr = new int[1] { 255 };
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ROOF_LIST, roof_temp_arr); 
 		int[] awning_temp_array = new int[1] { 255};
@@ -390,10 +399,14 @@ public class MainMenu : Mz_BaseScene {
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_TABLE_LIST, table_temp_array);
 		int[] accessories_temp_array = new int[1] {255};
 		PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ACCESSORIES_LIST, accessories_temp_array);
+
         // <@-- Initailizing pet data.
         PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + ExtendsStorageManager.KEY_PET_ID, 0);
         int[] defaultPetAliment_id = new int[] { 0 };
         PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + ExtendsStorageManager.KEY_CAN_ALIMENT_PET_LIST, defaultPetAliment_id);
+		
+		//<!-- Notice user to upgrade them shop.
+		PlayerPrefsX.SetBool(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_NOTICE_USER_TO_UPGRADE, false);
 
         Debug.Log("Store new player data complete.");
 
@@ -412,7 +425,7 @@ public class MainMenu : Mz_BaseScene {
     }
 
     //<!-- Show save game slot. If slot is full.
-    void ShowSaveGameSlot(bool _toSaveGame)
+     private void ShowSaveGameSlot(bool _toSaveGame)
     {
         if (_toSaveGame) 
 		{   
@@ -423,14 +436,14 @@ public class MainMenu : Mz_BaseScene {
 			GUI.Box(notification_Rect, message, notification_TextboxStyle);
 		}
 
-        GUI.BeginGroup(showSaveGameSlot_GroupRect);
+        GUI.BeginGroup(showSaveGameSlot_GroupRect, "", GUI.skin.box);
         {
             if (_toSaveGame)			
             {
                 /// Display To Save Username.
 //                GUI.Box(textbox_header_rect, username, mainmenu_Skin.textField);
                 /// Choose SaveGame Slot for replace new data.
-                if (GUI.Button(slot_1Rect, new GUIContent(PlayerPrefs.GetString(1 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
+                if (GUI.Button(slot_1Rect, new GUIContent(PlayerPrefs.GetString(1 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -438,7 +451,7 @@ public class MainMenu : Mz_BaseScene {
 //                    SaveNewPlayer();
 					StartCoroutine(ShowInitializeNewShop());
                 }
-                else if (GUI.Button(slot_2Rect, new GUIContent(PlayerPrefs.GetString(2 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
+                else if (GUI.Button(slot_2Rect, new GUIContent(PlayerPrefs.GetString(2 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -446,7 +459,7 @@ public class MainMenu : Mz_BaseScene {
 //				    SaveNewPlayer();
 					StartCoroutine(ShowInitializeNewShop());
                 }
-                else if (GUI.Button(slot_3Rect, new GUIContent(PlayerPrefs.GetString(3 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
+                else if (GUI.Button(slot_3Rect, new GUIContent(PlayerPrefs.GetString(3 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -474,7 +487,7 @@ public class MainMenu : Mz_BaseScene {
 
                 #region <!-- GUI data slot button.
 
-                if (GUI.Button(slot_1Rect, new GUIContent(slot_1, "button"), saveSlot_buttonStyle)) // saveSlot_buttonStyle))
+                if (GUI.Button(slot_1Rect, new GUIContent(slot_1, "button"), saveSlot_buttonStyle))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -627,6 +640,7 @@ public class MainMenu : Mz_BaseScene {
     private IEnumerator ShowInitializeNewShop()
     {
         sceneState = SceneState.showNewShop;
+		audioDescribe.PlayOnecSound(description_clips[2]);
 
         initializeNewGame_Group.gameObject.SetActiveRecursively(true);
         OK_button_Obj = initializeNewGame_Group.transform.Find("OK_button").gameObject;        
@@ -637,6 +651,8 @@ public class MainMenu : Mz_BaseScene {
             iTween.MoveTo(newgame_Group.gameObject, moveUpTransform_Data);
         if (loadgame_Group.gameObject.active)
             iTween.MoveTo(loadgame_Group.gameObject, moveUpTransform_Data);
+
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 200f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
 
         yield return new WaitForSeconds(1);
 
@@ -662,6 +678,8 @@ public class MainMenu : Mz_BaseScene {
         yield return new WaitForSeconds(1);
 
         iTween.MoveTo(mainmenu_Group.gameObject, moveDownTransform_Data);
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 90f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
+		
         newgame_Group.gameObject.SetActiveRecursively(false);
         initializeNewGame_Group.gameObject.SetActiveRecursively(false);
         loadgame_Group.gameObject.SetActiveRecursively(false);
@@ -671,6 +689,8 @@ public class MainMenu : Mz_BaseScene {
     private IEnumerator ShowCreateNewShop()
     {
         iTween.MoveTo(mainmenu_Group.gameObject, moveUpTransform_Data);
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 200f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
+		
         newgame_Group.gameObject.SetActiveRecursively(true);
         back_button.gameObject.SetActiveRecursively(true);
         OK_button_Obj = newgame_Group.transform.Find("OK_button").gameObject; 
@@ -690,6 +710,8 @@ public class MainMenu : Mz_BaseScene {
             iTween.MoveTo(initializeNewGame_Group.gameObject, moveUpTransform_Data);
         if(mainmenu_Group.gameObject.active)
             iTween.MoveTo(mainmenu_Group.gameObject, moveUpTransform_Data);
+		
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 200f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
 
         loadgame_Group.gameObject.SetActiveRecursively(true);
         back_button.gameObject.SetActiveRecursively(true);

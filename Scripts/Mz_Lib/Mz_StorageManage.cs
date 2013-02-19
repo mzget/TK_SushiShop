@@ -29,6 +29,9 @@ public class Mz_StorageManage : MonoBehaviour
     public static int TK_clothe_id = 255;
     public static int TK_hat_id = 255;
     public static int Pet_id = 0;
+	
+	public static bool _IsNoticeUser = false;
+	public static string KEY_NOTICE_USER_TO_UPGRADE = "NOTICE_USER_TO_UPGRADE";
 
 	/// <summary>
 	/// Storage data key.

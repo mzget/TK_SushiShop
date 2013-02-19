@@ -8,9 +8,17 @@ public class CharacterCustomization : MonoBehaviour {
         "Clothe_0001", "Clothe_0002", "Clothe_0003", 
          "Clothe_0004", "Clothe_0005", "Clothe_0006",
           "Clothe_0007", "Clothe_0008", "Clothe_0009",
-           "Clothe_0010", "Clothe_0011", "Clothe_0012",
+           "Clothe_0010", "Clothe_0011", "Clothe_0012",  
             "Clothe_0013", "Clothe_0014", "Clothe_0015",
     };
+	public Vector3[] arr_clothesOffsetPos = new Vector3[AvailableClothesNumber] {
+		Vector3.zero,		Vector3.zero,		Vector3.zero,
+		Vector3.zero,		Vector3.zero,		Vector3.zero,
+		Vector3.zero,		Vector3.right,		Vector3.zero,
+		Vector3.zero,		Vector3.zero,		Vector3.zero,
+		Vector3.zero,		Vector3.up,         Vector3.up * 0.5f,
+	};
+	
     public const int AvailableHatNumber = 23;
     public string[] arrHatNameSpec = new string[AvailableHatNumber] {
 		"Hat_0001", "Hat_0002", "Hat_0003", 
@@ -23,30 +31,29 @@ public class CharacterCustomization : MonoBehaviour {
         "Hat_0022", "Hat_0023", 
     };
 	private Vector3[] arr_hatLocalPos = new Vector3[AvailableHatNumber] {
-		new Vector3(0, -.095f, -4.5f),		
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,	
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero, // 5
+		Vector3.right,
 		new Vector3(0, -.095f, -4.5f),	
-		new Vector3(0, -.095f, -4.5f),
-		new Vector3(0, -.095f, -4.5f),	
-		new Vector3(0, -.095f, -4.5f),	
-		new Vector3(0, -.095f, -4.5f),   // 5.
-		new Vector3(0, -.095f, -4.5f),	
-		new Vector3(0, -.095f, -4.5f),	
-		new Vector3(0, -.095f, -4.5f),
-		new Vector3(0.025f, -0.095f, -4.5f),	
-        //new Vector3(0.003f, -0.08f, -0.4f),	    // 10.        
-		new Vector3(0.008f, -0.095f, -4.5f),	
-		new Vector3(0.01f, -0.04f, -4.5f),
-		new Vector3(0.01f, -0.04f, -4.5f),	
-		new Vector3(0.01f, -0.04f, -4.5f),
-		new Vector3(-0.03f, -0.028f, -4.5f),
-		new Vector3(0, -0.22f, -4.5f),	        // 15.
-		new Vector3(0.002f, 0f, -4.5f),	 
-		new Vector3(-0.003f, 0f, -4.5f),
-		new Vector3(-0.003f, 0f, -4.5f),
-		new Vector3(-0.003f, 0f, -4.5f),	
-		new Vector3(0.033f, -0.04f, -4.5f),  // 20.
-		new Vector3(-0.003f, 0f, -4.5f),
-		new Vector3(-0.003f, 0f, -4.5f),
+		Vector3.down * 6,
+		new Vector3(2.5f, -7f, 0f),	
+		new Vector3(0.8f, -7f, 0),	// 10.
+		new Vector3(0.85f, -6f, 0),
+		new Vector3(1f, 0.8f, 0),	
+		Vector3.zero,
+		new Vector3(-2f, -5.5f, 0),
+		Vector3.down * 22,	        // 15.
+		Vector3.zero,	 
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,	
+		Vector3.right * 3.9f, // 20.
+		Vector3.zero,
+		Vector3.zero,
 	};
 
     public tk2dSprite TK_clothe;
@@ -69,7 +76,8 @@ public class CharacterCustomization : MonoBehaviour {
 	void Update () {
 	
 	}
-
+	
+	private Vector3 originalClothePosition = new Vector3(0, -30, -3);
     public void ChangeClotheAtRuntime(int arr_index) {
         if (arr_index >= AvailableClothesNumber)
         {
@@ -82,9 +90,11 @@ public class CharacterCustomization : MonoBehaviour {
         }
 
         TK_clothe.spriteId = TK_clothe.GetSpriteIdByName(arr_clothesNameSpec[arr_index]);
+		TK_clothe.transform.localPosition = originalClothePosition + arr_clothesOffsetPos[arr_index];
 		Mz_StorageManage.TK_clothe_id = arr_index;
     }
 
+	private Vector3 originalHatPosition = new Vector3(0,0,-4.5f);
     public void ChangeHatAtRuntime(int arr_index) {
         if (arr_index >= AvailableHatNumber)
         {
@@ -97,7 +107,7 @@ public class CharacterCustomization : MonoBehaviour {
         }
 
         TK_hat.spriteId = TK_hat.GetSpriteIdByName(arrHatNameSpec[arr_index]);
-		TK_hat.transform.localPosition = arr_hatLocalPos[arr_index];
+		TK_hat.transform.localPosition = originalHatPosition + arr_hatLocalPos[arr_index];
 		Mz_StorageManage.TK_hat_id = arr_index;
 
 		if(arr_index == 8 || arr_index == 9 || arr_index == 10 || arr_index == 11) {

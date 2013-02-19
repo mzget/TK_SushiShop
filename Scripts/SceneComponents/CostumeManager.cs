@@ -83,6 +83,11 @@ public class CostumeManager : MonoBehaviour {
             low1_Sprite[i] = low1_Obj[i].GetComponent<tk2dSprite>();
         }
 
+        foreach (GameObject item in lockKey_obj)
+        {
+            item.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+        }
+
         this.confirmationWindowObj.SetActiveRecursively(false);
 		this.ShowTab(TabMenuState.clothes);
 	}

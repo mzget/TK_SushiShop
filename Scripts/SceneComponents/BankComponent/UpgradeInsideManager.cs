@@ -483,7 +483,7 @@ public class UpgradeInsideManager : MonoBehaviour {
                 {								
 					if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id) == false) {
                         Debug.Log("buying : Fatty_tuna_sushi");
-                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = fattyTuna_sushi_id, };
+                        currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 1, Item_id = fattyTuna_sushi_id, };
                         this.ActiveComfirmationWindow();
                     }
 					else{
@@ -505,7 +505,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 				{							
 					if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id) == false) {
 						Debug.Log("buying : Octopus_sushi");
-						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = octopus_sushi_id, };
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = octopus_sushi_id, };
 						this.ActiveComfirmationWindow();
 					}
 					else{
@@ -527,7 +527,7 @@ public class UpgradeInsideManager : MonoBehaviour {
                 {					
 					if(SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id) == false) {
 						Debug.Log("buying : Prawn_sushi");
-						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = prawn_sushi_id, };
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 3, Item_id = prawn_sushi_id, };
 						this.ActiveComfirmationWindow();
 					}
 					else{
@@ -553,7 +553,7 @@ public class UpgradeInsideManager : MonoBehaviour {
                 if (Mz_StorageManage.AccountBalance >= firstPage_prices[1, 0]) {					
 					if(SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id) == false) {
 						Debug.Log("buying : Salmon_sushi");
-						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 0, Item_id = salmon_sushi_id, };
+						currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 1, J = 0, Item_id = salmon_sushi_id, };
 						this.ActiveComfirmationWindow();
 					}
 					else{
@@ -712,7 +712,7 @@ public class UpgradeInsideManager : MonoBehaviour {
                 {
 					if(SushiShop.NumberOfCansellItem.Contains(ramen_id) == false) {
 						Debug.Log("buying : Ramen");
-                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 2, Item_id = ramen_id };
+                        this.currentOnUpdateTarget = new OnUpdateEvenArgs() { I = 0, J = 3, Item_id = ramen_id };
                         this.ActiveComfirmationWindow();
 					}
 					else

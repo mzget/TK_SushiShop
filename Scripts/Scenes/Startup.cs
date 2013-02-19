@@ -38,7 +38,7 @@ public class Startup : Mz_BaseScene {
 #elif UNITY_ANDROID
 		if(Screen.height < Main.HD_HEIGHT) {			
 			QualitySettings.SetQualityLevel(0);	
-		    Application.targetFrameRate = 30;
+		    Application.targetFrameRate = 60;
 		}
 		else {
         	QualitySettings.SetQualityLevel(1);
