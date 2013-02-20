@@ -5,7 +5,7 @@ public class HotTeapotBeh : ObjectsBeh {
 
 	public GameObject foodInstance;
 	private GoodsBeh food;
-	private Vector3 instancePosition = new Vector3(-85.5f, -45f, -1f);
+	private Vector3 instancePosition = new Vector3(-85.5f, -45f, -2f);
 	private FoodTrayBeh foodTrayBeh;
 
 	// Use this for initialization
@@ -39,6 +39,8 @@ public class HotTeapotBeh : ObjectsBeh {
                 food.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTrayEvent;
                 food.ObjectsBeh_destroyObj_Event = Handle_destroyObjectEvent;
             };
+            // Play sound effect.
+            baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[4]);
         }
 
 		base.OnTouchDown ();

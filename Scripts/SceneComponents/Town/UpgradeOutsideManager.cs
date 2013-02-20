@@ -43,14 +43,18 @@ class TableDataCollection {
 };
 
 class AccessoriesDatacollecction {
-	public readonly string[] NameSpeccify = new string[14] {
+	public const int Number_Of_AccessorriesCollections = 19;
+	
+	public readonly string[] NameSpeccify = new string[Number_Of_AccessorriesCollections] {
 		"access_0001", "access_0002", "access_0003", "access_0004", "access_0005", "access_0006", "access_0007", 
 		"access_0008", "access_0009", "access_0010", "access_0011", "access_0012", "access_0013", "access_0014", 
+		"access_0015", "access_0016", "access_0017", "access_0018", "access_0019", 
 	};
 
-	public readonly int[] upgradePrices  = new int[14] {
+	public readonly int[] upgradePrices  = new int[Number_Of_AccessorriesCollections] {
 		500, 600, 700, 800, 900, 1000, 1100, 
 		1200, 1300, 1400, 1500, 1600, 1700, 1800,
+		1200, 1300, 1400, 1500, 1600,
 	};
 };
 
@@ -309,7 +313,7 @@ public class UpgradeOutsideManager : MonoBehaviour
 		if(currentStateBehavior == StateBehavior.activeTable)
 			amountPages = 2;
 		else if(currentStateBehavior == StateBehavior.activeAccessories)
-			amountPages = 2;
+			amountPages = 3;
 		
 		if(currentPage < amountPages - 1)
 			currentPage += 1;
@@ -339,10 +343,10 @@ public class UpgradeOutsideManager : MonoBehaviour
 		if (currentStateBehavior == StateBehavior.activeTable) {
 			for (int i = 0; i < 7; i++) {
 				int j = i + (7 * pageSpecify);
-				if (j < tableData.NameSpecify.Length) 
+				if (j < tableData.NameSpecify.Length)
                 {
                     /// Display item sprite.
-					int spriteID = upgrade_sprites [i].GetSpriteIdByName (tableData.NameSpecify [j]);
+					int spriteID = upgrade_sprites [i].GetSpriteIdByName(tableData.NameSpecify [j]);
 					upgrade_sprites [i].spriteId = spriteID;
                     //@-- Display price.
 					if(UpgradeOutsideManager.CanDecoration_Table_list.Contains(j) == false) {
@@ -359,10 +363,11 @@ public class UpgradeOutsideManager : MonoBehaviour
 		else if (currentStateBehavior == StateBehavior.activeAccessories) {
 			for (int i = 0; i < 7; i++) {
 				int j = i + (7 * pageSpecify);
+				
 				if (j < accessoriesData.NameSpeccify.Length) {
                     /// Display item sprite.
 					int spriteID = upgrade_sprites [i].GetSpriteIdByName (accessoriesData.NameSpeccify [j]);
-					upgrade_sprites [i].spriteId = spriteID;
+					upgrade_sprites[i].spriteId = spriteID;
                     //@-- Display price.
 					if(UpgradeOutsideManager.CanDecoration_Accessories_list.Contains(j) == false) {
 						itemPrice_textmesh[i].gameObject.SetActiveRecursively(true);
@@ -372,6 +377,12 @@ public class UpgradeOutsideManager : MonoBehaviour
 					else {
 						itemPrice_textmesh[i].gameObject.SetActiveRecursively(false);
 					}
+				}
+				else if(j >= accessoriesData.NameSpeccify.Length) {
+                    /// Display item sprite.
+					int spriteID = upgrade_sprites [i].GetSpriteIdByName("none_button_up");
+					upgrade_sprites[i].spriteId = spriteID;
+					itemPrice_textmesh[i].gameObject.SetActiveRecursively(false);
 				}
 			}	
 		}
@@ -600,18 +611,23 @@ public class UpgradeOutsideManager : MonoBehaviour
 			}
 		}
 		else if(currentStateBehavior == StateBehavior.activeAccessories) {
-			if(CanDecoration_Accessories_list.Contains(targetItem_id) == false) {
-				if(Mz_StorageManage.AccountBalance >= accessoriesData.upgradePrices[targetItem_id]) {				
-					/// Todo... Asking to buy item.
-					confirmWindow_Obj.SetActiveRecursively(true);
-					this.PlaySoundOpenComfirmationWindow();
-					transaction_id = targetItem_id;
+			if(targetItem_id < accessoriesData.NameSpeccify.Length) {
+				if(CanDecoration_Accessories_list.Contains(targetItem_id) == false) {
+					if(Mz_StorageManage.AccountBalance >= accessoriesData.upgradePrices[targetItem_id]) {				
+						/// Todo... Asking to buy item.
+						confirmWindow_Obj.SetActiveRecursively(true);
+						this.PlaySoundOpenComfirmationWindow();
+						transaction_id = targetItem_id;
+					}
+					else 
+						this.PlaySoundWarning();
 				}
-				else 
-					this.PlaySoundWarning();
+				else
+					DisplayAccessories(targetItem_id);
 			}
-			else
-				DisplayAccessories(targetItem_id);
+			else {
+				sceneController.audioEffect.PlayOnecSound(sceneController.audioEffect.wrong_Clip);
+			}
 		}
     }
 

@@ -10,7 +10,7 @@ public class AudioEffectManager : MonoBehaviour {
 	public AudioClip buttonHover_Clip;
 	public AudioClip correct_Clip;
 	public AudioClip wrong_Clip;
-	public AudioClip tick_Clip;
+    public AudioClip pop_clip;
     //<!-- Bakery scene.
     public AudioClip dingdong_clip;
 	public AudioClip calc_clip;

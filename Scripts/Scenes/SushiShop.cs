@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UE = UnityEngine;
 
 [System.Serializable]
 public class ShopTutor {
@@ -33,8 +34,8 @@ public class SushiShop : Mz_BaseScene {
 	public List<Food> CanSellGoodLists = new List<Food>();
 	public AudioClip[] en_greeting_clip = new AudioClip[6];
     public AudioClip[] th_greeting_clip = new AudioClip[7];
-    private AudioClip[] apologize_clip = new AudioClip[5];
-    private AudioClip[] thanksCustomer_clips = new AudioClip[2];
+    public AudioClip[] apologize_clip = new AudioClip[5];
+    public AudioClip[] thanksCustomer_clips = new AudioClip[2];
 	
 	//<!-- in game button.
 	public GameObject close_button;	
@@ -174,6 +175,7 @@ public class SushiShop : Mz_BaseScene {
         StartCoroutine(this.ChangeShopLogoIcon());
         StartCoroutine(this.InitailizeShopLabelGUI());
         StartCoroutine(this.InitializeGameEffect());
+		StartCoroutine_Auto(this.ReInitializeAudioClipData());
         StartCoroutine(this.SceneInitializeAudio());
         StartCoroutine(this.InitializeObjectAnimation());
 
@@ -273,7 +275,7 @@ public class SushiShop : Mz_BaseScene {
             //			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
         }
 
-        this.ReInitializingMerchandiseNameAudio();
+//        this.ReInitializingMerchandiseNameAudio();
 
         yield return 0;
     }
@@ -874,13 +876,19 @@ public class SushiShop : Mz_BaseScene {
 
         if(MainMenu._HasNewGameEvent) {
             MainMenu._HasNewGameEvent = false;
+			Town.IntroduceGameUI_Event += Town.Handle_IntroduceGameUI_Event;
+			
             Destroy(shopTutor.greeting_textmesh);
             shopTutor.goaway_button_obj.active = true;
             shopTutor = null;
             darkShadowPlane.transform.position += Vector3.forward * 2f;
 
-            audioDescribe.PlayOnecSound(description_clips[5]);
+            audioDescribe.PlayOnecSound(description_clips[7]);
         }
+		else {
+			int r = UE.Random.Range(0, thanksCustomer_clips.Length);
+			audioDescribe.PlayOnecSound(thanksCustomer_clips[r]);
+		}
     }
 
 	private const string Packages_ResourcePath = "Packages/";

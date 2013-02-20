@@ -47,7 +47,7 @@ public class SushiProduction : ObjectsBeh {
 	
 	public GameObject sushiPopup;
     private ObjectsBeh sushiRice;
-    private Vector3 sushiRice_Pos = new Vector3(0, -44f, -1f);
+    private Vector3 sushiRice_Pos = new Vector3(0, -44f, -2f);
 	internal GameObject sushi_rice_solution;
     internal GoodsBeh sushi;
     private SushiShop sceneManager;
@@ -176,9 +176,11 @@ public class SushiProduction : ObjectsBeh {
 
 				sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Sushi_rice_anim, typeof(GameObject))) as GameObject;
 				sushi_rice_solution.transform.position = new Vector3(0, -25, -2);
+
 				tk2dAnimatedSprite sushi_rice_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
 				sushi_rice_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 					Destroy(sushi_rice_solution);
+
                     GameObject sushiRiceInstance = Instantiate(Resources.Load("FoodSolution/Sushi_rice", typeof(GameObject))) as GameObject;
                     sushiRiceInstance.transform.position = sushiRice_Pos;
 
@@ -192,6 +194,8 @@ public class SushiProduction : ObjectsBeh {
 
 					this.currentProductionState = ProductionState.WaitForSushiIngredient;
 				};
+				// Play sound effect.
+				baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
 			}
 		}
 		else if(nameInput == Alga) {
@@ -226,6 +230,8 @@ public class SushiProduction : ObjectsBeh {
 
 						this.currentProductionState = ProductionState.CompleteProduction;
 					};
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[6]);
 				}
 			}
 			else {
@@ -259,6 +265,8 @@ public class SushiProduction : ObjectsBeh {
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[6]);
                 }
             }
 		} 
@@ -290,6 +298,8 @@ public class SushiProduction : ObjectsBeh {
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[6]);
                 }
             }
 		}
@@ -323,6 +333,8 @@ public class SushiProduction : ObjectsBeh {
 		                sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 					};
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
 				}
 			}
             else
@@ -361,6 +373,8 @@ public class SushiProduction : ObjectsBeh {
 		                sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
 					};
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
 				}
 			}
             else
@@ -402,6 +416,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -443,6 +459,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -484,6 +502,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -525,6 +545,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -566,6 +588,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -607,6 +631,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else
@@ -648,6 +674,8 @@ public class SushiProduction : ObjectsBeh {
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
                         sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
                     };
+					// Play sound effect.
+					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
                 }
             }
             else

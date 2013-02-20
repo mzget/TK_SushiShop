@@ -11,7 +11,9 @@ public class GoodsBeh : ObjectsBeh {
 	string animationName_001 = string.Empty;
 	string animationName_002 = string.Empty;
 
-	//<!-- WaitForIngredientEvent.
+    #region <!-- Events data.
+
+    //<!-- WaitForIngredientEvent.
 	protected bool _isWaitFotIngredient = false;	
 	protected event System.EventHandler waitForIngredientEvent;
     protected void CheckingDelegationOfWaitFotIngredientEvent(object sender, EventArgs e) {
@@ -38,7 +40,8 @@ public class GoodsBeh : ObjectsBeh {
 		if (putObjectOnTray_Event != null) 
         {
 			putObjectOnTray_Event (this, e);
-
+            sceneManager.audioEffect.PlayOnecWithOutStop(sceneManager.soundEffect_clips[5]);
+			
             Debug.Log(putObjectOnTray_Event + ":: OnPutOnTray_event : " + this.name);
 
             if(MainMenu._HasNewGameEvent)
@@ -46,7 +49,9 @@ public class GoodsBeh : ObjectsBeh {
 		}
 	}
 
-	protected override void ImplementDraggableObject ()
+    #endregion
+
+    protected override void ImplementDraggableObject ()
 	{
 		base.ImplementDraggableObject ();
 		
@@ -125,6 +130,14 @@ public class GoodsBeh : ObjectsBeh {
         putObjectOnTray_Event += new EventHandler<PutGoodsToTrayEventArgs>(GoodsBeh_putObjectOnTray_Event);
     }
 
+    protected override void OnTouchBegan()
+    {
+        base.OnTouchBegan();
+
+        this.transform.localScale += new Vector3(1.2f, 1.2f, 1);
+        baseScene.audioEffect.PlayOnecWithOutStop(baseScene.audioEffect.pop_clip);
+    }
+
 	/// <!-- OnInput Events.
 	protected override void OnTouchDown ()
 	{
@@ -141,6 +154,13 @@ public class GoodsBeh : ObjectsBeh {
 
 		base.OnTouchDown();
 	}
+
+    protected override void OnTouchEnded()
+    {
+        base.OnTouchEnded();
+
+        this.transform.localScale -= new Vector3(1.2f, 1.2f, 1);
+    }
 
     public override void OnDispose()
     {

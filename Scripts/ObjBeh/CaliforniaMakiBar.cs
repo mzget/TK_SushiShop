@@ -42,6 +42,8 @@ public class CaliforniaMakiBar : ObjectsBeh {
                 food.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
                 food.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;
             };
+            // Play sound effect.
+            baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[3]);
 		}
 	}
 

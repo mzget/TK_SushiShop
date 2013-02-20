@@ -33,6 +33,8 @@ public class IcecreamTankBeh : ObjectsBeh {
 				icecreamBeh.GoodsBeh_putObjectOnTray_Event = icecreamBeh_putObjectOnTray_Event;
 				icecreamBeh.ObjectsBeh_destroyObj_Event = icecreamBeh_destroyObj_Event;
 			};
+			// Play sound effect.
+			baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[1]);
 		}
 
 		base.OnTouchDown();

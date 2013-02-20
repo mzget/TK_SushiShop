@@ -13,6 +13,8 @@ public class ObjectsBeh : Base_ObjectBeh {
 	protected bool _canActive = false;	
     internal Vector3 originalPosition;
 
+    #region <!-- Events data.
+
     /// <summary>
     /// destroyObj_Event.
     /// </summary>	
@@ -21,10 +23,14 @@ public class ObjectsBeh : Base_ObjectBeh {
         if (destroyObj_Event != null)
         {
             destroyObj_Event(this, e);
+            baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[1]);
+
             Debug.Log(destroyObj_Event + ": destroyObj_Event : " + this.name);
         }
     }
     internal System.EventHandler ObjectsBeh_destroyObj_Event;
+
+    #endregion
 
     protected virtual void Awake()
     {

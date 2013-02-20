@@ -44,6 +44,8 @@ public class SoupTankBeh : ObjectsBeh {
             {
                 soup._canDragaable = true;
             };
+            // Play sound effect.
+            baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[4]);
         }
 
         base.OnTouchDown();

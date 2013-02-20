@@ -46,6 +46,8 @@ public class IceBreakerBeh : ObjectsBeh
             {
                 food._canDragaable = true;
             };
+            // Play sound effect.
+            baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[7]);
         }
      
         base.OnTouchDown();

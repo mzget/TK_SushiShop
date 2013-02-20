@@ -34,6 +34,8 @@ public class IceTeaTankBeh : ObjectsBeh {
             instance = Instantiate(Resources.Load(PATH_OF_INSTANCE_PREFAB, typeof(GameObject))) as GameObject;
             instance.transform.position = instancePosition;
             instance.gameObject.name = GoodDataStore.FoodMenuList.Iced_greenTea.ToString();
+        
+			baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[2]);
 
             animatedInstance = instance.GetComponent<tk2dAnimatedSprite>();
             animatedInstance.Play();
