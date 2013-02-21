@@ -2,14 +2,29 @@ using UnityEngine;
 using System.Collections;
 
 public class ManualBeh : ObjectsBeh {
+	private readonly string[] arr_titleImgName = new string[12] {
+		GoodDataStore.FoodMenuList.Salmon_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Eel_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Crab_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Octopus_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Prawn_sushi.ToString(),
+		GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString(),
+		GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString(),
+		GoodDataStore.FoodMenuList.Roe_maki.ToString(),
+	};
 
-    private string[] arr_foodOrderName = new string[12] {
+    private readonly string[] arr_foodOrderName = new string[12] {
         "Salmon_form","SkipjackTuna_form","SweetenedEgg_form","Eel_form","FattyTuna_form","SpicyShell_form",
         "Crab_form","Octopus_form","Prawn_form","Cucumber_maki_form","PrawnBrownMaki_form","RoeMaki_form",
     };
 
     public GameObject manualCookbook;
 	private tk2dAnimatedSprite cookbook_animatedSprite;
+	public tk2dSprite[] titles_sprite = new tk2dSprite[3];
     public tk2dSprite form_0;
     public tk2dSprite form_1;
     public tk2dSprite form_2;
@@ -52,6 +67,10 @@ public class ManualBeh : ObjectsBeh {
     }
 
     internal void Setting_CookbookOrder() {
+		for (int i = 0; i < titles_sprite.Length; i++) {
+			titles_sprite [i].spriteId = titles_sprite [i].GetSpriteIdByName (arr_titleImgName [(currentPage_id * 3) + i]);
+		}
+
         form_0.spriteId = form_0.GetSpriteIdByName(arr_foodOrderName[(currentPage_id * 3) + 0]);
         form_1.spriteId = form_1.GetSpriteIdByName(arr_foodOrderName[(currentPage_id * 3) + 1]);
         form_2.spriteId = form_2.GetSpriteIdByName(arr_foodOrderName[(currentPage_id * 3) + 2]);
@@ -62,6 +81,10 @@ public class ManualBeh : ObjectsBeh {
     }
 	
 	private void ActivateCookbookFormOrder(bool p_active) {
+		foreach (var item in titles_sprite) {
+			item.gameObject.active = p_active;
+		}
+
 		form_0.gameObject.active = p_active;
 		form_1.gameObject.active = p_active;
 		form_2.gameObject.active = p_active;

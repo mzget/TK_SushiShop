@@ -28,11 +28,14 @@ public class Dressing : Mz_BaseScene {
 
     // Use this for initialization
 	void Start () {
+		StartCoroutine_Auto (this.ReInitializeAudioClipData ());
         StartCoroutine(InitializeAudio());
 		StartCoroutine(base.InitializeIdentityGUI());
 		
         Mz_ResizeScale.ResizingScale(background_transform);
         iTween.MoveTo(cloudAndFogs, iTween.Hash("x", -150f, "islocal", true, "time", 10f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
+		
+		audioDescribe.PlayOnecSound(description_clips[0]);
 	}
 
     protected new IEnumerator InitializeAudio()
@@ -45,6 +48,22 @@ public class Dressing : Mz_BaseScene {
 		 
 		yield return null; 
     }
+	
+	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/SceneInfo/";
+	private IEnumerator ReInitializeAudioClipData()
+	{
+		description_clips.Clear();
+		if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH)
+		{
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_suit", typeof(AudioClip)) as AudioClip);
+		}
+		else if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN)
+		{
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_suit", typeof(AudioClip)) as AudioClip);
+		}
+		
+		yield return 0;
+	}
 
 	public override void OnInput (string nameInput)
 	{

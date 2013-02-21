@@ -975,7 +975,7 @@ public class UpgradeInsideManager : MonoBehaviour {
         upgradeButton_Sprites[e.I, e.J].spriteId = UnActiveUpgradeButtonID;
         SushiShop.NumberOfCansellItem.Add(e.Item_id);
 		CalculateObjectsToDisplay();
-
+        
 		sceneController.ManageAvailabelMoneyBillBoard();
         sceneController.gameEffectManager.Create2DSpriteAnimationEffect(GameEffectManager.BLOOMSTAR_EFFECT_PATH, upgradeButton_Objs[e.I, e.J].transform);
         sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.longBring_clip);

@@ -275,26 +275,25 @@ public class SushiShop : Mz_BaseScene {
             //			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
         }
 
-//        this.ReInitializingMerchandiseNameAudio();
+        this.ReInitializingMerchandiseNameAudio();
 
         yield return 0;
     }
 
     private void ReInitializingMerchandiseNameAudio()
     {
-        audioDescriptionData.merchandiseNameDescribes = new AudioClip[30];
+        audioDescriptionData.merchandiseNameDescribes = new AudioClip[GoodDataStore.FoodDatabaseCapacity];
 
         if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN)
         {
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < GoodDataStore.FoodDatabaseCapacity; i++)
             {
-                audioDescriptionData.merchandiseNameDescribes[i] =
-                    Resources.Load(PATH_OF_MERCHANDISC_CLIP + "EN/" + goodDataStore.FoodDatabase_list[i].name, typeof(AudioClip)) as AudioClip;
+                audioDescriptionData.merchandiseNameDescribes[i] = Resources.Load(PATH_OF_MERCHANDISC_CLIP + "EN/" + goodDataStore.FoodDatabase_list[i].name, typeof(AudioClip)) as AudioClip;
             }
         }
         else if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH)
         {
-            for (int i = 0; i < 30; i++)
+			for (int i = 0; i < GoodDataStore.FoodDatabaseCapacity; i++)
             {
                 audioDescriptionData.merchandiseNameDescribes[i] = Resources.Load(PATH_OF_MERCHANDISC_CLIP + "TH/" + goodDataStore.FoodDatabase_list[i].name, typeof(AudioClip)) as AudioClip;
             }

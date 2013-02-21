@@ -29,6 +29,8 @@ class AwningDataCollection {
 }
 
 class TableDataCollection {
+	public const int NUMBER_OF_TABLE_COLLECTIONS = 16;
+	
 	public readonly string[] NameSpecify = new string[16] {
 		"Table_0001", "Table_0002", "Table_0003", "Table_0004", "Table_0005", "Table_0006", "Table_0007",
 		"Table_0008", "Table_0009", "Table_0010", "Table_0011", "Table_0012", "Table_0013", "Table_0014",
@@ -108,6 +110,8 @@ public class UpgradeOutsideManager : MonoBehaviour
 
 	public enum StateBehavior { activeRoof = 0, activeAwning, activeTable, activeAccessories, activePet, };
 	public StateBehavior currentStateBehavior;
+	private const int NumberOfTablePage = 3;
+	private const int NumberOfAccessoriePage = 3;
 	int amountPages;
 	int currentPage;
     private int transaction_id = 0;
@@ -311,9 +315,9 @@ public class UpgradeOutsideManager : MonoBehaviour
 	
 	public void HaveNextPageCommand() {
 		if(currentStateBehavior == StateBehavior.activeTable)
-			amountPages = 2;
+			amountPages = NumberOfTablePage;
 		else if(currentStateBehavior == StateBehavior.activeAccessories)
-			amountPages = 3;
+			amountPages = NumberOfAccessoriePage;
 		
 		if(currentPage < amountPages - 1)
 			currentPage += 1;
@@ -325,10 +329,10 @@ public class UpgradeOutsideManager : MonoBehaviour
 	
 	public void HavePreviousPageCommand() {		
 		if(currentStateBehavior == StateBehavior.activeTable) {
-			amountPages = 2;
+			amountPages = NumberOfTablePage;
 		}
 		else if(currentStateBehavior == StateBehavior.activeAccessories)
-			amountPages = 2;
+			amountPages = NumberOfAccessoriePage;
 		
 		if(currentPage > 0)
 			currentPage -= 1;
@@ -358,6 +362,12 @@ public class UpgradeOutsideManager : MonoBehaviour
 						itemPrice_textmesh[i].gameObject.SetActiveRecursively(false);
 					}
 				}
+                else {
+                    /// Display item sprite.
+					int spriteID = upgrade_sprites [i].GetSpriteIdByName("none_button_up");
+					upgrade_sprites[i].spriteId = spriteID;
+					itemPrice_textmesh[i].gameObject.SetActiveRecursively(false);                    
+                }
 			}		
 		} 
 		else if (currentStateBehavior == StateBehavior.activeAccessories) {
@@ -595,19 +605,28 @@ public class UpgradeOutsideManager : MonoBehaviour
 				DisplayAwning(targetItem_id);
 			}
 		}
-		else if(currentStateBehavior == StateBehavior.activeTable) {
-			if(CanDecoration_Table_list.Contains(targetItem_id) == false) {
-				if(Mz_StorageManage.AccountBalance >= tableData.upgradePrices[targetItem_id]) {				
-					/// Todo... Asking to buy item.
-					confirmWindow_Obj.SetActiveRecursively(true);
-					this.PlaySoundOpenComfirmationWindow();
-					transaction_id = targetItem_id;
+		else if(currentStateBehavior == StateBehavior.activeTable)
+		{
+			if(targetItem_id < tableData.NameSpecify.Length)
+			{
+				if(CanDecoration_Table_list.Contains(targetItem_id) == false)
+				{
+					if(Mz_StorageManage.AccountBalance >= tableData.upgradePrices[targetItem_id])
+					{				
+						/// Todo... Asking to buy item.
+						confirmWindow_Obj.SetActiveRecursively(true);
+						this.PlaySoundOpenComfirmationWindow();
+						transaction_id = targetItem_id;
+					}
+					else 
+						this.PlaySoundWarning();
 				}
-				else 
-					this.PlaySoundWarning();
+				else {
+					DisplayTable(targetItem_id);
+				}
 			}
 			else {
-				DisplayTable(targetItem_id);
+				sceneController.audioEffect.PlayOnecSound(sceneController.audioEffect.wrong_Clip);
 			}
 		}
 		else if(currentStateBehavior == StateBehavior.activeAccessories) {

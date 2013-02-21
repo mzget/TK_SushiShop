@@ -23,6 +23,7 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 
 	// Use this for initialization
 	void Start () {
+		StartCoroutine(this.ReInitializeAudioClipData());
 		StartCoroutine(this.InitializeAudio());
 		StartCoroutine(base.InitializeIdentityGUI());
 
@@ -30,6 +31,8 @@ public class DisplayRewards_Scene : Mz_BaseScene {
         iTween.MoveTo(cloudAndFog_Objs[0].gameObject, iTween.Hash("y", 0f, "islocal", true, "time", 3f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
         iTween.MoveTo(cloudAndFog_Objs[1].gameObject, iTween.Hash("y", 20f, "islocal", true, "time", 4f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
         iTween.MoveTo(cloudAndFog_Objs[2].gameObject, iTween.Hash("y", 40f, "islocal", true, "time", 5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
+				
+		this.audioDescribe.PlayOnecSound(description_clips[0]);
 	}
 	
 	private new IEnumerator InitializeAudio() {
@@ -41,6 +44,23 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 
         yield return null;
 	}
+
+	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/SceneInfo/";
+	private IEnumerator ReInitializeAudioClipData()
+	{
+		description_clips.Clear();
+		if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH)
+		{
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_reward", typeof(AudioClip)) as AudioClip);
+		}
+		else if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN)
+		{
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_reward", typeof(AudioClip)) as AudioClip);
+		}
+		
+		yield return 0;
+	}
+
 	
 	// Update is called once per frame
 //	void Update () {
@@ -52,21 +72,21 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 //		base.OnInput (nameInput);
 		
 		switch (nameInput) {
-		case BACK_BUTTON_NAME : if(!Application.isLoadingLevel) {
-				Mz_LoadingScreen.LoadSceneName = Mz_BaseScene.SceneNames.Town.ToString();
-				Application.LoadLevel(Mz_BaseScene.SceneNames.LoadingScene.ToString());
-			}
+			case BACK_BUTTON_NAME : if(!Application.isLoadingLevel) {
+					Mz_LoadingScreen.LoadSceneName = Mz_BaseScene.SceneNames.Town.ToString();
+					Application.LoadLevel(Mz_BaseScene.SceneNames.LoadingScene.ToString());
+				}
+				break;
+			case NEXT_BUTTON_NAME:
+				rewardManager.HaveNextPageCommand();
+				tk_animationManager.PlayGoodAnimation();
+				break;
+			case PREVIOUS_BUTTON_NAME : 
+				rewardManager.HavePreviousCommand();
+				tk_animationManager.PlayGoodAnimation();
+				break;
+			default:
 			break;
-		case NEXT_BUTTON_NAME:
-			rewardManager.HaveNextPageCommand();
-			tk_animationManager.PlayGoodAnimation();
-			break;
-		case PREVIOUS_BUTTON_NAME : 
-			rewardManager.HavePreviousCommand();
-			tk_animationManager.PlayGoodAnimation();
-			break;
-		default:
-		break;
 		}
 	}
 }
