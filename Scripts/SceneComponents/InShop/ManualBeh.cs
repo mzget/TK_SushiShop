@@ -58,6 +58,7 @@ public class ManualBeh : ObjectsBeh {
     private void ActiveCookbookObjectGroup() {
         manualCookbook.SetActiveRecursively(true);
         baseScene.plane_darkShadow.active = true;
+		this.Setting_CookbookOrder ();
     }
 
     private void UnActiveCookbookObjectGroup()

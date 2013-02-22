@@ -3,17 +3,15 @@ using System.Collections;
 
 public class InstantFoodManager : MonoBehaviour {
 
-    public FoodTrayBeh foodtrayBeh;
-
+    public SushiShop stageManager;
     private GameObject kimjiInstance;
     public GoodsBeh kimji;
-//    public InstantFood hotTea;
 
 	// Use this for initialization
 	void Start () {
         Debug.Log("InstantFoodManager : Start");
 
-        foodtrayBeh = this.GetComponent<SushiShop>().foodTrayBeh;
+        stageManager = this.GetComponent<SushiShop>();
 	}
 
     internal IEnumerator Create_InstantFoodObject()
@@ -29,6 +27,7 @@ public class InstantFoodManager : MonoBehaviour {
                 kimjiInstance.name = GoodDataStore.FoodMenuList.Kimji.ToString();
 
                 kimji = kimjiInstance.GetComponent<GoodsBeh>();
+                kimji.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Kimji].costs;
                 kimji._canDragaable = true;
                 kimji.GoodsBeh_putObjectOnTray_Event = InstantFood_putObjectOnTray_Event;
                 kimji.ObjectsBeh_destroyObj_Event = InstantFood_destroyObj_Event;
@@ -39,10 +38,10 @@ public class InstantFoodManager : MonoBehaviour {
     private void InstantFood_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e)
     {
         GoodsBeh obj = sender as GoodsBeh;
-        if (foodtrayBeh.goodsOnTray_List.Contains(obj) == false && foodtrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (stageManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && stageManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            foodtrayBeh.goodsOnTray_List.Add(obj);
-            foodtrayBeh.ReCalculatatePositionOfGoods();
+            stageManager.foodTrayBeh.goodsOnTray_List.Add(obj);
+            stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 			
 			if(e.foodInstance.name == kimjiInstance.name)
 			{
@@ -62,8 +61,12 @@ public class InstantFoodManager : MonoBehaviour {
 
     private void InstantFood_destroyObj_Event(object sender, System.EventArgs e)
     {
-        foodtrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        foodtrayBeh.ReCalculatatePositionOfGoods();
+		GoodsBeh goods = sender as GoodsBeh;
+		Mz_StorageManage.AvailableMoney -= goods.costs;
+        stageManager.ReFreshAvailableMoney();
+
+		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
+		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
         StartCoroutine_Auto(this.Create_InstantFoodObject());
     }

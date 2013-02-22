@@ -93,7 +93,8 @@ public class SheepBank : Mz_BaseScene {
         Mz_ResizeScale.ResizingScale(background_obj.transform);
 		
 		SheepBank.HaveUpgradeOutSide = false;
-
+		
+		StartCoroutine_Auto(ReInitializeAudioClipData());
         StartCoroutine(this.InitializeAudio());
         StartCoroutine(base.InitializeIdentityGUI());
         StartCoroutine(this.InitializeBankOfficer());
@@ -233,7 +234,38 @@ public class SheepBank : Mz_BaseScene {
         audioBackground_Obj.audio.Play();
 		
 		yield return 0;
-    }
+	}
+	
+	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/SheepBank/";
+	private const string PATH_OF_NOTIFICATION_CLIP = "AudioClips/Notifications/";
+	private IEnumerator ReInitializeAudioClipData()
+	{
+		description_clips.Clear();
+		if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) {
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_introduce", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_upgradeInside", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_upgradeOutside", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_SelectionUpgradeItem", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "TH_deposit_warning", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "TH_cannot_donation", typeof(AudioClip)) as AudioClip);
+			
+			short_introduce_clip = Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_greeting", typeof(AudioClip)) as AudioClip;
+		}
+		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_introduce", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_upgradeInside", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_upgradeOutside", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_SelectionUpgradeItem", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "EN_deposit_warning", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "EN_cannot_donation", typeof(AudioClip)) as AudioClip);
+			
+			short_introduce_clip = Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_greeting", typeof(AudioClip)) as AudioClip;
+		}		
+		
+		yield return 0;
+	}
 	
 	protected override void InitializeGameEffectGenerator ()
 	{
@@ -388,8 +420,6 @@ public class SheepBank : Mz_BaseScene {
 	{
 		base.Update ();
 	}
-	
-	private new void OnGUI () {	}
 	
     public override void OnInput (string nameInput)	
 	{

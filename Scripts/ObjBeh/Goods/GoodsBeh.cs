@@ -8,14 +8,15 @@ public class GoodsBeh : ObjectsBeh {
     protected SushiShop sceneManager;
 
     public Vector3 offsetPos;	
-	string animationName_001 = string.Empty;
-	string animationName_002 = string.Empty;
+	private string animationName_001 = string.Empty;
+	private string animationName_002 = string.Empty;
+	internal int costs;
 
     #region <!-- Events data.
 
     //<!-- WaitForIngredientEvent.
 	protected bool _isWaitFotIngredient = false;	
-	protected event System.EventHandler waitForIngredientEvent;
+	protected event EventHandler waitForIngredientEvent;
     protected void CheckingDelegationOfWaitFotIngredientEvent(object sender, EventArgs e) {
         if (waitForIngredientEvent != null)
             waitForIngredientEvent(sender, System.EventArgs.Empty);
@@ -89,7 +90,6 @@ public class GoodsBeh : ObjectsBeh {
 		}
 		else {
             if(this._isDropObject) {
-//            if(_isDraggable == false) {
                 this.transform.position = originalPosition;
                 this._isDropObject = false;
                 base._isDraggable = false;
@@ -138,7 +138,6 @@ public class GoodsBeh : ObjectsBeh {
         baseScene.audioEffect.PlayOnecWithOutStop(baseScene.audioEffect.pop_clip);
     }
 
-	/// <!-- OnInput Events.
 	protected override void OnTouchDown ()
 	{
 		if(_canActive && _isWaitFotIngredient) {

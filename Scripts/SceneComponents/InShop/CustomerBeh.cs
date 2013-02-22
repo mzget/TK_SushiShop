@@ -2,6 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+public class CustomerOrderRequire {
+	public Food food {get; set;}
+	//    public int number {get; set;}
+};
+
 public class CustomerBeh : MonoBehaviour {
 	
 	private SushiShop sceneManager;	
@@ -100,7 +106,8 @@ public class CustomerBeh : MonoBehaviour {
         }
 
         for(int j = 0; j < customerOrderRequire.Count; j++) {
-            amount += prices[j]; // * number[j];
+            amount += prices[j]; 
+//			 * number[j];
         }
 
         Debug.Log("CalculationPrice => amount : " + amount);

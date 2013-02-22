@@ -136,10 +136,4 @@ public class Dressing : Mz_BaseScene {
     {
         this.audioEffect.PlayOnecWithOutStop(audioEffect.wrong_Clip);
     }
-
-	internal void ReFreshAvailableMoney ()
-	{
-		base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-		base.availableMoney.Commit();
-	}
 }

@@ -198,10 +198,22 @@ public class MainMenu : Mz_BaseScene {
             iTween.ScaleTo(OK_button_Obj, iTween.Hash("scale", new Vector3(1.2f, 1.2f, 1f), "time", .6f, "looptype", iTween.LoopType.pingPong));
 	}
 
-	protected override void OnGUI() {
-        base.OnGUI();
+	private void OnGUI() {
 
 		GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1, Screen.height / Main.GAMEHEIGHT, 1));
+
+		if (_hasQuitCommand)
+        {			
+            GUI.BeginGroup(new Rect(Screen.width / 2 - (200 * Mz_OnGUIManager.Extend_heightScale), Main.GAMEHEIGHT / 2 - 100, 400 * Mz_OnGUIManager.Extend_heightScale, 200), "Do you want to quit ?", GUI.skin.window);
+            {
+                if (GUI.Button(new Rect(60 * Mz_OnGUIManager.Extend_heightScale, 155, 100 * Mz_OnGUIManager.Extend_heightScale, 40), "Yes"))
+                    Application.Quit();
+                else if (GUI.Button(new Rect(240 * Mz_OnGUIManager.Extend_heightScale, 155, 100 * Mz_OnGUIManager.Extend_heightScale, 40), "No")) {
+                    _hasQuitCommand = false; 
+				}
+            }
+            GUI.EndGroup();
+        }
 		
 		GUI.BeginGroup(Mz_OnGUIManager.viewPort_rect);
         {

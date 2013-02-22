@@ -67,7 +67,7 @@ public class Mz_BaseScene : MonoBehaviour {
 	#endregion
 	
 	protected bool _onDestroyScene = false;
-    public bool _hasQuitCommand = false;
+    protected bool _hasQuitCommand = false;
 
 
 	void Awake ()
@@ -104,9 +104,6 @@ public class Mz_BaseScene : MonoBehaviour {
 	{
 		Debug.Log("Mz_BaseScene :: Initialization");
 	}
-
-	// Use this for initialization
-//	void Start () {	}
 	
 	protected void InitializeAudio()
     {
@@ -127,7 +124,7 @@ public class Mz_BaseScene : MonoBehaviour {
 				audioDescribe.audio.mute = !ToggleAudioActive;
         }
         
-        /// <! Manage audio background.
+        // <! Manage audio background.
 		audioBackground_Obj = GameObject.FindGameObjectWithTag("AudioBackground");
         if (audioBackground_Obj == null)
         {
@@ -178,6 +175,12 @@ public class Mz_BaseScene : MonoBehaviour {
 
         yield return null;
     }
+   
+	internal void ReFreshAvailableMoney()
+	{
+		this.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
+		this.availableMoney.Commit();
+	}
     
     /// <summary>
     /// Virtual method. Used to generate game effect at runtime.
@@ -311,23 +314,4 @@ public class Mz_BaseScene : MonoBehaviour {
     }
 
     public virtual void OnDispose() { }
-     
-    protected virtual void OnGUI()
-    {
-        GUI.depth = 0;
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1, Screen.height / Main.GAMEHEIGHT, 1));
-
-        if (_hasQuitCommand)
-        {			
-            GUI.BeginGroup(new Rect(Screen.width / 2 - (200 * Mz_OnGUIManager.Extend_heightScale), Main.GAMEHEIGHT / 2 - 100, 400 * Mz_OnGUIManager.Extend_heightScale, 200), "Do you want to quit ?", GUI.skin.window);
-            {
-                if (GUI.Button(new Rect(60 * Mz_OnGUIManager.Extend_heightScale, 155, 100 * Mz_OnGUIManager.Extend_heightScale, 40), "Yes"))
-                    Application.Quit();
-                else if (GUI.Button(new Rect(240 * Mz_OnGUIManager.Extend_heightScale, 155, 100 * Mz_OnGUIManager.Extend_heightScale, 40), "No")) {
-                    _hasQuitCommand = false; 
-				}
-            }
-            GUI.EndGroup();
-        }
-    }
 }

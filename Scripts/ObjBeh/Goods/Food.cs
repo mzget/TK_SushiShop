@@ -4,13 +4,17 @@ using System.Collections;
 
 public class Food {
 
-    public SushiShop sceneManager;
+    private SushiShop sceneManager;
     private Food instance;
-	public string name;
-	public int price;
+
+	internal string name;
+	internal int price;
+	internal int costs;
 	
 	public Food ()
 	{
+		//<@-- Customer call to random specific available foods in CanSellGoodsList.
+
         sceneManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<SushiShop>();        
 
 		if (sceneManager.currentCustomer.list_goodsBag.Count > 0) {
@@ -33,5 +37,12 @@ public class Food {
 		this.instance = this;
 		this.instance.name = Init_name;
 		this.instance.price = p_price;
+	}
+	
+	public Food(string Init_name, int p_price, int p_costs) {
+		this.instance = this;
+		this.instance.name = Init_name;
+		this.instance.price = p_price;
+		this.instance.costs = p_costs;
 	}
 }

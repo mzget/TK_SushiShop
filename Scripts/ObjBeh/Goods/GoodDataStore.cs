@@ -62,13 +62,13 @@ public class GoodDataStore : ScriptableObject {
         new Food(FoodMenuList.Curry_with_rice.ToString(), 25),
 		
         new Food(FoodMenuList.Miso_soup.ToString(), 5),		
-        new Food(FoodMenuList.Kimji.ToString(), 5),
+        new Food(FoodMenuList.Kimji.ToString(), 10, 3),
 
-        new Food(FoodMenuList.Bean_ice_jam_on_crunching.ToString(), 13),
-        new Food(FoodMenuList.GreenTea_icecream.ToString(), 17),
+        new Food(FoodMenuList.Bean_ice_jam_on_crunching.ToString(), 15, 3),
+        new Food(FoodMenuList.GreenTea_icecream.ToString(), 15, 3),
 
-        new Food(FoodMenuList.Hot_greenTea.ToString(), 21),
-        new Food(FoodMenuList.Iced_greenTea.ToString(), 9),
+        new Food(FoodMenuList.Hot_greenTea.ToString(), 5, 1),
+        new Food(FoodMenuList.Iced_greenTea.ToString(), 10, 2),
     };
 	
     public GoodDataStore() {

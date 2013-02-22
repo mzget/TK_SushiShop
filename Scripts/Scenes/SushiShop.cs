@@ -584,8 +584,8 @@ public class SushiShop : Mz_BaseScene {
 	/// </summary>
     public void Handle_manageGoodsComplete_event(object sender, System.EventArgs eventArgs)
     {
-        //		int r = UE.Random.Range(0, appreciate_clips.Length);
-        //		this.PlayAppreciateAudioClip(appreciate_clips[r]);
+//        		int r = UE.Random.Range(0, appreciate_clips.Length);
+//        		this.PlayAppreciateAudioClip(appreciate_clips[r]);
 
         audioEffect.PlayOnecWithOutStop(audioEffect.correctBring_clip);
 
@@ -1144,7 +1144,8 @@ public class SushiShop : Mz_BaseScene {
         }
 	}
 
-    private void CallCheckAnswerOfTotalPrice() {
+    private void CallCheckAnswerOfTotalPrice()
+	{
         if(currentCustomer.amount == calculatorBeh.GetDisplayResultTextToInt()) {
 			audioEffect.PlayOnecSound(audioEffect.correct_Clip);
 		
@@ -1227,8 +1228,8 @@ public class SushiShop : Mz_BaseScene {
 				if(temp_goods != null) {
 	                list_goodsTemp.Add(new CustomerOrderRequire() { food = temp_goods, });
 					
-					/// Check correctly of goods with arr_orderingItems.
-					/// and change color of arr_orderingBaseItems.
+					// Check correctly of goods with arr_orderingItems.
+					// and change color of arr_orderingBaseItems.
 					foreach (tk2dSprite item in arr_orderingItems) {		
 						if(list_goodsTemp[i] != null) {
 							if(item.gameObject.name == list_goodsTemp[i].food.name)
@@ -1280,8 +1281,8 @@ public class SushiShop : Mz_BaseScene {
                     {
                         list_goodsTemp.Add(new CustomerOrderRequire() { food = temp_goods, });
 
-                        /// Check correctly of goods with arr_orderingItems.
-                        /// and change color of arr_orderingBaseItems.
+                        // Check correctly of goods with arr_orderingItems.
+                        // and change color of arr_orderingBaseItems.
                         foreach (tk2dSprite item in arr_orderingItems)
                         {
                             if (list_goodsTemp[i] != null)
@@ -1373,11 +1374,6 @@ public class SushiShop : Mz_BaseScene {
     private void RollingDoor_close() {
         Mz_LoadingScreen.LoadSceneName = SceneNames.Town.ToString();
         Application.LoadLevel(SceneNames.LoadingScene.ToString());	
-    }
-
-    public override void OnDispose()
-    {
-        base.OnDispose();
     }
 
     internal void WarningPlayerToSeeManual()

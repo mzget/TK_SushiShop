@@ -416,7 +416,7 @@ public class Town : Mz_BaseScene {
     /// <summary>
     /// <!-- Gui region.
     /// </summary>
-    private new void OnGUI() {
+    private void OnGUI() {
         GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1, Screen.height / Main.GAMEHEIGHT, 1));    
 		
 		/// OnGUIState.DrawEditShopname.
