@@ -50,14 +50,14 @@ public class SushiProduction : ObjectsBeh {
     private Vector3 sushiRice_Pos = new Vector3(0, -44f, -2f);
 	internal GameObject sushi_rice_solution;
     internal GoodsBeh sushi;
-    private SushiShop sceneManager;
+    private SushiShop stageManager;
 
 	// Use this for initialization
     protected override void Start()
     {
         base.Start();
 
-        sceneManager = baseScene.GetComponent<SushiShop>();
+        stageManager = baseScene.GetComponent<SushiShop>();
 
         this.sushiPopup.gameObject.SetActiveRecursively(false);
     }
@@ -137,10 +137,10 @@ public class SushiProduction : ObjectsBeh {
     private void Handle_SushiBeh_putObjectOnTray_Event(object sender, EventArgs e)
     {
         GoodsBeh obj = sender as GoodsBeh;
-        if (sceneManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && sceneManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (stageManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && stageManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            sceneManager.foodTrayBeh.goodsOnTray_List.Add(obj);
-            sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+            stageManager.foodTrayBeh.goodsOnTray_List.Add(obj);
+            stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
             sushi = null;
 			this.currentProductionState = ProductionState.None;
@@ -154,9 +154,13 @@ public class SushiProduction : ObjectsBeh {
     }
 
     private void Handle_SushiBeh_destroyObj_Event(object sender, EventArgs e)
-    {
-        sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+    {	
+		GoodsBeh goods = sender as GoodsBeh;
+		Mz_StorageManage.AvailableMoney -= goods.costs;
+		stageManager.CreateDeductionsCoin (goods.costs);
+		stageManager.ReFreshAvailableMoney();		
+		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
+		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
 		this.currentProductionState = ProductionState.None;
     }
@@ -171,7 +175,7 @@ public class SushiProduction : ObjectsBeh {
 		}
 		else if(nameInput == BucketOfRice) {
 			if(sushiRice == null && sushi_rice_solution == null && sushi == null) {
-				sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+				stageManager.choppingBlock_sprite.spriteId = stageManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 				this.currentProductionState = ProductionState.CreateSushiRice;
 
 				sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + Sushi_rice_anim, typeof(GameObject))) as GameObject;
@@ -188,8 +192,12 @@ public class SushiProduction : ObjectsBeh {
                     sushiRice._canDragaable = true;
                     sushiRice.originalPosition = sushiRice_Pos;
 					sushiRice.ObjectsBeh_destroyObj_Event = delegate(object sender, System.EventArgs e) {
-						Destroy(sushiRice.gameObject);
+						Destroy(sushiRice.gameObject);						
 						this.currentProductionState = ProductionState.None;
+
+						Mz_StorageManage.AvailableMoney -= 1;
+						stageManager.CreateDeductionsCoin(1);
+						stageManager.ReFreshAvailableMoney();
 					};
 
 					this.currentProductionState = ProductionState.WaitForSushiIngredient;
@@ -202,31 +210,32 @@ public class SushiProduction : ObjectsBeh {
 			if(this.currentProductionState == ProductionState.None) {
 				this.currentProductionState = ProductionState.WaitForMakiIngredient;
 
-				sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock_maki");
+				stageManager.choppingBlock_sprite.spriteId = stageManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock_maki");
 			}
 		}
 		else if(nameInput == Pickles) {
 			if(this.currentProductionState == ProductionState.WaitForMakiIngredient) {
 				if(sushi_rice_solution == null && sushi == null) {
 					sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "PicklingCucumberFilledMaki_anim", typeof(GameObject))) as GameObject;
-					sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
-					sceneManager.choppingBlock_sprite.gameObject.active = false;
+					sushi_rice_solution.transform.position = stageManager.choppingBlock_sprite.transform.position;
+					stageManager.choppingBlock_sprite.gameObject.active = false;
 
 					tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
 					new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 						Destroy(sushi_rice_solution);
-						sceneManager.choppingBlock_sprite.gameObject.active = true;
-						sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+						stageManager.choppingBlock_sprite.gameObject.active = true;
+						stageManager.choppingBlock_sprite.spriteId = stageManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 
 						GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
 						maki_product_obj.transform.position = new Vector3(0, -44, -2);
 						maki_product_obj.name = GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString();
 						
 						sushi = maki_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki].costs;
 						sushi._canDragaable = true;
 						sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Pickling_cucumber_filled_maki.ToString());
 						sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
 
 						this.currentProductionState = ProductionState.CompleteProduction;
 					};
@@ -243,25 +252,26 @@ public class SushiProduction : ObjectsBeh {
                 if (sushi_rice_solution == null && sushi == null)
                 {
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "PrawnBrownMaki_anim", typeof(GameObject))) as GameObject;
-                    sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
-                    sceneManager.choppingBlock_sprite.gameObject.active = false;
+                    sushi_rice_solution.transform.position = stageManager.choppingBlock_sprite.transform.position;
+                    stageManager.choppingBlock_sprite.gameObject.active = false;
 
                     tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
                     new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
                     {
                         Destroy(sushi_rice_solution);
-                        sceneManager.choppingBlock_sprite.gameObject.active = true;
-                        sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+                        stageManager.choppingBlock_sprite.gameObject.active = true;
+                        stageManager.choppingBlock_sprite.spriteId = stageManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 
                         GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
                         maki_product_obj.transform.position = new Vector3(0, -44, -2);
                         maki_product_obj.name = GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString();
 
 						sushi = maki_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Prawn_brown_maki].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_brown_maki.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
@@ -276,25 +286,26 @@ public class SushiProduction : ObjectsBeh {
                 if (sushi_rice_solution == null && sushi == null)
                 {
                     sushi_rice_solution = Instantiate(Resources.Load("FoodSolution/" + "RoeMaki_anim", typeof(GameObject))) as GameObject;
-                    sushi_rice_solution.transform.position = sceneManager.choppingBlock_sprite.transform.position;
-                    sceneManager.choppingBlock_sprite.gameObject.active = false;
+                    sushi_rice_solution.transform.position = stageManager.choppingBlock_sprite.transform.position;
+                    stageManager.choppingBlock_sprite.gameObject.active = false;
 
                     tk2dAnimatedSprite new_maki_anim = sushi_rice_solution.GetComponent<tk2dAnimatedSprite>();
                     new_maki_anim.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId)
                     {
                         Destroy(sushi_rice_solution);
-                        sceneManager.choppingBlock_sprite.gameObject.active = true;
-                        sceneManager.choppingBlock_sprite.spriteId = sceneManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
+                        stageManager.choppingBlock_sprite.gameObject.active = true;
+                        stageManager.choppingBlock_sprite.spriteId = stageManager.choppingBlock_sprite.GetSpriteIdByName("choppingBlock");
 
                         GameObject maki_product_obj = Instantiate(Resources.Load(PATH_OF_Sushi_product, typeof(GameObject))) as GameObject;
                         maki_product_obj.transform.position = new Vector3(0, -44, -2);
                         maki_product_obj.name = GoodDataStore.FoodMenuList.Roe_maki.ToString();
 
 						sushi = maki_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Roe_maki].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Roe_maki.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
 
                         this.currentProductionState = ProductionState.CompleteProduction;
                     };
@@ -328,10 +339,11 @@ public class SushiProduction : ObjectsBeh {
 						sushi_product_obj.name = GoodDataStore.FoodMenuList.Crab_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Crab_sushi].costs;
 						sushi._canDragaable = true;
 						sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Crab_sushi.ToString());
 		                sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
 					};
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -339,7 +351,7 @@ public class SushiProduction : ObjectsBeh {
 			}
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -368,10 +380,11 @@ public class SushiProduction : ObjectsBeh {
 						sushi_product_obj.name = GoodDataStore.FoodMenuList.Eel_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Eel_sushi].costs;
 						sushi._canDragaable = true;
 						sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Eel_sushi.ToString());
 		                sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
 					};
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -379,7 +392,7 @@ public class SushiProduction : ObjectsBeh {
 			}
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -411,10 +424,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Fatty_tuna_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Fatty_tuna_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -422,7 +436,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -454,10 +468,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Octopus_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Octopus_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Octopus_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -465,7 +480,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -497,10 +512,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Prawn_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Prawn_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Prawn_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -508,7 +524,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -540,10 +556,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Salmon_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Salmon_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Salmon_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -551,7 +568,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -583,10 +600,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Skipjack_tuna_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Skipjack_tuna_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -594,7 +612,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -626,10 +644,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Spicy_shell_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Spicy_shell_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -637,7 +656,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 
@@ -669,10 +688,11 @@ public class SushiProduction : ObjectsBeh {
                         sushi_product_obj.name = GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString();
 
 						sushi = sushi_product_obj.GetComponent<GoodsBeh>();
+						sushi.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Sweetened_egg_sushi].costs;
 						sushi._canDragaable = true;
                         sushi.sprite.spriteId = sushi.sprite.GetSpriteIdByName(GoodDataStore.FoodMenuList.Sweetened_egg_sushi.ToString());
                         sushi.GoodsBeh_putObjectOnTray_Event = Handle_SushiBeh_putObjectOnTray_Event;
-                        sushi.ObjectsBeh_destroyObj_Event += Handle_SushiBeh_destroyObj_Event;
+                        sushi.ObjectsBeh_destroyObj_Event = Handle_SushiBeh_destroyObj_Event;
                     };
 					// Play sound effect.
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[3]);
@@ -680,7 +700,7 @@ public class SushiProduction : ObjectsBeh {
             }
             else
             {
-                sceneManager.WarningPlayerToSeeManual();
+                stageManager.WarningPlayerToSeeManual();
                 this.sushiPopup.SetActiveRecursively(false);
             }
 

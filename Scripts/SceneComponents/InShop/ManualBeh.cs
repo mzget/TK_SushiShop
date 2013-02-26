@@ -50,8 +50,9 @@ public class ManualBeh : ObjectsBeh {
     }
 
     internal void OnActiveCookbook()
-    {
-        this.animation.Play("ManualAnim");
+	{
+		baseScene.audioEffect.PlayOnecSound(baseScene.audioEffect.calc_clip);
+		this.animation.Play("ManualAnim");
         StartCoroutine_Auto(CheckingUnityAnimationComplete.ICheckAnimationComplete(this.animation, "ManualAnim", this.gameObject, "ActiveCookbookObjectGroup"));
     }
 
@@ -96,6 +97,7 @@ public class ManualBeh : ObjectsBeh {
         if (nameInput == "Previous_button") {
             cookbook_animatedSprite.Play("Playback");
             this.ActivateCookbookFormOrder(false);
+			baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[8]);
             cookbook_animatedSprite.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
                 this.ActivateCookbookFormOrder(true);
                 if (currentPage_id > 0)
@@ -112,7 +114,8 @@ public class ManualBeh : ObjectsBeh {
         }
         else if (nameInput == "Next_button") {
 			cookbook_animatedSprite.Play("Play");
-            this.ActivateCookbookFormOrder(false);
+			this.ActivateCookbookFormOrder(false);
+			baseScene.audioEffect.PlayOnecWithOutStop(baseScene.soundEffect_clips[8]);
             cookbook_animatedSprite.animationCompleteDelegate = (sprite, clipId) => {
                 this.ActivateCookbookFormOrder(true);
 	            if (currentPage_id < MaxPageNumber - 1) {

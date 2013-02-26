@@ -8,14 +8,14 @@ public class SoupTankBeh : ObjectsBeh {
     private tk2dAnimatedSprite animatedInstance;
     private GoodsBeh soup;
     private Vector3 instancePosition = new Vector3(-110f, 34f, 0f);
-    private FoodTrayBeh foodTrayBeh;
+    private SushiShop stageManager;
 
 	// Use this for initialization
     protected override void Start()
     {
         base.Start();
 
-        foodTrayBeh = baseScene.GetComponent<SushiShop>().foodTrayBeh;
+        stageManager = baseScene.GetComponent<SushiShop>();
     }
 	
 	// Update is called once per frame
@@ -36,6 +36,7 @@ public class SoupTankBeh : ObjectsBeh {
             animatedInstance.Play();
 
             soup = soup_instance.GetComponent<GoodsBeh>();
+			soup.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Miso_soup].costs;
 			soup.offsetPos = Vector3.up * 4.5f;
 			soup.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTray_Event;
 			soup.ObjectsBeh_destroyObj_Event = Handle_destroyObj_Event;
@@ -53,10 +54,10 @@ public class SoupTankBeh : ObjectsBeh {
 
     void Handle_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e) {
         GoodsBeh obj = sender as GoodsBeh;
-        if (foodTrayBeh.goodsOnTray_List.Contains(obj) == false && foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (stageManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && stageManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            foodTrayBeh.goodsOnTray_List.Add(obj);
-            foodTrayBeh.ReCalculatatePositionOfGoods();
+            stageManager.foodTrayBeh.goodsOnTray_List.Add(obj);
+            stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
             //<!-- Setting original position.
             obj.originalPosition = obj.transform.position;
@@ -72,8 +73,13 @@ public class SoupTankBeh : ObjectsBeh {
         }
     }
 
-    void Handle_destroyObj_Event(object sender, System.EventArgs e) {
-        foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        foodTrayBeh.ReCalculatatePositionOfGoods();
+    void Handle_destroyObj_Event(object sender, System.EventArgs e) {		
+		GoodsBeh goods = sender as GoodsBeh;
+		Mz_StorageManage.AvailableMoney -= goods.costs;
+		stageManager.CreateDeductionsCoin (goods.costs);
+		baseScene.ReFreshAvailableMoney();
+		
+		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
+		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 }

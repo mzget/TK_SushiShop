@@ -138,9 +138,7 @@ public class SushiShop : Mz_BaseScene {
     private void OnManageGoodComplete(System.EventArgs e)
     {
         if (manageGoodsComplete_event != null)
-        {
             manageGoodsComplete_event(this, e);
-        }
     }
 	
 	
@@ -268,11 +266,11 @@ public class SushiShop : Mz_BaseScene {
             thanksCustomer_clips[0] = Resources.Load(PATH_OF_THANKS_CLIP + "EN_Thank_0001", typeof(AudioClip)) as AudioClip;
             thanksCustomer_clips[1] = Resources.Load(PATH_OF_THANKS_CLIP + "EN_Thank_0002", typeof(AudioClip)) as AudioClip;
 
-            //			appreciate_clips[0] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_001", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[1] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_002", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[2] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_003", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[3] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_004", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
+//			appreciate_clips[0] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_001", typeof(AudioClip)) as AudioClip;
+//			appreciate_clips[1] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_002", typeof(AudioClip)) as AudioClip;
+//			appreciate_clips[2] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_003", typeof(AudioClip)) as AudioClip;
+//			appreciate_clips[3] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_004", typeof(AudioClip)) as AudioClip;
+//			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
         }
 
         this.ReInitializingMerchandiseNameAudio();
@@ -588,7 +586,7 @@ public class SushiShop : Mz_BaseScene {
 //        		this.PlayAppreciateAudioClip(appreciate_clips[r]);
 
         audioEffect.PlayOnecWithOutStop(audioEffect.correctBring_clip);
-
+        //<@-- Wait for calculation price session complete.
         currentGamePlayState = GamePlayState.calculationPrice;
 
         TK_animationManager.PlayGoodAnimation();
@@ -907,16 +905,17 @@ public class SushiShop : Mz_BaseScene {
         StartCoroutine(this.CreateGameEffect());
 		audioEffect.PlayOnecSound(audioEffect.longBring_clip);
 
+        this.CreateEarnTKCoin(currentCustomer.amount);        
+        Mz_StorageManage.AvailableMoney += currentCustomer.amount;
+        base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
+        base.availableMoney.Commit();
+
 		TK_animationManager.RandomPlayGoodAnimation();
 
         billingAnimatedSprite.Play("Thanks");
         billingAnimatedSprite.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 			billingAnimatedSprite.Play("Billing");
 		};
-        
-        Mz_StorageManage.AvailableMoney += currentCustomer.amount;
-        base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-        base.availableMoney.Commit();
 
         //<!-- Clare resource data.
 		Destroy(packaging_Obj);
@@ -1077,14 +1076,6 @@ public class SushiShop : Mz_BaseScene {
                         break;
                     case "OrderingIcon": StartCoroutine(this.ShowOrderingGUI());
                         break;
-                    case "Billing_machine":
-                        if (MainMenu._HasNewGameEvent) {
-                            base.SetActivateTotorObject(false);
-                        }
-                        audioEffect.PlayOnecSound(audioEffect.calc_clip);
-                        billingMachine.animation.Play(billingMachine_animState.name);
-                        StartCoroutine(this.CheckingUNITYAnimationComplete(billingMachine.animation, billingMachine_animState.name));
-                        break;
                     default:
                         break;
                 }
@@ -1110,11 +1101,27 @@ public class SushiShop : Mz_BaseScene {
                     currentGamePlayState = GamePlayState.PreparingFood;
                     return;
                 }
-                else if (nameInput == manualManager.name) {
-                    currentGamePlayState = GamePlayState.DisplayCookbook;
-                    this.manualManager.OnActiveCookbook();
-                    return;
+				else if (nameInput == manualManager.name) {
+					this.manualManager.OnActiveCookbook();
+					currentGamePlayState = GamePlayState.DisplayCookbook;
+					return;
                 }
+				else if(nameInput == billingMachine.name) {
+					if (MainMenu._HasNewGameEvent) {
+						base.SetActivateTotorObject(false);
+					}
+					
+					audioEffect.PlayOnecSound(audioEffect.calc_clip);
+					billingMachine.animation.Play(billingMachine_animState.name);
+					StartCoroutine_Auto(CheckingUnityAnimationComplete.ICheckAnimationComplete(billingMachine.animation, billingMachine_animState.name, null, string.Empty));
+					
+					EventHandler handle = null;
+					handle = (object sender, EventArgs e) => {	
+						this.CheckingGoodsObjInTray(string.Empty);
+						CheckingUnityAnimationComplete.TargetAnimationComplete_event -= handle;
+					};	
+					CheckingUnityAnimationComplete.TargetAnimationComplete_event += handle;
+				}
             }
 
             #endregion
@@ -1186,18 +1193,6 @@ public class SushiShop : Mz_BaseScene {
             Debug.Log("Wrong answer !. Please recalculate");
         }
 	}
-
-    private IEnumerator CheckingUNITYAnimationComplete(Animation targetAnimation, string targetAnimatedName)
-    {
-        do
-        {
-            yield return null;
-        } while (targetAnimation.IsPlaying(targetAnimatedName));
-
-		Debug.LogWarning(targetAnimatedName + " finish !");
-
-		this.CheckingGoodsObjInTray(string.Empty);
-    }
 
     internal void CheckingGoodsObjInTray(string callFrom)
     {
@@ -1379,5 +1374,40 @@ public class SushiShop : Mz_BaseScene {
     internal void WarningPlayerToSeeManual()
     {
         audioEffect.PlayOnecWithOutStop(audioEffect.wrong_Clip);
+    }
+
+	internal void CreateDeductionsCoin (int p_value)
+	{
+		GameObject tk_coin = Instantiate (Resources.Load ("Money/Coin", typeof(GameObject))) as GameObject;
+		tk_coin.transform.parent = binBeh.transform;
+		tk_coin.transform.localPosition = Vector3.up * 40;
+		Transform animatedCoin = tk_coin.transform.Find("TK_Coin");
+		Transform value_transform = animatedCoin.transform.Find ("TextMesh");
+		tk2dTextMesh value_textmesh = value_transform.GetComponent<tk2dTextMesh>();
+		value_textmesh.text = "-" + p_value.ToString();
+		value_textmesh.Commit ();
+
+		animatedCoin.animation.Play ();
+		StartCoroutine_Auto(CheckingUnityAnimationComplete.ICheckAnimationComplete (animatedCoin.animation, "CoinAnim", null, string.Empty));
+		CheckingUnityAnimationComplete.TargetAnimationComplete_event += (object sender, EventArgs e) => { 
+			Destroy(tk_coin);
+		};
+	}
+
+	private void CreateEarnTKCoin(int p_value)
+	{
+		GameObject tk_coin = Instantiate (Resources.Load ("Money/Coin", typeof(GameObject))) as GameObject;
+		tk_coin.transform.position = new Vector3(80, 50, -3);
+		Transform animatedCoin = tk_coin.transform.Find("TK_Coin");
+		Transform value_transform = animatedCoin.transform.Find ("TextMesh");
+		tk2dTextMesh value_textmesh = value_transform.GetComponent<tk2dTextMesh>();
+		value_textmesh.text = "+" + p_value.ToString();
+		value_textmesh.Commit ();
+		
+		animatedCoin.animation.Play ();
+		StartCoroutine_Auto(CheckingUnityAnimationComplete.ICheckAnimationComplete (animatedCoin.animation, "CoinAnim", null, string.Empty));
+		CheckingUnityAnimationComplete.TargetAnimationComplete_event += (object sender, EventArgs e) => { 
+			Destroy(tk_coin);
+		};
     }
 }

@@ -104,7 +104,9 @@ public class Mz_BaseScene : MonoBehaviour {
 	{
 		Debug.Log("Mz_BaseScene :: Initialization");
 	}
-	
+
+	#region <@-- Audio management.
+
 	protected void InitializeAudio()
     {
         //<!-- Setup All Audio Objects.
@@ -147,12 +149,14 @@ public class Mz_BaseScene : MonoBehaviour {
         this.SetActivateEnablePlayAudio();
     }
 
-    void SetActivateEnablePlayAudio()
+    private void SetActivateEnablePlayAudio()
     {
         audioEffect.audio.mute = !ToggleAudioActive;
         audioBackground_Obj.audio.mute = !ToggleAudioActive;
         audioDescribe.audio.mute = !ToggleAudioActive;
     }
+
+	#endregion
 
     //<!--- GUI_identity.
     public GameObject identityGUI_obj;
@@ -286,6 +290,7 @@ public class Mz_BaseScene : MonoBehaviour {
             }
         }
     }
+
 	protected virtual void MovingCameraTransform ()	{ }
 
     public virtual void OnInput(string nameInput) {

@@ -12,7 +12,7 @@ public class GoodsBeh : ObjectsBeh {
 	private string animationName_002 = string.Empty;
 	internal int costs;
 
-    #region <!-- Events data.
+    #region <@-- Events data.
 
     //<!-- WaitForIngredientEvent.
 	protected bool _isWaitFotIngredient = false;	
@@ -134,7 +134,7 @@ public class GoodsBeh : ObjectsBeh {
     {
         base.OnTouchBegan();
 
-        this.transform.localScale += new Vector3(1.2f, 1.2f, 1);
+        this.transform.localScale = new Vector3(1.2f, 1.2f, 1);
         baseScene.audioEffect.PlayOnecWithOutStop(baseScene.audioEffect.pop_clip);
     }
 
@@ -158,7 +158,7 @@ public class GoodsBeh : ObjectsBeh {
     {
         base.OnTouchEnded();
 
-        this.transform.localScale -= new Vector3(1.2f, 1.2f, 1);
+        this.transform.localScale = new Vector3(1f, 1f, 1);
     }
 
     public override void OnDispose()

@@ -13,7 +13,7 @@ public class BeltMachineBeh : ObjectsBeh
     public const string YakiSoba_UI = "YakiSoba_UI";
     public const string ZaruSoba_UI = "ZaruSoba_UI";
     
-    private SushiShop sceneManager;
+    private SushiShop stageManager;
     public GameObject beltMachinePopup_obj;
     public Transform ramen_transform;
     public Transform curryWithRice_transform;
@@ -39,7 +39,7 @@ public class BeltMachineBeh : ObjectsBeh
 	{
 		base.Start ();
 
-        sceneManager = baseScene.GetComponent<SushiShop>();
+        stageManager = baseScene.GetComponent<SushiShop>();
 		
         beltMachinePopup_obj.transform.localScale = Vector3.one * 0.4f;
         beltMachinePopup_obj.SetActiveRecursively(false);
@@ -112,7 +112,7 @@ public class BeltMachineBeh : ObjectsBeh
 
     internal void DeActiveBeltMachinePopup() {
         iTween.ScaleTo(beltMachinePopup_obj, scaleDown_hash);
-        sceneManager.currentGamePlayState = SushiShop.GamePlayState.Ordering;
+        stageManager.currentGamePlayState = SushiShop.GamePlayState.Ordering;
     }
 
     private void OnPopupClosedComplete() {
@@ -141,11 +141,12 @@ public class BeltMachineBeh : ObjectsBeh
             foodInstance.transform.position = ramen_transform.position + Vector3.back;
 			foodInstance.name = foodName;
 
-            food = foodInstance.GetComponent<GoodsBeh>();
+			food = foodInstance.GetComponent<GoodsBeh>();
+			food.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Ramen].costs;
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
             food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
-            food.ObjectsBeh_destroyObj_Event = new System.EventHandler(food_destroyObj_Event);
+            food.ObjectsBeh_destroyObj_Event = food_destroyObj_Event;
         }
         else if (nameInput == CurryWithRice_UI)
         {
@@ -158,10 +159,11 @@ public class BeltMachineBeh : ObjectsBeh
 			foodInstance.name = foodName;
 
             food = foodInstance.GetComponent<GoodsBeh>();
+			food.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Curry_with_rice].costs;
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
             food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
-            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+			food.ObjectsBeh_destroyObj_Event = food_destroyObj_Event;
         }
         else if (nameInput == Tempura_UI)
         {
@@ -174,10 +176,11 @@ public class BeltMachineBeh : ObjectsBeh
 			foodInstance.name = foodName;
 
             food = foodInstance.GetComponent<GoodsBeh>();
+			food.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Tempura].costs;
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
             food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
-            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.ObjectsBeh_destroyObj_Event = food_destroyObj_Event;
         }
         else if (nameInput == YakiSoba_UI)
         {
@@ -190,10 +193,11 @@ public class BeltMachineBeh : ObjectsBeh
 			foodInstance.name = foodName;
 
             food = foodInstance.GetComponent<GoodsBeh>();
+			food.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Yaki_soba].costs;
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
             food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
-            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.ObjectsBeh_destroyObj_Event = food_destroyObj_Event;
         }
         else if (nameInput == ZaruSoba_UI)
         {
@@ -205,25 +209,30 @@ public class BeltMachineBeh : ObjectsBeh
             foodInstance.transform.position = zarusoba_transform.position + Vector3.back;
 			foodInstance.name = foodName;
 
-            food = foodInstance.GetComponent<GoodsBeh>();
+			food = foodInstance.GetComponent<GoodsBeh>();
+			food.costs = stageManager.goodDataStore.FoodDatabase_list[(int)GoodDataStore.FoodMenuList.Zaru_soba].costs;
 			food.sprite.spriteId = food.sprite.GetSpriteIdByName(foodName);
             food._canDragaable = true;
             food.GoodsBeh_putObjectOnTray_Event = food_putObjectOnTray_Event;
-            food.ObjectsBeh_destroyObj_Event += new System.EventHandler(food_destroyObj_Event);
+            food.ObjectsBeh_destroyObj_Event = food_destroyObj_Event;
         }
 	}
 
-    private void food_destroyObj_Event(object sender, System.EventArgs e) {
-        sceneManager.foodTrayBeh.goodsOnTray_List.Remove(sender as GoodsBeh);
-        sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+	private void food_destroyObj_Event(object sender, System.EventArgs e) {
+		GoodsBeh goods = sender as GoodsBeh;
+		Mz_StorageManage.AvailableMoney -= goods.costs;
+		stageManager.CreateDeductionsCoin (goods.costs);
+		baseScene.ReFreshAvailableMoney();		
+		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
+		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
     }
 
     private void food_putObjectOnTray_Event(object sender, GoodsBeh.PutGoodsToTrayEventArgs e) {
         GoodsBeh obj = sender as GoodsBeh;
-        if (sceneManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && sceneManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
+        if (stageManager.foodTrayBeh.goodsOnTray_List.Contains(obj) == false && stageManager.foodTrayBeh.goodsOnTray_List.Count < FoodTrayBeh.MaxGoodsCapacity)
         {
-            sceneManager.foodTrayBeh.goodsOnTray_List.Add(obj);
-            sceneManager.foodTrayBeh.ReCalculatatePositionOfGoods();
+            stageManager.foodTrayBeh.goodsOnTray_List.Add(obj);
+            stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
             food = null;
             foodInstance = null;

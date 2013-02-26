@@ -81,8 +81,8 @@ public class IceTeaTankBeh : ObjectsBeh {
     {		
 		GoodsBeh goods = sender as GoodsBeh;
 		Mz_StorageManage.AvailableMoney -= goods.costs;
+		stageManager.CreateDeductionsCoin (goods.costs);
         baseScene.ReFreshAvailableMoney();
-
 		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
 		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
     }

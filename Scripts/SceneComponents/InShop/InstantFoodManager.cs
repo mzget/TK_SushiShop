@@ -63,8 +63,8 @@ public class InstantFoodManager : MonoBehaviour {
     {
 		GoodsBeh goods = sender as GoodsBeh;
 		Mz_StorageManage.AvailableMoney -= goods.costs;
+		stageManager.CreateDeductionsCoin (goods.costs);
         stageManager.ReFreshAvailableMoney();
-
 		stageManager.foodTrayBeh.goodsOnTray_List.Remove(goods);
 		stageManager.foodTrayBeh.ReCalculatatePositionOfGoods();
 
