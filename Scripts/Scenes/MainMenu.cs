@@ -100,7 +100,7 @@ public class MainMenu : Mz_BaseScene {
         Mz_ResizeScale.ResizingScale(baseBuilding_Obj.transform);
 
         iTween.MoveTo(mainmenu_Group.gameObject, moveDownTransform_Data);
-		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 90f, "time", 1f, "easetype",  iTween.EaseType.easeOutSine));
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 85f, "time", 1f, "easetype",  iTween.EaseType.easeOutSine));
 
         newgame_Group.gameObject.SetActiveRecursively(false);
 		initializeNewShop = initializeNewGame_Group.GetComponent<InitializeNewShop>();
@@ -602,7 +602,8 @@ public class MainMenu : Mz_BaseScene {
                 StartCoroutine(ShowMainMenu());
             }
         }
-        else if(initializeNewGame_Group.gameObject.active) {
+        else if(initializeNewGame_Group.gameObject.active) 
+		{
             if(nameInput == back_button.name) {
                 StartCoroutine(ShowMainMenu());
             }
@@ -690,7 +691,7 @@ public class MainMenu : Mz_BaseScene {
         yield return new WaitForSeconds(1);
 
         iTween.MoveTo(mainmenu_Group.gameObject, moveDownTransform_Data);
-		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 90f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
+		iTween.MoveTo(options_group_transform.gameObject, iTween.Hash("y", 85f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
 		
         newgame_Group.gameObject.SetActiveRecursively(false);
         initializeNewGame_Group.gameObject.SetActiveRecursively(false);

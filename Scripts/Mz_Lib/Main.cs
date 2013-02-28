@@ -25,8 +25,8 @@ public class Main
     {
         public enum SupportLanguage
         {
-            EN = 1,
-            TH = 0,
+            EN = 0,
+            TH = 1,
         };
         public static SupportLanguage appLanguage;
     }

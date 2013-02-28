@@ -7,10 +7,11 @@ public class InitializeNewShop : MonoBehaviour {
 	public tk2dSprite shopLogo_sprite;
 	public string currentLogoColor = "Blue";
 	public int currentLogoID = 0;
-	const int MaxLogoCount = 4;
+	private const int MaxLogoCount = 6;
 	public static string[] shopLogo_NameSpecify = new string[MaxLogoCount] {
 		"Logo_0001", "Logo_0002", "Logo_0003", "Logo_0004",
-//		"Logo_0005", "Logo_0006", "Logo_0007", "Logo_0008", 
+		"Logo_0005", "Logo_0006", 
+//		"Logo_0007", "Logo_0008", 
 //		"Logo_0009", "Logo_0010", "Logo_0011", "Logo_0012",
 //		"Logo_0013", "Logo_0014", "Logo_0015", "Logo_0016",
 	};
