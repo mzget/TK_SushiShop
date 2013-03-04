@@ -21,6 +21,7 @@ public class Startup : Mz_BaseScene {
 		base.Initialization ();
 		
 		Mz_OnGUIManager.CalculateViewportScreen();
+
 		Mz_StorageManage.Language_id = PlayerPrefs.GetInt(Mz_StorageManage.KEY_SYSTEM_LANGUAGE, 0);
 		Main.Mz_AppLanguage.appLanguage = (Main.Mz_AppLanguage.SupportLanguage)Mz_StorageManage.Language_id;
 	}

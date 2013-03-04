@@ -120,8 +120,8 @@ public class SheepBank : Mz_BaseScene {
     private IEnumerator InitializeBankOfficer()
     {
         if (MainMenu._HasNewGameEvent)
-        {
-            audioDescribe.PlayOnecWithOutStop(long_introduce_clip);
+		{
+			audioDescribe.PlayOnecWithOutStop(description_clips[0]);
             StartCoroutine(PlayWomanOfficerAnimation(string.Empty));
             StartCoroutine(PlayManOfficerAnimation(string.Empty));
         }
@@ -141,18 +141,18 @@ public class SheepBank : Mz_BaseScene {
 
     void CreateTutorObjectAtRuntime ()
 	{
-//		sheepBankTutor = new SheepBankTutor();
 		cameraTutor_Obj = GameObject.FindGameObjectWithTag("MainCamera");
 		
-		handTutor = Instantiate(Resources.Load("Tutor_Objs/Town/HandTutor", typeof(GameObject))) as GameObject;
+		handTutor = Instantiate(Resources.Load("Tutor_Objs/HandTutor", typeof(GameObject))) as GameObject;
 		handTutor.transform.parent = cameraTutor_Obj.transform;
+		handTutor.transform.localScale = Vector3.one;
 		handTutor.transform.localPosition = new Vector3(-75f, 17f, 8);
-		handTutor.transform.localScale += Vector3.one * 100;
 		
-		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/SheepBank/Tutor_description", typeof(GameObject))) as GameObject;
+		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
 		tutorText_0.transform.parent = cameraTutor_Obj.transform;
-		tutorText_0.transform.localPosition = new Vector3(-36f, 30f, 8f);
-		tutorText_0.transform.localScale += Vector3.one * 100;
+		tutorText_0.transform.localPosition = new Vector3(-64f, 15f, 8f);
+		tutorText_0.GetComponent<tk2dTextMesh> ().text = "DEPOSIT";
+		tutorText_0.GetComponent<tk2dTextMesh> ().Commit ();
 		base.tutorDescriptions = new List<GameObject>();
 		tutorDescriptions.Add(tutorText_0);
 		//<@-- Animated hand with tweening.
@@ -165,7 +165,7 @@ public class SheepBank : Mz_BaseScene {
 
 		handTutor.transform.localPosition = new Vector3(-27f, 1.9f, 8f);
 
-		tutorDescriptions[0].transform.localPosition = new Vector3(15f, 5.5f, 8f);
+		tutorDescriptions[0].transform.localPosition = new Vector3(-12f, 0f, 8f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "PUT \"1300\"";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		//<@-- Animated hand with tweening.
@@ -174,6 +174,8 @@ public class SheepBank : Mz_BaseScene {
 
 	IEnumerator CreateUpgradeInsideTutorEvent ()
 	{
+		audioDescribe.PlayOnecSound(description_clips[1]); 
+
 		yield return new WaitForFixedUpdate();
 
 		SetActivateTotorObject(true);
@@ -183,7 +185,7 @@ public class SheepBank : Mz_BaseScene {
 		sheepBankTutor.Back_Button_obj.transform.position += Vector3.forward * 20;
 
 		handTutor.transform.localPosition = new Vector3(48f, 17f, 8f);
-		tutorDescriptions[0].transform.localPosition = new Vector3(1f, 32f, 8f);
+		tutorDescriptions[0].transform.localPosition = new Vector3(-40f, 16f, 8f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "UPGRADE SHOP";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		
@@ -192,11 +194,13 @@ public class SheepBank : Mz_BaseScene {
 	}
 
     void CreateBuyUpgradeShopTutorEvent()
-    {
+	{
+		this.audioDescribe.PlayOnecSound(description_clips[4]);
+
         this.SetActivateTotorObject(true);
 
         handTutor.transform.localPosition = new Vector3(-65f, 22f, 8f);
-        tutorDescriptions[0].transform.localPosition = new Vector3(-98f, 30f, 8f);
+        tutorDescriptions[0].transform.localPosition = new Vector3(-50f, 18f, 8f);
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "BUY ITEM";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 
@@ -208,7 +212,9 @@ public class SheepBank : Mz_BaseScene {
     }
 
     void CreateUpgradeOutsideTutorEvent()
-    {
+	{
+		audioDescribe.PlayOnecSound(description_clips[3]);
+
         SetActivateTotorObject(true);
 
         shadowPlane_Obj.gameObject.active = true;
@@ -216,7 +222,7 @@ public class SheepBank : Mz_BaseScene {
         sheepBankTutor.Back_Button_obj.transform.localPosition = new Vector3(-108f, -85f, -5);
 
         handTutor.transform.localPosition = new Vector3(93f, 17f, 8f);
-        tutorDescriptions[0].transform.localPosition = new Vector3(35f, 20f, 8f);
+        tutorDescriptions[0].transform.localPosition = new Vector3(-3f, 12f, 8f);
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "BUY DECORATION";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 
@@ -660,6 +666,7 @@ public class SheepBank : Mz_BaseScene {
 				else {
 					//<@-- warning sound user not enough available money.
 					audioDescribe.PlayOnecWithOutStop(audioEffect.wrong_Clip);
+					audioDescribe.PlayOnecSound(description_clips[5]);
 	            	calculatorBeh.ClearCalcMechanism();		
 				}
 	        }

@@ -16,11 +16,11 @@ public class InitializeNewShop : MonoBehaviour {
 //		"Logo_0013", "Logo_0014", "Logo_0015", "Logo_0016",
 	};
 	public static Dictionary<string,Color> shopLogos_Color = new Dictionary<string, Color>() {
-		{"Blue", new Color(0.5f, 1, 1, 1)},
-		{"Green", Color.green},
-		{"Pink", new Color(1, .5f, 1, 1)},
-		{"Red", Color.red},
-		{"Yellow", Color.yellow},
+		{"Blue", new Color(0f, .5f, .75f, 1)},
+		{"Green", new Color(0, .8f, 0, 1)},
+		{"Pink", new Color(.9f, .3f, .9f, 1)},
+		{"Red", new Color(.9f, 0, 0, 1)},
+		{"Yellow", new Color(.9f, .8f, 0, 1)},
 	};
 
 

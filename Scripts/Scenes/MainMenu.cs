@@ -78,7 +78,7 @@ public class MainMenu : Mz_BaseScene {
 
 	#region <@-- Events
 
-	internal static bool _HasNewGameEvent = false;
+	internal static bool _HasNewGameEvent = true;
 	public event EventHandler NewGame_event;
 	void OnNewGameEvent (EventArgs e)
 	{
@@ -113,7 +113,7 @@ public class MainMenu : Mz_BaseScene {
 
 		//<@-- Add new game eventhandle. 
 		_HasNewGameEvent = false;
-//		this.NewGame_event += Handle_NewGame_event;
+		this.NewGame_event += Handle_NewGame_event;
 	}
 	
 	protected IEnumerator PreparingAudio ()

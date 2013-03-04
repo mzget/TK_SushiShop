@@ -195,17 +195,17 @@ public class Town : Mz_BaseScene {
         audioDescribe.PlayOnecWithOutStop(description_clips[0]);
 		cameraTutor_Obj = GameObject.FindGameObjectWithTag("MainCamera");
 		
-		handTutor = Instantiate(Resources.Load("Tutor_Objs/Town/HandTutor", typeof(GameObject))) as GameObject;
+		handTutor = Instantiate(Resources.Load("Tutor_Objs/HandTutor", typeof(GameObject))) as GameObject;
 		handTutor.transform.parent = cameraTutor_Obj.transform;
-		handTutor.transform.localPosition = new Vector3(-0.1f, 0, 8);
+		handTutor.transform.localPosition = new Vector3(-10f, 0, 7f);
 		
-		GameObject tutor_text = Instantiate(Resources.Load("Tutor_Objs/Town/Tutor_description", typeof(GameObject))) as GameObject;
+		GameObject tutor_text = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
         tutor_text.transform.parent = cameraTutor_Obj.transform;
-        tutor_text.transform.localPosition = new Vector3(0.15f, 0.2f, 8f);
+        tutor_text.transform.localPosition = new Vector3(10f, 0f, 7f);
         base.tutorDescriptions = new List<GameObject>();
         base.tutorDescriptions.Add(tutor_text);
 		
-		iTween.MoveTo(Camera.main.gameObject, iTween.Hash("x", 2.66f, "time", 1f, "easetype", iTween.EaseType.easeInOutSine,
+		iTween.MoveTo(Camera.main.gameObject, iTween.Hash("x", 266f, "time", 1f, "easetype", iTween.EaseType.easeInOutSine,
 		                                                  "oncomplete", MoveCameraToTutorPointComplete_FUNC, "oncompletetarget", this.gameObject));
 	}
 
@@ -219,20 +219,20 @@ public class Town : Mz_BaseScene {
     {
         cameraTutor_Obj = GameObject.FindGameObjectWithTag("MainCamera");
 
-        handTutor = Instantiate(Resources.Load("Tutor_Objs/Town/HandTutor", typeof(GameObject))) as GameObject;
+        handTutor = Instantiate(Resources.Load("Tutor_Objs/HandTutor", typeof(GameObject))) as GameObject;
         handTutor.transform.parent = cameraTutor_Obj.transform;
-        handTutor.transform.localPosition = new Vector3(-0.8f, -0.5f, 6);
+        handTutor.transform.localPosition = new Vector3(-78f, -55f, 4);
 
-        GameObject tutor_text = Instantiate(Resources.Load("Tutor_Objs/Town/Tutor_description", typeof(GameObject))) as GameObject;
+        GameObject tutor_text = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
         tutor_text.transform.parent = cameraTutor_Obj.transform;
-        tutor_text.transform.localPosition = new Vector3(-0.65f, -0.4f, 6f);
+        tutor_text.transform.localPosition = new Vector3(-65f, -45f, 4);
         tutor_text.GetComponent<tk2dTextMesh>().text = "BUY DECORATION";
         tutor_text.GetComponent<tk2dTextMesh>().Commit();
         base.tutorDescriptions = new List<GameObject>();
         base.tutorDescriptions.Add(tutor_text);
 
         this._updatable = false;
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -0.4f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -45f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
     }
 	
 	private IEnumerator WaitForDecorationTweenDownComplete() {
@@ -247,14 +247,14 @@ public class Town : Mz_BaseScene {
         shopDoor_anim.gameObject.transform.position += Vector3.back * 13;
         characterAnimatedManage.gameObject.transform.position += Vector3.back * 13;
 
-        handTutor.transform.localPosition = new Vector3(0.08f, 0f, 5f);
-        tutorDescriptions[0].transform.localPosition = new Vector3(0.25f, 0.1f, 5);
-        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "LET PLAY";
+        handTutor.transform.localPosition = new Vector3(0f, 0f, 5f);
+        tutorDescriptions[0].transform.localPosition = new Vector3(20f, 0f, 5f);
+        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "LET'S PLAY";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 
         this._updatable = false;
 		audioDescribe.PlayOnecSound(description_clips[1]);
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 0.1f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 10f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
     }
 		
 	public static event EventHandler IntroduceGameUI_Event;

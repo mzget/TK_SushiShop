@@ -108,6 +108,7 @@ public class SushiShop : Mz_BaseScene {
 	};
     public GamePlayState currentGamePlayState;
 
+	public GameObject hotTeapot_obj;
 	public GameObject soupTank_obj;
 	public GameObject icedBreaker_obj;
 	public GameObject icecreamTank_obj;
@@ -215,6 +216,7 @@ public class SushiShop : Mz_BaseScene {
     private const string PATH_OD_APOLOGIZE_CLIP = "AudioClips/ApologizeClips/";
     private const string PATH_OF_APPRECIATE_CLIP = "AudioClips/AppreciateClips/";
     private const string PATH_OF_THANKS_CLIP = "AudioClips/ThanksClips/";
+	private const string PATH_OF_NOTIFICATION_CLIP = "AudioClips/Notifications/";
     private IEnumerator ReInitializeAudioClipData()
     {
         description_clips.Clear();
@@ -229,6 +231,7 @@ public class SushiShop : Mz_BaseScene {
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "7.TH_giveTheChange", typeof(AudioClip)) as AudioClip);
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "8.TH_completeTutor", typeof(AudioClip)) as AudioClip);
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_noticeUserToUpgrade", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "TH_NoticePlayerToSeeManual", typeof(AudioClip)) as AudioClip);
 
             apologize_clip[0] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "TH_shortSorry_0001", typeof(AudioClip)) as AudioClip;
             apologize_clip[1] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "TH_shortSorry_0002", typeof(AudioClip)) as AudioClip;
@@ -255,9 +258,10 @@ public class SushiShop : Mz_BaseScene {
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "6.EN_calculationPrice", typeof(AudioClip)) as AudioClip);
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "7.EN_giveTheChange", typeof(AudioClip)) as AudioClip);
             description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "8.EN_completeTutor", typeof(AudioClip)) as AudioClip);
-            description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_noticeUserToUpgrade", typeof(AudioClip)) as AudioClip);
-
-            apologize_clip[0] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "EN_shortSorry_0001", typeof(AudioClip)) as AudioClip;
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_noticeUserToUpgrade", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "EN_NoticePlayerToSeeManual", typeof(AudioClip)) as AudioClip);
+			
+			apologize_clip[0] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "EN_shortSorry_0001", typeof(AudioClip)) as AudioClip;
             apologize_clip[1] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "EN_shortSorry_0002", typeof(AudioClip)) as AudioClip;
             apologize_clip[2] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "EN_longSorry_0001", typeof(AudioClip)) as AudioClip;
             apologize_clip[3] = Resources.Load(PATH_OD_APOLOGIZE_CLIP + "EN_longSorry_0002", typeof(AudioClip)) as AudioClip;
@@ -391,14 +395,14 @@ public class SushiShop : Mz_BaseScene {
 	{
 		cameraTutor_Obj = GameObject.FindGameObjectWithTag("MainCamera");
 		
-		handTutor = Instantiate(Resources.Load("Tutor_Objs/Town/HandTutor", typeof(GameObject))) as GameObject;
+		handTutor = Instantiate(Resources.Load("Tutor_Objs/HandTutor", typeof(GameObject))) as GameObject;
 		handTutor.transform.parent = cameraTutor_Obj.transform;
 		handTutor.transform.localPosition = new Vector3(30f, 75f, 3f);
 		handTutor.transform.localScale = Vector3.one;
 		
-		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/SheepBank/Tutor_description", typeof(GameObject))) as GameObject;
+		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
 		tutorText_0.transform.parent = cameraTutor_Obj.transform;
-		tutorText_0.transform.localPosition = new Vector3(65f, 80f, 3f);
+		tutorText_0.transform.localPosition = new Vector3(-38f, 70f, 3f);
 		tutorText_0.transform.localScale = Vector3.one;
 
 		base.tutorDescriptions = new List<GameObject>();
@@ -426,7 +430,7 @@ public class SushiShop : Mz_BaseScene {
 		
 		handTutor.transform.localPosition = new Vector3(-62f, -13f, 3f);
 		
-		tutorDescriptions[0].transform.localPosition = new Vector3(0f, 0f, 3f);
+		tutorDescriptions[0].transform.localPosition = new Vector3(-45f, -17f, 3f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "ACCEPT ORDERS";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		//<@-- Animated hand with tweening.
@@ -440,13 +444,15 @@ public class SushiShop : Mz_BaseScene {
 	{
 		base.SetActivateTotorObject(true);
 
-        handTutor.transform.localPosition = new Vector3(-0.68f, 0.38f, 3f);
+		hotTeapot_obj.transform.position += Vector3.back * 7;
+
+        handTutor.transform.localPosition = new Vector3(-104f, 13f, 3f);
 		
-		tutorDescriptions[0].transform.localPosition = new Vector3(-0.48f, 0.5f, 3f);
+		tutorDescriptions[0].transform.localPosition = new Vector3(-90f, 13f, 3f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "TAP";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		//<@-- Animated hand with tweening.
-		iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 0.45f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+		iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 23f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
 	}
 
     internal void CreateDragGoodsToTrayTutorEvent()
@@ -1098,7 +1104,6 @@ public class SushiShop : Mz_BaseScene {
 				}
                 else if (nameInput == BeltMachineBeh.BeltMachineObjectName) {
                     beltMachine.HandleOnInput(ref nameInput);
-                    currentGamePlayState = GamePlayState.PreparingFood;
                     return;
                 }
 				else if (nameInput == manualManager.name) {
@@ -1122,6 +1127,15 @@ public class SushiShop : Mz_BaseScene {
 					};	
 					CheckingUnityAnimationComplete.TargetAnimationComplete_event += handle;
 				}
+				else if (nameInput == BeltMachineBeh.CloseButtonName) {
+					beltMachine.DeActiveBeltMachinePopup();
+					return;
+				}
+				else if (nameInput == BeltMachineBeh.Ramen_UI || nameInput == BeltMachineBeh.CurryWithRice_UI || nameInput == BeltMachineBeh.Tempura_UI ||
+				         nameInput == BeltMachineBeh.YakiSoba_UI || nameInput == BeltMachineBeh.ZaruSoba_UI) {
+					beltMachine.HandleOnInput(ref nameInput);
+					return;
+				}
             }
 
             #endregion
@@ -1129,7 +1143,7 @@ public class SushiShop : Mz_BaseScene {
         else if (currentGamePlayState == GamePlayState.PreparingFood)
         {
             #region <!-- GamePlayState.PreparingFood.
-
+/*
             if (nameInput == BeltMachineBeh.CloseButtonName) {
                 beltMachine.DeActiveBeltMachinePopup();
                 return;
@@ -1143,7 +1157,7 @@ public class SushiShop : Mz_BaseScene {
                 beltMachine.HandleOnInput(ref nameInput);
                 return;
             }
-
+*/
             #endregion
         }
         else if (currentGamePlayState == GamePlayState.DisplayCookbook) {
@@ -1165,9 +1179,12 @@ public class SushiShop : Mz_BaseScene {
         }
         else {
 			audioEffect.PlayOnecSound(audioEffect.wrong_Clip);
-            calculatorBeh.ClearCalcMechanism();
+			calculatorBeh.ClearCalcMechanism();
 			
-            Debug.LogWarning("Wrong answer !. Please recalculate");
+			int r = UE.Random.Range(2, 5);
+			audioDescribe.PlayOnecSound(apologize_clip[r]);
+			
+			Debug.LogWarning("Wrong answer !. Please recalculate");
         }
     }	
 	
@@ -1188,9 +1205,12 @@ public class SushiShop : Mz_BaseScene {
         else {			
 			audioEffect.PlayOnecWithOutStop(audioEffect.wrong_Clip);
 			calculatorBeh.ClearCalcMechanism();
-            currentCustomer.PlayRampage_animation();
+			currentCustomer.PlayRampage_animation();
 			
-            Debug.Log("Wrong answer !. Please recalculate");
+			int r = UE.Random.Range(2, 5);
+			audioDescribe.PlayOnecSound(apologize_clip[r]);
+			
+			Debug.Log("Wrong answer !. Please recalculate");
         }
 	}
 
@@ -1373,7 +1393,8 @@ public class SushiShop : Mz_BaseScene {
 
     internal void WarningPlayerToSeeManual()
     {
-        audioEffect.PlayOnecWithOutStop(audioEffect.wrong_Clip);
+		Debug.Log(SushiShop.WarningMessageToSeeManual);
+        audioDescribe.PlayOnecSound(description_clips[9]);
     }
 
 	internal void CreateDeductionsCoin (int p_value)

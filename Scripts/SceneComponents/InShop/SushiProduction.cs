@@ -44,6 +44,16 @@ public class SushiProduction : ObjectsBeh {
 	};
 	public ProductionState currentProductionState;
 	public tk2dSprite[] sushiFaces_sprite = new tk2dSprite[9];
+	private string[] arr_THsushiFaceSpriteNames = new string[9] {
+		"TH_Crab_sushi", "TH_Eel_sushi", "TH_Fatty_tuna_sushi",
+		"TH_Octopus_sushi", "TH_Prawn_sushi", "TH_Salmon_sushi",
+		"TH_Skipjack_tuna_sushi", "TH_Spicy_shell_sushi", "TH_Sweetened_egg_sushi",
+	} ;
+	private string[] arr_ENsushiFaceSpriteNames = new string[9] {		
+		"EN_Crab_sushi", "EN_Eel_sushi", "EN_Fatty_tuna_sushi",
+		"EN_Octopus_sushi", "EN_Prawn_sushi", "EN_Salmon_sushi",
+		"EN_Skipjack_tuna_sushi", "EN_Spicy_shell_sushi", "EN_Sweetened_egg_sushi",
+	} ;
 	
 	public GameObject sushiPopup;
     private ObjectsBeh sushiRice;
@@ -65,6 +75,13 @@ public class SushiProduction : ObjectsBeh {
 	public void InitializeSushiPopupWindows ()
 	{
 		this.sushiPopup.SetActiveRecursively(true);
+
+		for (int i = 0; i < sushiFaces_sprite.Length; i++) {
+			if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) 
+				sushiFaces_sprite[i].spriteId = sushiFaces_sprite[i].GetSpriteIdByName(arr_ENsushiFaceSpriteNames[i]);
+			else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) 
+				sushiFaces_sprite[i].spriteId = sushiFaces_sprite[i].GetSpriteIdByName(arr_THsushiFaceSpriteNames[i]);
+		}
 		
 		if(SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Eel_sushi)) {
 			var key = sushiFaces_sprite[1].transform.Find("Key");
@@ -244,7 +261,7 @@ public class SushiProduction : ObjectsBeh {
 				}
 			}
 			else {
-				Debug.Log(SushiShop.WarningMessageToSeeManual);
+				stageManager.WarningPlayerToSeeManual();
 			}
 		}
 		else if(nameInput == FlyingFishRoe) {
@@ -279,6 +296,9 @@ public class SushiProduction : ObjectsBeh {
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[6]);
                 }
             }
+			else {
+				stageManager.WarningPlayerToSeeManual();
+			}
 		} 
 		else if(nameInput == Roe) {
             if (this.currentProductionState == ProductionState.WaitForMakiIngredient)
@@ -313,6 +333,9 @@ public class SushiProduction : ObjectsBeh {
 					baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[6]);
                 }
             }
+			else {
+				stageManager.WarningPlayerToSeeManual();
+			}
 		}
 
 		if(nameInput == Crab_sushi_face)

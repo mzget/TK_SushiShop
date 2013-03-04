@@ -39,6 +39,11 @@ public class HotTeapotBeh : ObjectsBeh {
                 food._canDragaable = true;
                 food.GoodsBeh_putObjectOnTray_Event = Handle_putObjectOnTrayEvent;
                 food.ObjectsBeh_destroyObj_Event = Handle_destroyObjectEvent;
+
+				if(MainMenu._HasNewGameEvent) {
+					foodInstance.transform.position += Vector3.back * 7;
+					this.transform.position += Vector3.forward * 7;
+				}
             };
             // Play sound effect.
             baseScene.audioEffect.PlayOnecSound(baseScene.soundEffect_clips[4]);
