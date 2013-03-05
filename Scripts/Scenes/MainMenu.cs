@@ -8,11 +8,11 @@ public class MainMenu : Mz_BaseScene {
     public GameObject baseBuilding_Obj;
     public GameObject movingCloud_Objs;
     public GameObject flyingBird_group;
-    public CharacterAnimationManager characterAnimationManager;
     public Transform mainmenu_Group;
     public Transform newgame_Group;
     public Transform initializeNewGame_Group;
 	public Transform options_group_transform;
+	public CharacterAnimationManager characterAnimationManager;
     private InitializeNewShop initializeNewShop;
 
     public GUIOptionsManager optionsManager = new GUIOptionsManager();
@@ -76,7 +76,7 @@ public class MainMenu : Mz_BaseScene {
 	Rect showSaveGameSlot_GroupRect;
     Rect slot_1Rect, slot_2Rect, slot_3Rect;
 
-	#region <@-- Events
+	#region <@-- Events Data.
 
 	internal static bool _HasNewGameEvent = true;
 	public event EventHandler NewGame_event;

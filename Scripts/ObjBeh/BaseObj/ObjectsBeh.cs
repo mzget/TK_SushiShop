@@ -61,7 +61,7 @@ public class ObjectsBeh : Base_ObjectBeh {
             screenPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        this.transform.position = new Vector3(screenPoint.x, screenPoint.y, -6f);
+        this.transform.position = new Vector3(screenPoint.x, screenPoint.y, -8f);
 	}
 	
 	// Update is called once per frame

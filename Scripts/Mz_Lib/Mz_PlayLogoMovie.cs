@@ -36,12 +36,6 @@ public class Mz_PlayLogoMovie : MonoBehaviour {
         else 
 			PlayMovie();
 #endif
-		
-#if UNITY_IPHONE || UNITY_ANDROID
-		
-		iPhoneUtils.PlayMovie("TK_Logo.mov", Color.clear, iPhoneMovieControlMode.CancelOnTouch, iPhoneMovieScalingMode.Fill);
-
-#endif
 	}
 	
 	private IEnumerator Start() {

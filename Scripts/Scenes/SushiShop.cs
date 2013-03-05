@@ -118,8 +118,7 @@ public class SushiShop : Mz_BaseScene {
 	public GameObject flyingFishRoe;
 	public GameObject roe;
 
-	#region <!-- Customer data group.
-
+	// <!-- Customer data group.
     public GameObject customerMenu_group_Obj;
     internal CustomerBeh currentCustomer;
 
@@ -131,8 +130,6 @@ public class SushiShop : Mz_BaseScene {
 			Debug.Log("Callback :: nullCustomer_event");
         }
     }
-	
-	#endregion	
     
     //<!-- Manage goods complete Event handle.
     public event System.EventHandler manageGoodsComplete_event;
@@ -148,12 +145,12 @@ public class SushiShop : Mz_BaseScene {
         yield return StartCoroutine(this.InitailizeSceneObject());
 
         this.OpenShop();
-        close_button.active = true;
 	}
 
     private IEnumerator InitailizeSceneObject()
     {
         Mz_ResizeScale.ResizingScale(shop_background);
+
         foodTrayBeh = new FoodTrayBeh();
         goodDataStore = new GoodDataStore();
         calculator_group_instance.SetActiveRecursively(false);
@@ -166,7 +163,9 @@ public class SushiShop : Mz_BaseScene {
         // Debug can sell list.
         StartCoroutine_Auto(this.InitializeCanSellGoodslist());
         Debug.Log("CanSellGoodLists.Count : " + CanSellGoodLists.Count + " :: " + "NumberOfCansellItem.Count : " + NumberOfCansellItem.Count);
-        yield return StartCoroutine_Auto(this.CreateInstantFoodObject());
+		yield return StartCoroutine_Auto(this.CreateInstantFoodObject());
+
+		close_button.active = true;
     }
 
     private IEnumerator InitializeExternalfactor()
@@ -196,7 +195,12 @@ public class SushiShop : Mz_BaseScene {
         audioEffect.PlayOnecSound(base.soundEffect_clips[0]);
 				
         nullCustomer_event += new EventHandler(Handle_nullCustomer_event);
-        OnNullCustomer_event(EventArgs.Empty);
+		OnNullCustomer_event(EventArgs.Empty);
+		
+		if(MainMenu._HasNewGameEvent == false) {
+			Destroy(shopTutor.greeting_textmesh);
+			shopTutor = null;
+		}
     }
    
 	private IEnumerator SceneInitializeAudio()
@@ -446,8 +450,7 @@ public class SushiShop : Mz_BaseScene {
 
 		hotTeapot_obj.transform.position += Vector3.back * 7;
 
-        handTutor.transform.localPosition = new Vector3(-104f, 13f, 3f);
-		
+        handTutor.transform.localPosition = new Vector3(-104f, 13f, 3f);		
 		tutorDescriptions[0].transform.localPosition = new Vector3(-90f, 13f, 3f);
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "TAP";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
@@ -458,17 +461,21 @@ public class SushiShop : Mz_BaseScene {
     internal void CreateDragGoodsToTrayTutorEvent()
     {
         Vector3 originalFoodTrayPos = foodsTray_obj.transform.position;
-        foodsTray_obj.transform.position = new Vector3(originalFoodTrayPos.x, originalFoodTrayPos.y, -5.5f);
+		foodsTray_obj.transform.position = new Vector3(originalFoodTrayPos.x, originalFoodTrayPos.y, -7f);
+		audioDescribe.PlayOnecSound(description_clips[2]);
 
         base.SetActivateTotorObject(true);
 
-        handTutor.transform.localPosition = new Vector3(0f, -0.5f, 3f);
+		handTutor.transform.localPosition = new Vector3(-81f, -50f, 3f);
+		handTutor.transform.rotation = Quaternion.Euler(Vector3.zero);
+		tk2dSprite hand_sprite = handTutor.GetComponent<tk2dSprite>();
+		hand_sprite.spriteId = hand_sprite.GetSpriteIdByName("HandDragItem_tutor");
 
-        tutorDescriptions[0].transform.localPosition = new Vector3(0.6f, -0.3f, 3f);
-        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "DRAG GOOD TO TRAY";
-        tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
-        //<@-- Animated hand with tweening.
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -.6f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        tutorDescriptions[0].transform.localPosition = new Vector3(-68f, -13f, 3f);
+        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "DRAG GOODS TO TRAY";
+		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
+		//<@-- Animated hand with tweening.
+		iTween.MoveTo(handTutor.gameObject, iTween.Hash("x", 0f, "y", -75f, "Time", 1f, "delay", 0.5f, "easetype", iTween.EaseType.easeInOutSine, "looptype", iTween.LoopType.loop));
     }
 	
 	private bool _isPlayAcceptOuderSound = false;
@@ -485,15 +492,19 @@ public class SushiShop : Mz_BaseScene {
         this.SetActivateTotorObject(true);
         shopTutor.goaway_button_obj.active = false;
         Vector3 originalFoodTrayPos = foodsTray_obj.transform.position;
-        foodsTray_obj.transform.position = new Vector3(originalFoodTrayPos.x, originalFoodTrayPos.y, -2f);
+		foodsTray_obj.transform.position = new Vector3(originalFoodTrayPos.x, originalFoodTrayPos.y, -2f);
 
-        handTutor.transform.localPosition = new Vector3(-0.62f, -0.13f, 3f);
+		audioDescribe.PlayOnecSound(description_clips[3]);
 
-        tutorDescriptions[0].transform.localPosition = new Vector3(0f, 0f, 3f);
+		handTutor.transform.localPosition = new Vector3(-60f, -15f, 3f);
+		tk2dSprite hand_sprite = handTutor.GetComponent<tk2dSprite>();
+		hand_sprite.spriteId = hand_sprite.GetSpriteIdByName("Hand_tutor");
+
+        tutorDescriptions[0].transform.localPosition = new Vector3(-40f, -20f, 3f);
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "CHECK ACCURACY";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
         //<@-- Animated hand with tweening.
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -0.2f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", -5f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
     }
 
     private void CreateBillingTutorEvent()
@@ -502,17 +513,17 @@ public class SushiShop : Mz_BaseScene {
 
         base.SetActivateTotorObject(true);
 		darkShadowPlane.active = true;
-        billingMachine.transform.position += Vector3.back * 5f;
+        billingMachine.transform.position += Vector3.back * 7f;
 
-        handTutor.transform.localPosition = new Vector3(-0.25f, -0.1f, 3f);
+        handTutor.transform.localPosition = new Vector3(-55f, 0f, 3f);
 
-        tutorDescriptions[0].transform.localPosition = new Vector3(0.1f, 0f, 3f);
+        tutorDescriptions[0].transform.localPosition = new Vector3(-40f, 0f, 3f);
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "BILLING";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
         //<@-- Animated hand with tweening.
-        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 0f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+        iTween.MoveTo(handTutor.gameObject, iTween.Hash("y", 10f, "Time", .5f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
 
-        audioDescribe.PlayOnecSound(description_clips[2]);
+        audioDescribe.PlayOnecSound(description_clips[4]);
     }
 
 	#endregion
@@ -522,8 +533,25 @@ public class SushiShop : Mz_BaseScene {
 	/// Handle_nulls the customer_event.
 	/// </summary>
     private void Handle_nullCustomer_event(object sender, EventArgs e) {
-    	StartCoroutine(CreateCustomer());
-    }
+		if(MainMenu._HasNewGameEvent) {
+			StartCoroutine(this.WaitForCreateCustomer());
+			close_button.gameObject.active = false;
+		}
+		else {
+			StartCoroutine(CreateCustomer());
+			darkShadowPlane.active = false;
+			close_button.gameObject.active = true;
+		}
+	}
+	
+	IEnumerator WaitForCreateCustomer ()
+	{
+		yield return StartCoroutine(this.CreateCustomer());
+		darkShadowPlane.active = true;
+		darkShadowPlane.transform.position += Vector3.back * 2f;
+		this.CreateTutorObjectAtRuntime();
+		this.CreateGreetingCustomerTutorEvent();
+	}
 
     private IEnumerator CreateCustomer() { 
 		yield return new WaitForSeconds(1f);
@@ -552,17 +580,6 @@ public class SushiShop : Mz_BaseScene {
 
 		currentGamePlayState = GamePlayState.GreetingCustomer;
 		this.SetActiveGreetingMessage(true);
-
-		if(MainMenu._HasNewGameEvent) {
-			darkShadowPlane.active = true;
-            darkShadowPlane.transform.position += Vector3.back * 2f;
-            this.CreateTutorObjectAtRuntime();
-            this.CreateGreetingCustomerTutorEvent();
-		}
-		else {
-			darkShadowPlane.active = true;
-            Destroy(shopTutor.greeting_textmesh);
-        }
     }
 
     private IEnumerator ExpelCustomer() {
@@ -588,9 +605,6 @@ public class SushiShop : Mz_BaseScene {
 	/// </summary>
     public void Handle_manageGoodsComplete_event(object sender, System.EventArgs eventArgs)
     {
-//        		int r = UE.Random.Range(0, appreciate_clips.Length);
-//        		this.PlayAppreciateAudioClip(appreciate_clips[r]);
-
         audioEffect.PlayOnecWithOutStop(audioEffect.correctBring_clip);
         //<@-- Wait for calculation price session complete.
         currentGamePlayState = GamePlayState.calculationPrice;
@@ -616,7 +630,7 @@ public class SushiShop : Mz_BaseScene {
 		this.ManageCalculationPriceGUI();
 
         if(MainMenu._HasNewGameEvent) {
-            audioDescribe.PlayOnecSound(description_clips[3]);
+            audioDescribe.PlayOnecSound(description_clips[5]);
         }
     }
 
@@ -847,7 +861,7 @@ public class SushiShop : Mz_BaseScene {
 		currentGamePlayState = GamePlayState.giveTheChange;
 
         if(MainMenu._HasNewGameEvent) {
-            audioDescribe.PlayOnecSound(description_clips[4]);
+            audioDescribe.PlayOnecSound(description_clips[6]);
         }
     }
 
@@ -1310,7 +1324,7 @@ public class SushiShop : Mz_BaseScene {
                         if (list_goodsTemp.Count == currentCustomer.customerOrderRequire.Count)
                         {
                             shopTutor.currentTutorState = ShopTutor.TutorStatus.CheckAccuracy;
-                            this.billingMachine.animation.Play();
+//                            this.billingMachine.animation.Play();
                             StartCoroutine(this.ShowOrderingGUI());
                         }
 

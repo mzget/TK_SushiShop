@@ -43,6 +43,8 @@ public class HotTeapotBeh : ObjectsBeh {
 				if(MainMenu._HasNewGameEvent) {
 					foodInstance.transform.position += Vector3.back * 7;
 					this.transform.position += Vector3.forward * 7;
+					stageManager.SetActivateTotorObject(false);
+					stageManager.CreateDragGoodsToTrayTutorEvent();
 				}
             };
             // Play sound effect.

@@ -197,11 +197,11 @@ public class Town : Mz_BaseScene {
 		
 		handTutor = Instantiate(Resources.Load("Tutor_Objs/HandTutor", typeof(GameObject))) as GameObject;
 		handTutor.transform.parent = cameraTutor_Obj.transform;
-		handTutor.transform.localPosition = new Vector3(-10f, 0, 7f);
+		handTutor.transform.localPosition = new Vector3(-10f, 0, 6f);
 		
 		GameObject tutor_text = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
         tutor_text.transform.parent = cameraTutor_Obj.transform;
-        tutor_text.transform.localPosition = new Vector3(10f, 0f, 7f);
+        tutor_text.transform.localPosition = new Vector3(10f, 0f, 6f);
         base.tutorDescriptions = new List<GameObject>();
         base.tutorDescriptions.Add(tutor_text);
 		
@@ -275,27 +275,25 @@ public class Town : Mz_BaseScene {
 		GameObject decoration_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Decoration_audioTip", typeof(GameObject))) as GameObject;
 		decoration_tip.name = "Decoration_audioTip";
 		decoration_tip.transform.parent = townTutorData.topRightAnchor_transform;
-		decoration_tip.transform.localPosition = new Vector3(-.2f, -.25f, 0);
+		decoration_tip.transform.localPosition = new Vector3(-20f, -25f, 0);
 		townTutorData.decoration_audioTip = decoration_tip;
 		iTween.PunchScale(townTutorData.decoration_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
 		
 		GameObject trophy_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Trophy_audioTip", typeof(GameObject))) as GameObject;
 		trophy_tip.name = "Trophy_audioTip";
 		trophy_tip.transform.parent = townTutorData.topRightAnchor_transform;
-		trophy_tip.transform.localPosition = new Vector3(-.58f, -.25f, 0);
+		trophy_tip.transform.localPosition = new Vector3(-58f, -25f, 0);
 		townTutorData.trophy_audioTip = trophy_tip;			
 		iTween.PunchScale(townTutorData.trophy_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
 		
 		GameObject dress_tip = Instantiate(Resources.Load("Tutor_Objs/TIP/Dress_audioTip", typeof(GameObject))) as GameObject;
 		dress_tip.name = "Dress_audioTip";
 		dress_tip.transform.parent = townTutorData.topRightAnchor_transform;
-		dress_tip.transform.localPosition = new Vector3(-.9f, -.25f, 0);
+		dress_tip.transform.localPosition = new Vector3(-90f, -25f, 0);
 		townTutorData.dress_audioTip = dress_tip;			
 		iTween.PunchScale(townTutorData.dress_audioTip, iTween.Hash("amount", Vector3.one, "time", 0.5f, "looptype", iTween.LoopType.pingPong));
 	}
-
 	
-
     #endregion
 
     void Checking_HasNewStartingTruckEvent ()
@@ -316,26 +314,26 @@ public class Town : Mz_BaseScene {
 	
 	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/Town/";
     private IEnumerator ReInitializeAudioClipData()
-    {
-        description_clips.Clear();
+	{
+		description_clips.Clear();
 		if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) {
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_tutor_01", typeof(AudioClip)) as AudioClip);
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_Letplay", typeof(AudioClip)) as AudioClip);
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_decoration", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_tutor_01", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_Letplay", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_decoration", typeof(AudioClip)) as AudioClip);
 			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_trophy", typeof(AudioClip)) as AudioClip);
 			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_dress", typeof(AudioClip)) as AudioClip);
 			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_touchmove", typeof(AudioClip)) as AudioClip);
 		}
 		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_tutor_01", typeof(AudioClip)) as AudioClip);
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_Letplay", typeof(AudioClip)) as AudioClip);
-        	description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_decoration", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_trophy", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_dress", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_touchmove", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_tutor_01", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_Letplay", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_decoration", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_trophy", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_dress", typeof(AudioClip)) as AudioClip);
+			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_touchmove", typeof(AudioClip)) as AudioClip);
 		}		
 		
-        yield return 0;
+		yield return 0;
     }
 
 	#region <!-- Decoration upgrade bar.
@@ -561,6 +559,18 @@ public class Town : Mz_BaseScene {
 	                Mz_LoadingScreen.LoadSceneName = Mz_BaseScene.SceneNames.DisplayReward.ToString();
 	                Application.LoadLevel(Mz_BaseScene.SceneNames.LoadingScene.ToString());
 				}
+				break;
+			case "Decoration_audioTip" : 
+				audioDescribe.PlayOnecSound(description_clips[2]);
+				Destroy(townTutorData.decoration_audioTip);
+				break;
+			case "Trophy_audioTip" :
+				audioDescribe.PlayOnecSound(description_clips[3]);
+				Destroy(townTutorData.trophy_audioTip);
+				break;
+			case "Dress_audioTip" :
+				audioDescribe.PlayOnecSound(description_clips[4]);
+				Destroy(townTutorData.dress_audioTip);
 				break;
 			default:
 				break;
