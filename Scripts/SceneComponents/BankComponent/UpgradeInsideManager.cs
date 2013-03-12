@@ -962,18 +962,20 @@ public class UpgradeInsideManager : MonoBehaviour {
             Mz_StorageManage.AccountBalance -= secondPage_prices[e.I, e.J];
         else if (currentPageIndex == 2)
             Mz_StorageManage.AccountBalance -= thirdPage_prices[e.I, e.J];
-		
-        if (e.AdditionalParams != string.Empty)
-        {
-            switch (e.AdditionalParams)
-            {
-                default:
-                    break;
-            }
-        }
+
+		//<@-- Additional parameter use for the item who special than other.
+//        if (e.AdditionalParams != string.Empty)
+//        {
+//            switch (e.AdditionalParams)
+//            {
+//                default:
+//                    break;
+//            }
+//        }
 
         upgradeButton_Sprites[e.I, e.J].spriteId = UnActiveUpgradeButtonID;
         SushiShop.NumberOfCansellItem.Add(e.Item_id);
+		SushiShop.NewItem_IDs.Add (e.Item_id);
 		CalculateObjectsToDisplay();
         
 		sceneController.ManageAvailabelMoneyBillBoard();

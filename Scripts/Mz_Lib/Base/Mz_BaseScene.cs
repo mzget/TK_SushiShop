@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class Mz_BaseScene : MonoBehaviour {
     
     public enum SceneNames { none = 0, LoadingScene = 1, MainMenu, WaitForStart, Town, Shop, Sheepbank, Dressing, DisplayReward, };
-	
+
     //<!-- Audio Manage.
+    public const string PATH_OF_APPRECIATE_CLIP = "AudioClips/AppreciateClips/";
     protected static bool ToggleAudioActive = true;
     public GameEffectManager gameEffectManager;
     public AudioEffectManager audioEffect;
@@ -16,8 +17,7 @@ public class Mz_BaseScene : MonoBehaviour {
     public AudioClip background_clip;
     public List<AudioClip> description_clips = new List<AudioClip>();
     public List<AudioClip> soundEffect_clips = new List<AudioClip>();
-//  public List<AudioClip> appreciate_Clips = new List<AudioClip>();
-//	public List<AudioClip> warning_Clips = new List<AudioClip>();
+	public Base_AudioManager audioManager;
 	
 	#region <@-- Detect Touch and Input Data Fields.
 

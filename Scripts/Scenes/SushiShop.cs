@@ -25,9 +25,10 @@ public class SushiShop : Mz_BaseScene {
 	public const string WarningMessageToSeeManual = "Please see a manual if you don't known how to make a food";
 
 	public Transform shop_background;
+	public Transform midLeft_anchor;
     public GameObject bakeryShop_backgroup_group;
     public ExtendAudioDescribeData audioDescriptionData = new ExtendAudioDescribeData();
-	public CharacterAnimationManager TK_animationManager;
+	public CharacterAnimationManager char_animationManager;
 	public tk2dSprite shopLogo_sprite;
 	public GoodDataStore goodDataStore;
 	public static List<int> NumberOfCansellItem = new List<int>(GoodDataStore.FoodDatabaseCapacity);
@@ -122,6 +123,8 @@ public class SushiShop : Mz_BaseScene {
     public GameObject customerMenu_group_Obj;
     internal CustomerBeh currentCustomer;
 
+	#region <@!-- Events.
+
     public event EventHandler nullCustomer_event;
     private void OnNullCustomer_event(EventArgs e) {
         if(nullCustomer_event != null) {
@@ -132,16 +135,31 @@ public class SushiShop : Mz_BaseScene {
     }
     
     //<!-- Manage goods complete Event handle.
-    public event System.EventHandler manageGoodsComplete_event;
-    private void OnManageGoodComplete(System.EventArgs e)
+    public event EventHandler manageGoodsComplete_event;
+    private void OnManageGoodComplete(EventArgs e)
     {
         if (manageGoodsComplete_event != null)
             manageGoodsComplete_event(this, e);
     }
-	
+
+	private event EventHandler<NewItemEventArgs> haveNewItem_event;
+	private void OnHaveNewItem_event (NewItemEventArgs e)
+	{
+		var handler = haveNewItem_event;
+		if (handler != null)
+			handler (null, e);
+	}
+	public static List<int> NewItem_IDs = new List<int> ();
+	public class NewItemEventArgs : EventArgs {
+		public int item_id;
+	};
+
+	#endregion
+
 	
 	// Use this for initialization
 	IEnumerator Start () {				
+		haveNewItem_event = null;
         yield return StartCoroutine(this.InitailizeSceneObject());
 
         this.OpenShop();
@@ -201,6 +219,26 @@ public class SushiShop : Mz_BaseScene {
 			Destroy(shopTutor.greeting_textmesh);
 			shopTutor = null;
 		}
+		
+		if (SushiShop.NewItem_IDs.Count != 0) {
+			haveNewItem_event += Handle_haveNewItem_event;			
+			foreach (int item in NewItem_IDs) {
+				this.OnHaveNewItem_event(new NewItemEventArgs() { item_id = item, });
+			}
+
+			SushiShop.NewItem_IDs.Clear();
+		}
+    }
+
+    void Handle_haveNewItem_event (object sender, NewItemEventArgs e)
+    {
+		GameObject newItem_UI = Instantiate (Resources.Load ("Base_newitemUI", typeof(GameObject))) as GameObject;
+		newItem_UI.transform.parent = midLeft_anchor;
+		newItem_UI.transform.localPosition = new Vector3 (-16f, 40f, -1f);
+
+		Transform item = newItem_UI.transform.Find("newItem");
+		tk2dSprite item_sprite = item.GetComponent<tk2dSprite> ();
+		item_sprite.spriteId = item_sprite.GetSpriteIdByName (goodDataStore.FoodDatabase_list[e.item_id].name);
     }
    
 	private IEnumerator SceneInitializeAudio()
@@ -218,7 +256,6 @@ public class SushiShop : Mz_BaseScene {
     private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/Shop/";
     private const string PATH_OF_MERCHANDISC_CLIP = "AudioClips/AudioDescribe/";
     private const string PATH_OD_APOLOGIZE_CLIP = "AudioClips/ApologizeClips/";
-    private const string PATH_OF_APPRECIATE_CLIP = "AudioClips/AppreciateClips/";
     private const string PATH_OF_THANKS_CLIP = "AudioClips/ThanksClips/";
 	private const string PATH_OF_NOTIFICATION_CLIP = "AudioClips/Notifications/";
     private IEnumerator ReInitializeAudioClipData()
@@ -245,12 +282,6 @@ public class SushiShop : Mz_BaseScene {
 
             thanksCustomer_clips[0] = Resources.Load(PATH_OF_THANKS_CLIP + "TH_Thank_0001", typeof(AudioClip)) as AudioClip;
             thanksCustomer_clips[1] = Resources.Load(PATH_OF_THANKS_CLIP + "TH_Thank_0002", typeof(AudioClip)) as AudioClip;
-
-            //			appreciate_clips[0] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_001", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[1] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_002", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[2] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_003", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[3] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_004", typeof(AudioClip)) as AudioClip;
-            //			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
         }
         else if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN)
         {
@@ -273,12 +304,6 @@ public class SushiShop : Mz_BaseScene {
 
             thanksCustomer_clips[0] = Resources.Load(PATH_OF_THANKS_CLIP + "EN_Thank_0001", typeof(AudioClip)) as AudioClip;
             thanksCustomer_clips[1] = Resources.Load(PATH_OF_THANKS_CLIP + "EN_Thank_0002", typeof(AudioClip)) as AudioClip;
-
-//			appreciate_clips[0] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_001", typeof(AudioClip)) as AudioClip;
-//			appreciate_clips[1] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_002", typeof(AudioClip)) as AudioClip;
-//			appreciate_clips[2] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_003", typeof(AudioClip)) as AudioClip;
-//			appreciate_clips[3] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_004", typeof(AudioClip)) as AudioClip;
-//			appreciate_clips[4] = Resources.Load(PATH_OF_APPRECIATE_CLIP + "EN_appreciate_005", typeof(AudioClip)) as AudioClip;
         }
 
         this.ReInitializingMerchandiseNameAudio();
@@ -472,7 +497,7 @@ public class SushiShop : Mz_BaseScene {
 		hand_sprite.spriteId = hand_sprite.GetSpriteIdByName("HandDragItem_tutor");
 
         tutorDescriptions[0].transform.localPosition = new Vector3(-68f, -13f, 3f);
-        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "DRAG GOODS TO TRAY";
+        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "DRAG TO TRAY";
 		tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 		//<@-- Animated hand with tweening.
 		iTween.MoveTo(handTutor.gameObject, iTween.Hash("x", 0f, "y", -75f, "Time", 1f, "delay", 0.5f, "easetype", iTween.EaseType.easeInOutSine, "looptype", iTween.LoopType.loop));
@@ -609,7 +634,7 @@ public class SushiShop : Mz_BaseScene {
         //<@-- Wait for calculation price session complete.
         currentGamePlayState = GamePlayState.calculationPrice;
 
-        TK_animationManager.PlayGoodAnimation();
+        char_animationManager.PlayGoodAnimation();
         currentCustomer.customerOrderingIcon_Obj.active = false;
 
         StartCoroutine(this.ShowReceiptGUIForm());
@@ -761,6 +786,7 @@ public class SushiShop : Mz_BaseScene {
 	{
 		if(activeState) {
 			greetingMessage_ObjGroup.SetActiveRecursively(true);
+			plane_darkShadow.gameObject.active = true;
 			iTween.ScaleTo(greetingMessage_ObjGroup, iTween.Hash("x", 1f, "y", 1f, "time", 0.5f, "easetype", iTween.EaseType.easeInSine));
 		}
 		else {
@@ -771,6 +797,7 @@ public class SushiShop : Mz_BaseScene {
 	
 	void UnActiveGreetingMessage() {		
 		greetingMessage_ObjGroup.SetActiveRecursively(false);
+		plane_darkShadow.gameObject.active = false;
 		
 		if(MainMenu._HasNewGameEvent) {
 			currentCustomer.GenerateTutorGoodOrderEvent();
@@ -781,14 +808,14 @@ public class SushiShop : Mz_BaseScene {
 	
 	IEnumerator PlayApologizeCustomer (AudioClip clip)
 	{
-		this.TK_animationManager.PlayEyeAnimation(CharacterAnimationManager.NameAnimationsList.agape);
+		this.char_animationManager.PlayEyeAnimation(CharacterAnimationManager.NameAnimationsList.agape);
 		currentCustomer.PlayRampage_animation();
 		
-		while (TK_animationManager._isPlayingAnimation) {
+		while (char_animationManager._isPlayingAnimation) {
 			yield return null;
 		}
 		
-		TK_animationManager.PlayTalkingAnimation();
+		char_animationManager.PlayTalkingAnimation();
 		this.PlayApologizeAudioClip(clip);
 	}
 
@@ -918,7 +945,7 @@ public class SushiShop : Mz_BaseScene {
             packaging_Obj.transform.localPosition = new Vector3(0, 12f, -0.5f);
         }
 		
-		TK_animationManager.RandomPlayGoodAnimation();
+		char_animationManager.RandomPlayGoodAnimation();
 
         yield return new WaitForSeconds(2);
         
@@ -930,7 +957,7 @@ public class SushiShop : Mz_BaseScene {
         base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
         base.availableMoney.Commit();
 
-		TK_animationManager.RandomPlayGoodAnimation();
+		char_animationManager.RandomPlayGoodAnimation();
 
         billingAnimatedSprite.Play("Thanks");
         billingAnimatedSprite.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
@@ -1410,6 +1437,12 @@ public class SushiShop : Mz_BaseScene {
 		Debug.Log(SushiShop.WarningMessageToSeeManual);
         audioDescribe.PlayOnecSound(description_clips[9]);
     }
+	
+	internal void PlaySoundRejoice ()
+	{
+		audioEffect.PlayOnecWithOutStop(audioEffect.correct_Clip);
+		char_animationManager.RandomPlayGoodAnimation();
+	}
 
 	internal void CreateDeductionsCoin (int p_value)
 	{

@@ -81,8 +81,6 @@ public class SheepBank : Mz_BaseScene {
 	public SheepBankTutor sheepBankTutor;
     public BankOfficer offecer = new BankOfficer();
     public GameObject[] upgradeButtons = new GameObject[8];
-	public AudioClip long_introduce_clip;
-	public AudioClip short_introduce_clip;
 
     public enum GameSceneStatus { none = 0, ShowUpgradeInside = 1, ShowDonationForm, ShowDepositForm, ShowWithdrawalForm, ShowPassbook, };
     public GameSceneStatus currentGameStatus;
@@ -245,28 +243,53 @@ public class SheepBank : Mz_BaseScene {
 	
 	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/SheepBank/";
 	private const string PATH_OF_NOTIFICATION_CLIP = "AudioClips/Notifications/";
+	public AudioClip short_introduce_clip;
+	public Dictionary<int, string> TH_DescriptionDict = new Dictionary<int, string>() {
+		{0, "TH_introduce"},
+		{1, "TH_upgradeInside"},
+		{2, "TH_donation"},
+		{3, "TH_upgradeOutside"},
+		{4, "TH_SelectionUpgradeItem"},
+		{5, "TH_deposit"},
+		{6, "TH_withdraw"},
+		{7, "TH_interior_upgrade"},
+		{8, "TH_exterior_upgrade"},
+		{9, "TH_deposit_warning"},
+		{10, "TH_cannot_donation"},
+	};
+	public Dictionary<int, string> EN_DescriptionDict = new Dictionary<int, string>() {
+		{0, "EN_introduce"},
+		{1, "EN_upgradeInside"},
+		{2, "EN_donation"},
+		{3, "EN_upgradeOutside"},
+		{4, "EN_SelectionUpgradeItem"},
+		{5, "EN_deposit"},
+		{6, "EN_withdraw"},
+		{7, "EN_interior_upgrade"},
+		{8, "EN_exterior_upgrade"},
+		{9, "EN_deposit_warning"},
+		{10, "EN_cannot_donation"},
+	};
 	private IEnumerator ReInitializeAudioClipData()
 	{
 		description_clips.Clear();
 		if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) {
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_introduce", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_upgradeInside", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_upgradeOutside", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_SelectionUpgradeItem", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "TH_deposit_warning", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "TH_cannot_donation", typeof(AudioClip)) as AudioClip);
+			for (int i = 0; i < TH_DescriptionDict.Count; i++) {
+				if(i < 9)
+					description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + TH_DescriptionDict[i], typeof(AudioClip)) as AudioClip);
+				else 
+					description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + TH_DescriptionDict[i], typeof(AudioClip)) as AudioClip);
+			}
 			
 			short_introduce_clip = Resources.Load(PATH_OF_DYNAMIC_CLIP + "TH_greeting", typeof(AudioClip)) as AudioClip;
 		}
-		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_introduce", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_upgradeInside", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_upgradeOutside", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_SelectionUpgradeItem", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "EN_deposit_warning", typeof(AudioClip)) as AudioClip);
-			description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + "EN_cannot_donation", typeof(AudioClip)) as AudioClip);
+		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {	
+			for (int i = 0; i < TH_DescriptionDict.Count; i++) {
+				if(i < 9)
+					description_clips.Add(Resources.Load(PATH_OF_DYNAMIC_CLIP + EN_DescriptionDict[i], typeof(AudioClip)) as AudioClip);
+				else
+					description_clips.Add(Resources.Load(PATH_OF_NOTIFICATION_CLIP + EN_DescriptionDict[i], typeof(AudioClip)) as AudioClip);
+			}
 			
 			short_introduce_clip = Resources.Load(PATH_OF_DYNAMIC_CLIP + "EN_greeting", typeof(AudioClip)) as AudioClip;
 		}		
@@ -438,14 +461,20 @@ public class SheepBank : Mz_BaseScene {
 			}
 			
             StartCoroutine(this.PlayManOfficerAnimation("ActiveUpgradeInsideForm"));
-            shadowPlane_Obj.gameObject.active = true;
-            return;
+			shadowPlane_Obj.gameObject.active = true;
+			if(MainMenu._HasNewGameEvent == false)
+				audioDescribe.PlayOnecSound(description_clips[7]);
+
+			return;
         }
         else if (nameInput == UpgradeOutside_BUTTON_NAME)
         {
             StartCoroutine(PlayManOfficerAnimation("ActiveUpgradeOutside"));
-            shadowPlane_Obj.gameObject.active = true;
-            return;
+			shadowPlane_Obj.gameObject.active = true;
+			if(MainMenu._HasNewGameEvent == false)
+				audioDescribe.PlayOnecSound(description_clips[8]);
+
+			return;
         }
         else if (nameInput == DEPOSIT_BUTTON_NAME)
         {
@@ -456,18 +485,26 @@ public class SheepBank : Mz_BaseScene {
 			
 			StartCoroutine(this.PlayWomanOfficerAnimation(ActiveDepositForm_function));
 			shadowPlane_Obj.gameObject.active = true;
+			if(MainMenu._HasNewGameEvent == false)
+				audioDescribe.PlayOnecSound(description_clips[5]);
+
 			return;
         }
         else if (nameInput == WITHDRAWAL_BUTTON_NAME)
         {
             StartCoroutine(this.PlayWomanOfficerAnimation(ActiveWithdrawalForm_function));
             shadowPlane_Obj.gameObject.active = true;
+			if(MainMenu._HasNewGameEvent == false)
+			 	audioDescribe.PlayOnecSound(description_clips[6]);
+
             return;
         }
         else if (nameInput == Donate_Button_Name)
         {
             StartCoroutine(this.PlayWomanOfficerAnimation(ActiveDonationForm_function));
             shadowPlane_Obj.gameObject.active = true;
+			audioDescribe.PlayOnecSound(description_clips[2]);
+
             return;
         }
         else if (nameInput == PASSBOOKBUTTONNAME)
@@ -666,7 +703,7 @@ public class SheepBank : Mz_BaseScene {
 				else {
 					//<@-- warning sound user not enough available money.
 					audioDescribe.PlayOnecWithOutStop(audioEffect.wrong_Clip);
-					audioDescribe.PlayOnecSound(description_clips[5]);
+					audioDescribe.PlayOnecSound(description_clips[9]);
 	            	calculatorBeh.ClearCalcMechanism();		
 				}
 	        }

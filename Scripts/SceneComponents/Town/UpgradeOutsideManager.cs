@@ -678,6 +678,8 @@ public class UpgradeOutsideManager : MonoBehaviour
 			confirmWindow_Obj.SetActiveRecursively(false);
 			Mz_StorageManage.AccountBalance -= awningData.upgradePrice[transaction_id];
 			this.ReFreshAccountBalanceTextDisplay();
+			
+			sceneController.PlayAppreciateAudioClip(true);
 		}
 		else if(currentStateBehavior == StateBehavior.activeTable) {
 			this.DisplayTable(transaction_id);
@@ -731,7 +733,8 @@ public class UpgradeOutsideManager : MonoBehaviour
         roofDecoration_Sprite.gameObject.transform.localPosition = roofData.offsetPosY[active_id]; 
 		Mz_StorageManage.Roof_id = active_id;
 
-		sceneController.PlaySoundRejoice();
+		sceneController.PlaySoundRejoice();		
+		sceneController.PlayAppreciateAudioClip(true);
 	}
 
 	void DisplayAwning (int active_id)
@@ -740,7 +743,8 @@ public class UpgradeOutsideManager : MonoBehaviour
 		awningDecoration_Sprite.spriteId = awningDecoration_Sprite.GetSpriteIdByName(awningData.NameSpecify[active_id]);
 		Mz_StorageManage.Awning_id = active_id;
 
-		sceneController.PlaySoundRejoice();
+		sceneController.PlaySoundRejoice();		
+		sceneController.PlayAppreciateAudioClip(true);
 	}
 
 	void DisplayTable (int active_id)
@@ -750,6 +754,7 @@ public class UpgradeOutsideManager : MonoBehaviour
 		Mz_StorageManage.Table_id = active_id;
 
 		sceneController.PlaySoundRejoice();
+		sceneController.PlayAppreciateAudioClip(true);
 	}
 
 	void DisplayAccessories (int targetItem_id)
@@ -759,6 +764,7 @@ public class UpgradeOutsideManager : MonoBehaviour
 		Mz_StorageManage.Accessory_id = targetItem_id;
 
 		sceneController.PlaySoundRejoice();
+		sceneController.PlayAppreciateAudioClip(true);
 	}
 
 }

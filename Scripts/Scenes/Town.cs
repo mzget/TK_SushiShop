@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UE = UnityEngine;
 
 
 [System.Serializable]
@@ -148,7 +149,7 @@ public class Town : Mz_BaseScene {
         Mz_ResizeScale.ResizingScale(town_bg_group.transform);
 
 		StartCoroutine(ReInitializeAudioClipData());
-		StartCoroutine(this.InitializeAudio());
+		StartCoroutine(this.InitAudio());
         StartCoroutine(base.InitializeIdentityGUI());
 
         this.upgradeOutsideManager.InitializeDecorationObjects();
@@ -186,7 +187,6 @@ public class Town : Mz_BaseScene {
             this.CreateBuyDecoratuionTutorEvent();
         }
 	}
-
 
     #region <@-- Tutor system.
 
@@ -301,7 +301,7 @@ public class Town : Mz_BaseScene {
 		OnnewGameStartup_Event(EventArgs.Empty);
 	}
 
-	protected new IEnumerator InitializeAudio ()
+	protected IEnumerator InitAudio ()
 	{
     	base.InitializeAudio();
 		
@@ -309,10 +309,36 @@ public class Town : Mz_BaseScene {
         audioBackground_Obj.audio.loop = true;
         audioBackground_Obj.audio.Play();
 
+		base.audioManager = ScriptableObject.CreateInstance<Base_AudioManager> ();
+		if (Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.EN) {
+            for (int i = 0; i < arr_EN_AppreciateClipName.Length; i++)
+			{
+                base.audioManager.appreciate_Clips.Add(Resources.Load(PATH_OF_APPRECIATE_CLIP + arr_EN_AppreciateClipName[i], typeof(AudioClip)) as AudioClip);
+            }
+		}
+		else if(Main.Mz_AppLanguage.appLanguage == Main.Mz_AppLanguage.SupportLanguage.TH) {
+            for (int i = 0; i < arr_TH_AppreciateClipName.Length; i++)
+            {
+                base.audioManager.appreciate_Clips.Add(Resources.Load(PATH_OF_APPRECIATE_CLIP + arr_TH_AppreciateClipName[i], typeof(AudioClip)) as AudioClip);
+            }
+		}
+
         yield return null;
 	}
-	
-	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/Town/";
+
+    public const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/Town/";
+	private readonly string[] arr_TH_AppreciateClipName = new string[] {
+        "TH_appreciate_01", 
+        "TH_appreciate_02",
+        "TH_appreciate_03",
+        "TH_appreciate_04",
+	};
+    private readonly string[] arr_EN_AppreciateClipName = new string[] {
+        "EN_appreciate_001", 
+        "EN_appreciate_002",
+        "EN_appreciate_003",
+        "EN_appreciate_004",
+    };
     private IEnumerator ReInitializeAudioClipData()
 	{
 		description_clips.Clear();
@@ -606,6 +632,15 @@ public class Town : Mz_BaseScene {
 		audioEffect.PlayOnecWithOutStop(audioEffect.correct_Clip);
 		characterAnimatedManage.RandomPlayGoodAnimation();
 	}
+
+    internal void PlayAppreciateAudioClip(bool p_random)
+    {
+        if (p_random) {
+            int r = UE.Random.Range(0, audioManager.appreciate_Clips.Count);
+
+            audioDescribe.PlayOnecSound(audioManager.appreciate_Clips[r]);
+        }
+    }
 
     public override void OnDispose()
     {
