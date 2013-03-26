@@ -485,7 +485,10 @@ public class CostumeManager : MonoBehaviour {
         if (Dressing.CanEquipClothe_list.Contains(index))
         {
             if (index < CharacterCustomization.AvailableClothesNumber)
+            {
                 sceneController.PlayGreatEffect();
+                sceneController.RandomPlayAppreciateClip();
+            }
             characterCustomization.ChangeClotheAtRuntime(index);
         }
         else {
@@ -504,14 +507,19 @@ public class CostumeManager : MonoBehaviour {
 					sceneController.TK_animationManager.PlayEyeAnimation(CharacterAnimationManager.NameAnimationsList.agape);
                 }
             }
+			else {
+				characterCustomization.ChangeClotheAtRuntime(index);
+			}
         }
     }
 	
 	private void CheckingCanEquipHat (int id)
 	{
 		if(Dressing.CanEquipHat_list.Contains(id)) {
-			if (id < CharacterCustomization.AvailableHatNumber)
+			if (id < CharacterCustomization.AvailableHatNumber) {
 				sceneController.PlayGreatEffect();
+				sceneController.RandomPlayAppreciateClip();
+			}
 			characterCustomization.ChangeHatAtRuntime(id);
 		}
 		else {
@@ -527,6 +535,9 @@ public class CostumeManager : MonoBehaviour {
 					sceneController.PlaySoundWarning();
 					sceneController.TK_animationManager.PlayEyeAnimation(CharacterAnimationManager.NameAnimationsList.agape);
 				}
+			}
+			else {
+				characterCustomization.ChangeHatAtRuntime(id);				
 			}
 		}
 	}

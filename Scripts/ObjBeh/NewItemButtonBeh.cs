@@ -5,6 +5,8 @@ public class NewItemButtonBeh : Base_ObjectBeh {
 
 	private SushiShop stageManager;
 
+	public int food_id { get; set; }
+
 	// Use this for initialization
 	void Start () {
 		GameObject stage = GameObject.FindGameObjectWithTag ("GameController");
@@ -31,6 +33,7 @@ public class NewItemButtonBeh : Base_ObjectBeh {
 
 		yield return new WaitForSeconds (0.5f);
 
+		SushiShop.NewItem_IDs.Remove(food_id);
 		Destroy (this.gameObject);
 	}
 }

@@ -678,8 +678,6 @@ public class UpgradeOutsideManager : MonoBehaviour
 			confirmWindow_Obj.SetActiveRecursively(false);
 			Mz_StorageManage.AccountBalance -= awningData.upgradePrice[transaction_id];
 			this.ReFreshAccountBalanceTextDisplay();
-			
-			sceneController.PlayAppreciateAudioClip(true);
 		}
 		else if(currentStateBehavior == StateBehavior.activeTable) {
 			this.DisplayTable(transaction_id);

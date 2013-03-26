@@ -37,7 +37,6 @@ public class UpgradeInsideManager : MonoBehaviour {
         {500, 1300,0,0},
     };
 
-	public const string Message_Warning_NotEnoughMoney = "Connot upgrade this item because available money is not enough.";
 	private int currentPageIndex = 0;
     private const int MAX_PAGE_NUMBER = 3;
 	private const int ActiveUpgradeButtonID = 25;
@@ -469,8 +468,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
                 }
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
                 }
 
                 #endregion
@@ -491,8 +489,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
                 }
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
                 }
 
                 #endregion
@@ -513,8 +510,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
                 }
 
                 #endregion
@@ -535,8 +531,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
-					print (Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
                 }
 
                 #endregion
@@ -560,9 +555,8 @@ public class UpgradeInsideManager : MonoBehaviour {
 						this.PlaySoundWarning();
 					}
                 }
-                else {
-					print(Message_Warning_NotEnoughMoney);
-                    sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+                else {					
+					this.PLayWarningCannotBuyItem();
                 }
 
 				#endregion
@@ -584,8 +578,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 				
 				#endregion
@@ -606,8 +599,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -628,8 +620,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 					}
 				}
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -656,8 +647,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
                 }
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -677,8 +667,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
                 }
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -698,8 +687,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-					print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -719,9 +707,8 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
                 }
                 else
-                {
-					print(Message_Warning_NotEnoughMoney);
-                    sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+				{					
+					this.PLayWarningCannotBuyItem();
                 }
 
 				#endregion
@@ -746,8 +733,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -767,8 +753,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -788,8 +773,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -809,8 +793,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
                 }
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -836,8 +819,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -856,8 +838,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -876,8 +857,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -897,8 +877,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 						PlaySoundWarning();
 				}
 				else {
-                    print(Message_Warning_NotEnoughMoney);
-					sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+					this.PLayWarningCannotBuyItem();
 				}
 
 				#endregion
@@ -987,6 +966,14 @@ public class UpgradeInsideManager : MonoBehaviour {
 	{
 		sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
 		Debug.LogWarning("This Item has be upgraded");
+	}
+	
+	private void PLayWarningCannotBuyItem() {
+		sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.wrong_Clip);
+		
+		Debug.Log(SheepBank.Warning_CannotBuyItem);
+		sceneController.audioDescribe.PlayOnecSound(sceneController.description_clips[11]);
+		sceneController.CreateDepositIcon();
 	}
 
     private void ActiveComfirmationWindow()

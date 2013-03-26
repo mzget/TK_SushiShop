@@ -37,6 +37,26 @@ public class SheepBankTutor {
 
 public class SheepBank : Mz_BaseScene {
 
+	//<!-- Constance Button Name.
+	public const string Warning_CannotBuyItem = "Connot upgrade this item because availabel money is not enough.";
+	//<!-- Constance Button Name.
+	const string WITHDRAWAL_BUTTON_NAME = "Withdrawal_button";
+	const string DEPOSIT_BUTTON_NAME = "Deposit_button";
+	const string UpgradeInside_BUTTON_NAME = "UpgradeInside_button";
+	const string UpgradeOutside_BUTTON_NAME = "UpgradeOutside_button";
+	const string Donate_Button_Name = "Donate_button";
+	const string PreviousButtonName = "Previous_button";
+	const string NextButtonName = "Next_button";
+	const string OKButtonName = "OK_button";
+	const string BACK_BUTTON_NAME = "Back_button";
+	const string PASSBOOKBUTTONNAME = "Passbook_button";
+	const string YES_BUTTON_NAME = "Yes_button";
+	const string NO_BUTTON_NAME = "No_button";
+	
+	const string ActiveDonationForm_function = "ActiveDonationForm";
+	const string ActiveDepositForm_function = "ActiveDepositForm";
+	const string ActiveWithdrawalForm_function = "ActiveWithdrawalForm";
+
     public GameObject background_obj;
     public GameObject upgradeInside_window_Obj;
 	public GameObject depositForm_Obj;
@@ -44,6 +64,7 @@ public class SheepBank : Mz_BaseScene {
 	public GameObject transactionForm_Obj;
     public GameObject donationForm_group;
 	public GameObject passbook_group;
+	public GameObject depositIcon;
 	public GameObject shadowPlane_Obj;
 	public tk2dTextMesh availableMoney_Textmesh;
 	public tk2dTextMesh accountBalance_Textmesh;
@@ -53,24 +74,6 @@ public class SheepBank : Mz_BaseScene {
 	public GameObject availabelMoneyBillboard_Obj;
 	public tk2dTextMesh availableMoneyBillboard_Textmesh;
 	int resultValue = 0;
-
-    //<!-- Constance Button Name.
-	const string WITHDRAWAL_BUTTON_NAME = "Withdrawal_button";
-	const string DEPOSIT_BUTTON_NAME = "Deposit_button";
-	const string UpgradeInside_BUTTON_NAME = "UpgradeInside_button";
-	const string UpgradeOutside_BUTTON_NAME = "UpgradeOutside_button";
-    const string Donate_Button_Name = "Donate_button";
-	const string PreviousButtonName = "Previous_button";
-	const string NextButtonName = "Next_button";
-    const string OKButtonName = "OK_button";
-	const string BACK_BUTTON_NAME = "Back_button";
-	const string PASSBOOKBUTTONNAME = "Passbook_button";
-	const string YES_BUTTON_NAME = "Yes_button";
-	const string NO_BUTTON_NAME = "No_button";
-	
-	const string ActiveDonationForm_function = "ActiveDonationForm";
-    const string ActiveDepositForm_function = "ActiveDepositForm";
-    const string ActiveWithdrawalForm_function = "ActiveWithdrawalForm";
 	
 	private Hashtable moveDown_Transaction_Hash;
     private Hashtable moveDownUpgradeInside = new Hashtable();
@@ -244,6 +247,7 @@ public class SheepBank : Mz_BaseScene {
 	private const string PATH_OF_DYNAMIC_CLIP = "AudioClips/GameIntroduce/SheepBank/";
 	private const string PATH_OF_NOTIFICATION_CLIP = "AudioClips/Notifications/";
 	public AudioClip short_introduce_clip;
+	public AudioClip getReward_clip;
 	public Dictionary<int, string> TH_DescriptionDict = new Dictionary<int, string>() {
 		{0, "TH_introduce"},
 		{1, "TH_upgradeInside"},
@@ -256,6 +260,7 @@ public class SheepBank : Mz_BaseScene {
 		{8, "TH_exterior_upgrade"},
 		{9, "TH_deposit_warning"},
 		{10, "TH_cannot_donation"},
+		{11, "TH_CannotBuyItem"},
 	};
 	public Dictionary<int, string> EN_DescriptionDict = new Dictionary<int, string>() {
 		{0, "EN_introduce"},
@@ -269,6 +274,7 @@ public class SheepBank : Mz_BaseScene {
 		{8, "EN_exterior_upgrade"},
 		{9, "EN_deposit_warning"},
 		{10, "EN_cannot_donation"},
+		{11, "EN_CannotBuyItem"},
 	};
 	private IEnumerator ReInitializeAudioClipData()
 	{
@@ -559,39 +565,50 @@ public class SheepBank : Mz_BaseScene {
 
         switch (currentGameStatus)
         {
-            case GameSceneStatus.ShowUpgradeInside:
-                if (nameInput == NextButtonName) { upgradeInsideManager.GotoNextPage(); }
-                else if (nameInput == PreviousButtonName) { upgradeInsideManager.BackToPreviousPage(); }
-                else if (nameInput == YES_BUTTON_NAME) {
-                    if (MainMenu._HasNewGameEvent)
-                    {
+		case GameSceneStatus.ShowUpgradeInside:
+			if (nameInput == NextButtonName) { 
+				upgradeInsideManager.GotoNextPage();
+			}
+			else if (nameInput == PreviousButtonName) {
+				upgradeInsideManager.BackToPreviousPage();
+			}
+			else if (nameInput == YES_BUTTON_NAME) {
+				if (MainMenu._HasNewGameEvent)
+				{
                         this.SetActivateTotorObject(false);
                         upgradeInsideManager.UserComfirm(); 
                         this.OnInput(BACK_BUTTON_NAME);
                         this.CreateUpgradeOutsideTutorEvent();
-                    }
-                    else
-                        upgradeInsideManager.UserComfirm(); 
-			    }
-                else if (nameInput == NO_BUTTON_NAME) {
-					if(MainMenu._HasNewGameEvent)
-						this.audioEffect.PlayOnecWithOutStop(this.audioEffect.wrong_Clip);
-					else 
-						upgradeInsideManager.UnActiveComfirmationWindow(); 
 				}
-                else
-                {
+				else
+					upgradeInsideManager.UserComfirm(); 
+			}
+			else if (nameInput == NO_BUTTON_NAME) {
+				if(MainMenu._HasNewGameEvent)
+					this.audioEffect.PlayOnecWithOutStop(this.audioEffect.wrong_Clip);
+				else 
+					upgradeInsideManager.UnActiveComfirmationWindow(); 
+			}
+			else if(nameInput == depositIcon.name) {
+				iTween.MoveTo(upgradeInside_window_Obj.gameObject, moveUp_hashdata);
+				iTween.StopByName(depositIcon.gameObject, "ShakeDepositIcon");
+				depositIcon.active = false;
+				
+				StartCoroutine_Auto(this.WaitForHookUPDepositFunction());
+			}
+			else
+	        {
 				    //<@-- Handle other name input.
-                    for (int i = 0; i < upgradeButtons.Length; i++)
-                    {
-                        if (nameInput == upgradeButtons[i].name)
-                        {
-                            upgradeInsideManager.BuyingUpgradeMechanism(upgradeButtons[i].name);
-                            break;
-                        }
-                    }
-                }
-                break;
+	            for (int i = 0; i < upgradeButtons.Length; i++)
+	            {
+	                if (nameInput == upgradeButtons[i].name)
+	                {
+	                    upgradeInsideManager.BuyingUpgradeMechanism(upgradeButtons[i].name);
+	                    break;
+	                }
+	            }
+	        }
+	        break;
             case GameSceneStatus.ShowDonationForm : {
 	                if (nameInput == PreviousButtonName)
 	                {
@@ -770,6 +787,19 @@ public class SheepBank : Mz_BaseScene {
 		passbookAccountName_textmesh.Commit ();
 		passbookAccountBalance_textmesh.text = Mz_StorageManage.AccountBalance.ToString();
 		passbookAccountBalance_textmesh.Commit();
+	}
+
+	internal void CreateDepositIcon ()
+	{
+		depositIcon.active = true;
+		iTween.ShakePosition(depositIcon.gameObject, 
+			iTween.Hash("name", "ShakeDepositIcon", "amount", new Vector3(1.5f, 1.5f, 0f), "time", 1f, "looptype", iTween.LoopType.pingPong));
+	}
+	
+	IEnumerator WaitForHookUPDepositFunction ()
+	{
+		yield return new WaitForSeconds(0.8f);
+		this.OnInput(DEPOSIT_BUTTON_NAME);
 	}
 }
 

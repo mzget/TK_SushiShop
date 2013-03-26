@@ -7,111 +7,10 @@ public class ExtendsStorageManager : Mz_StorageManage
 {	
     public const String KEY_CAN_ALIMENT_PET_LIST = "KEY_CAN_ALIMENT_PET_LIST";
     public const string KEY_PET_ID = "PET_ID";
+
+	public const string KEY_LIST_NEWITEM = "KEY_LIST_NEWITEM";
 	
 	#region <@-- Load secsion.
-
-	public void LoadCanSellGoodsListData ()
-	{		
-		int[] array = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + KEY_CANSELLGOODSLIST);
-        SushiShop.NumberOfCansellItem.Clear();
-		foreach (var item in array) {
-			SushiShop.NumberOfCansellItem.Add(item);
-		}
-	}
-
-    public void LoadCostumeData() {
-		/// Clothes data.
-		int[] load_arr = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_CLOTHE_LIST);
-		if(load_arr.Length != 0) {
-			this.AddCanEquipClotheTempToStaticVar(ref load_arr);
-		}
-		else if(load_arr.Length == 0) {
-			load_arr = new int[] { 0, 1, 2 };
-			this.AddCanEquipClotheTempToStaticVar(ref load_arr);
-		}
-
-		/// Hats data.
-		int[] load_temp_hats = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_HAT_LIST);
-		if(load_temp_hats.Length != 0) {
-			this.AddCanEquipHatTempToStaticVar(ref load_temp_hats);
-		}
-		else if(load_temp_hats.Length == 0) {
-			load_temp_hats = new int[] { 0, 1, 2 };
-			this.AddCanEquipHatTempToStaticVar(ref load_temp_hats);
-		}
-    }
-
-	void AddCanEquipClotheTempToStaticVar (ref int[] temp_arr)
-	{
-		Dressing.CanEquipClothe_list.Clear();
-		foreach (int item in temp_arr)
-		{
-			Dressing.CanEquipClothe_list.Add(item);
-		}
-	}
-
-	void AddCanEquipHatTempToStaticVar (ref int[] temp_hats)
-	{
-		Dressing.CanEquipHat_list.Clear();
-		foreach (int item in temp_hats) {
-			Dressing.CanEquipHat_list.Add(item);
-		}
-	}
-
-    private void LoadDecorationShopOutside()
-    {
-		int[] roof_temp_array = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ROOF_LIST, 0, 0);
-		if(roof_temp_array.Length != 0) {
-			this.AddCanDecorationRoofList(ref roof_temp_array);
-		}
-		else return;
-
-		int[] awning_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_AWNING_LIST, 0, 0);
-		if(awning_temp_array.Length != 0) {
-			this.AddCanDecorateAwningList(ref awning_temp_array);
-		}
-		else return;
-
-		int[] table_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_TABLE_LIST, 0, 0);
-		if(table_temp_array.Length != 0) {
-			this.AddCanDecorationTableList(ref table_temp_array);
-		}
-		else return;
-
-		int[] accessories_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_ACCESSORIES_LIST, 0, 0);
-		if(accessories_temp_array.Length != 0) {
-			this.AddCanDecorationAccessoriesList(ref accessories_temp_array);
-		}
-		else return;
-    }
-	void AddCanDecorationRoofList (ref int[] roof_temp_array)
-	{
-		UpgradeOutsideManager.CanDecorateRoof_list.Clear();
-		foreach (int item in roof_temp_array) {
-			UpgradeOutsideManager.CanDecorateRoof_list.Add(item);
-		}
-	}
-	void AddCanDecorateAwningList (ref int[] awning_temp_array)
-	{
-		UpgradeOutsideManager.CanDecorateAwning_list.Clear();
-		foreach (int item in awning_temp_array) {
-			UpgradeOutsideManager.CanDecorateAwning_list.Add(item);
-		}
-	}
-	void AddCanDecorationTableList (ref int[] table_temp_array)
-	{
-		UpgradeOutsideManager.CanDecoration_Table_list.Clear();
-		foreach (int item in table_temp_array) {
-			UpgradeOutsideManager.CanDecoration_Table_list.Add(item);
-		}
-	}
-	void AddCanDecorationAccessoriesList (ref int[] accessories_temp_array)
-	{
-		UpgradeOutsideManager.CanDecoration_Accessories_list.Clear();
-		foreach (var item in accessories_temp_array) {
-			UpgradeOutsideManager.CanDecoration_Accessories_list.Add(item);
-		}
-	}
 
 	public override void LoadSaveDataToGameStorage()
 	{
@@ -143,11 +42,125 @@ public class ExtendsStorageManager : Mz_StorageManage
         GlobalWarmingOranization.Level = PlayerPrefs.GetInt(SaveSlot + KEY_GLOBALWARMING_LV, 0);
 
         this.LoadCanSellGoodsListData();
+		this.LoadNewItemArrayData ();
         this.LoadCostumeData();
         this.LoadDecorationShopOutside();
         this.LoadCanAlimentPetList();
 	}
+		
+	public void LoadCanSellGoodsListData ()
+	{		
+		int[] array = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + KEY_CANSELLGOODSLIST);
+		SushiShop.NumberOfCansellItem.Clear();
+		foreach (var item in array) {
+			SushiShop.NumberOfCansellItem.Add(item);
+		}
+	}
+
+	private void LoadNewItemArrayData ()
+	{
+		int[] array = PlayerPrefsX.GetIntArray (SaveSlot + KEY_LIST_NEWITEM);
+		SushiShop.NewItem_IDs.Clear ();
+		foreach (var item in array) {
+			if(item != 255)
+				SushiShop.NewItem_IDs.Add(item);
+		}
+	}
 	
+	public void LoadCostumeData() {
+		/// Clothes data.
+		int[] load_arr = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_CLOTHE_LIST);
+		if(load_arr.Length != 0) {
+			this.AddCanEquipClotheTempToStaticVar(ref load_arr);
+		}
+		else if(load_arr.Length == 0) {
+			load_arr = new int[] { 0, 1, 2 };
+			this.AddCanEquipClotheTempToStaticVar(ref load_arr);
+		}
+		
+		/// Hats data.
+		int[] load_temp_hats = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_EQUIP_HAT_LIST);
+		if(load_temp_hats.Length != 0) {
+			this.AddCanEquipHatTempToStaticVar(ref load_temp_hats);
+		}
+		else if(load_temp_hats.Length == 0) {
+			load_temp_hats = new int[] { 0, 1, 2 };
+			this.AddCanEquipHatTempToStaticVar(ref load_temp_hats);
+		}
+	}
+	
+	void AddCanEquipClotheTempToStaticVar (ref int[] temp_arr)
+	{
+		Dressing.CanEquipClothe_list.Clear();
+		foreach (int item in temp_arr)
+		{
+			Dressing.CanEquipClothe_list.Add(item);
+		}
+	}
+	
+	void AddCanEquipHatTempToStaticVar (ref int[] temp_hats)
+	{
+		Dressing.CanEquipHat_list.Clear();
+		foreach (int item in temp_hats) {
+			Dressing.CanEquipHat_list.Add(item);
+		}
+	}
+	
+	private void LoadDecorationShopOutside()
+	{
+		int[] roof_temp_array = PlayerPrefsX.GetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ROOF_LIST, 0, 0);
+		if(roof_temp_array.Length != 0) {
+			this.AddCanDecorationRoofList(ref roof_temp_array);
+		}
+		else return;
+		
+		int[] awning_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_AWNING_LIST, 0, 0);
+		if(awning_temp_array.Length != 0) {
+			this.AddCanDecorateAwningList(ref awning_temp_array);
+		}
+		else return;
+		
+		int[] table_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_TABLE_LIST, 0, 0);
+		if(table_temp_array.Length != 0) {
+			this.AddCanDecorationTableList(ref table_temp_array);
+		}
+		else return;
+		
+		int[] accessories_temp_array = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_DECORATE_ACCESSORIES_LIST, 0, 0);
+		if(accessories_temp_array.Length != 0) {
+			this.AddCanDecorationAccessoriesList(ref accessories_temp_array);
+		}
+		else return;
+	}
+	void AddCanDecorationRoofList (ref int[] roof_temp_array)
+	{
+		UpgradeOutsideManager.CanDecorateRoof_list.Clear();
+		foreach (int item in roof_temp_array) {
+			UpgradeOutsideManager.CanDecorateRoof_list.Add(item);
+		}
+	}
+	void AddCanDecorateAwningList (ref int[] awning_temp_array)
+	{
+		UpgradeOutsideManager.CanDecorateAwning_list.Clear();
+		foreach (int item in awning_temp_array) {
+			UpgradeOutsideManager.CanDecorateAwning_list.Add(item);
+		}
+	}
+	void AddCanDecorationTableList (ref int[] table_temp_array)
+	{
+		UpgradeOutsideManager.CanDecoration_Table_list.Clear();
+		foreach (int item in table_temp_array) {
+			UpgradeOutsideManager.CanDecoration_Table_list.Add(item);
+		}
+	}
+	void AddCanDecorationAccessoriesList (ref int[] accessories_temp_array)
+	{
+		UpgradeOutsideManager.CanDecoration_Accessories_list.Clear();
+		foreach (var item in accessories_temp_array) {
+			UpgradeOutsideManager.CanDecoration_Accessories_list.Add(item);
+		}
+	}
+
     private void LoadCanAlimentPetList()
     {
         int[] array_temp = PlayerPrefsX.GetIntArray(SaveSlot + KEY_CAN_ALIMENT_PET_LIST);
@@ -202,7 +215,8 @@ public class ExtendsStorageManager : Mz_StorageManage
 			this.SaveCanAlimentPetList();
 
 		this.SaveCanDecorateShopOutside();
-		
+		this.SaveNewItemArray ();
+				
 		PlayerPrefs.Save();
     }
 
@@ -210,6 +224,17 @@ public class ExtendsStorageManager : Mz_StorageManage
         int[] array_temp = SushiShop.NumberOfCansellItem.ToArray();
         PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + KEY_CANSELLGOODSLIST, array_temp);
     }
+
+	private void SaveNewItemArray ()
+	{
+		if (SushiShop.NewItem_IDs.Count != 0) {
+			int[] temp_arr = SushiShop.NewItem_IDs.ToArray ();
+			PlayerPrefsX.SetIntArray (Mz_StorageManage.SaveSlot + KEY_LIST_NEWITEM, temp_arr);
+		}
+		else {
+			PlayerPrefsX.SetIntArray(SaveSlot + KEY_LIST_NEWITEM, new int[] { 255, });
+		}
+	}
 
     private void SaveCanEquipClothesData() {
         int[] arr_clothe = Dressing.CanEquipClothe_list.ToArray();

@@ -226,19 +226,25 @@ public class SushiShop : Mz_BaseScene {
 				this.OnHaveNewItem_event(new NewItemEventArgs() { item_id = item, });
 			}
 
-			SushiShop.NewItem_IDs.Clear();
+			haveNewItem_event -= Handle_haveNewItem_event;
 		}
     }
 
+	private List<GameObject> list_newItemUI_obj = new List<GameObject>();
     void Handle_haveNewItem_event (object sender, NewItemEventArgs e)
     {
 		GameObject newItem_UI = Instantiate (Resources.Load ("Base_newitemUI", typeof(GameObject))) as GameObject;
+		list_newItemUI_obj.Add(newItem_UI);
+
 		newItem_UI.transform.parent = midLeft_anchor;
 		newItem_UI.transform.localPosition = new Vector3 (-16f, 40f, -1f);
 
 		Transform item = newItem_UI.transform.Find("newItem");
 		tk2dSprite item_sprite = item.GetComponent<tk2dSprite> ();
 		item_sprite.spriteId = item_sprite.GetSpriteIdByName (goodDataStore.FoodDatabase_list[e.item_id].name);
+
+		NewItemButtonBeh newItem_button = newItem_UI.GetComponent<NewItemButtonBeh>();
+		newItem_button.food_id = e.item_id;
     }
    
 	private IEnumerator SceneInitializeAudio()

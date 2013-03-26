@@ -288,7 +288,7 @@ public class MainMenu : Mz_BaseScene {
 #if UNITY_EDITOR || UNITY_WEBPLAYER
             //<!-- "Please Insert Username !".
             GUI.SetNextControlName("Username");
-            username = GUI.TextField(newgame_Textfield_rect, username, 13, GUI.skin.textField);  //saveSlot_buttonStyle);
+            username = GUI.TextField(newgame_Textfield_rect, username, 13, saveSlot_buttonStyle);
 
             if (GUI.GetNameOfFocusedControl() == string.Empty || GUI.GetNameOfFocusedControl() == "")
             {
@@ -432,7 +432,7 @@ public class MainMenu : Mz_BaseScene {
 			Town.newGameStartup_Event += Town.Handle_NewGameStartupEvent;
 
 			Mz_LoadingScreen.LoadSceneName = Mz_BaseScene.SceneNames.Town.ToString();
-			Application.LoadLevel(Mz_BaseScene.SceneNames.LoadingScene.ToString());					
+			Application.LoadLevel(Mz_BaseScene.SceneNames.LoadingScene.ToString());	
 		}
     }
 
@@ -448,14 +448,14 @@ public class MainMenu : Mz_BaseScene {
 			GUI.Box(notification_Rect, message, notification_TextboxStyle);
 		}
 
-        GUI.BeginGroup(showSaveGameSlot_GroupRect, "", GUI.skin.box);
+        GUI.BeginGroup(showSaveGameSlot_GroupRect);
         {
             if (_toSaveGame)			
             {
                 /// Display To Save Username.
 //                GUI.Box(textbox_header_rect, username, mainmenu_Skin.textField);
                 /// Choose SaveGame Slot for replace new data.
-                if (GUI.Button(slot_1Rect, new GUIContent(PlayerPrefs.GetString(1 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
+                if (GUI.Button(slot_1Rect, new GUIContent(PlayerPrefs.GetString(1 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -463,7 +463,7 @@ public class MainMenu : Mz_BaseScene {
 //                    SaveNewPlayer();
 					StartCoroutine(ShowInitializeNewShop());
                 }
-                else if (GUI.Button(slot_2Rect, new GUIContent(PlayerPrefs.GetString(2 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
+                else if (GUI.Button(slot_2Rect, new GUIContent(PlayerPrefs.GetString(2 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 
@@ -471,7 +471,7 @@ public class MainMenu : Mz_BaseScene {
 //				    SaveNewPlayer();
 					StartCoroutine(ShowInitializeNewShop());
                 }
-                else if (GUI.Button(slot_3Rect, new GUIContent(PlayerPrefs.GetString(3 + Mz_StorageManage.KEY_USERNAME), "button"), GUI.skin.button))
+                else if (GUI.Button(slot_3Rect, new GUIContent(PlayerPrefs.GetString(3 + Mz_StorageManage.KEY_USERNAME), "button"), saveSlot_buttonStyle))
                 {
                     audioEffect.PlayOnecWithOutStop(audioEffect.buttonDown_Clip);
 

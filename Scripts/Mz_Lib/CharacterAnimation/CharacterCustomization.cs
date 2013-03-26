@@ -94,7 +94,7 @@ public class CharacterCustomization : MonoBehaviour {
 		Mz_StorageManage.TK_clothe_id = arr_index;
     }
 
-	private Vector3 originalHatPosition = new Vector3(0,0,-4.5f);
+	private Vector3 originalHatPosition = new Vector3(0, 0, -4.5f);
     public void ChangeHatAtRuntime(int arr_index) {
         if (arr_index >= AvailableHatNumber)
         {
