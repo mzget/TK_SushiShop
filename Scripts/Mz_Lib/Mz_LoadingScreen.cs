@@ -24,7 +24,7 @@ public class Mz_LoadingScreen : MonoBehaviour
         Time.timeScale = 1f;
 		Resources.UnloadUnusedAssets();
 
-//        Mz_ResizeScale.ResizingScale(loading_background_sprite.transform);
+        Mz_ResizeScale.ResizingScale(loading_background_sprite.transform);
 		
 #if UNITY_STANDALONE_WIN 
             //async = DatVistaData.LoadLevelAsync(sceneName);

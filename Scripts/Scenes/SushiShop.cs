@@ -451,7 +451,7 @@ public class SushiShop : Mz_BaseScene {
 		shopTutor.greeting_textSprite.active = false;
         shopTutor.greeting_textmesh.active = true;
 
-        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "GREETING";
+        tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "GREETINGS";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
 
         audioDescribe.PlayOnecSound(description_clips[0]);
@@ -556,6 +556,18 @@ public class SushiShop : Mz_BaseScene {
 
         audioDescribe.PlayOnecSound(description_clips[4]);
     }
+
+	private void CreateNoticeUpgradeShopEvent ()
+	{
+		GameObject upgradeShop_button = Instantiate(Resources.Load("Tutor_Objs/NoticeUpgradeButton", typeof(GameObject))) as GameObject;
+		upgradeShop_button.transform.position = new Vector3(40f, -75f, -4f);
+		upgradeShop_button.name = "NoticeUpgradeButton";
+		
+		audioDescribe.PlayOnecSound(description_clips[8]);
+		
+		iTween.PunchScale(upgradeShop_button, 
+			iTween.Hash("amount", Vector3.one * 0.2f, "time", 1f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));
+	}
 
 	#endregion
 	
@@ -969,6 +981,12 @@ public class SushiShop : Mz_BaseScene {
         billingAnimatedSprite.animationCompleteDelegate = delegate(tk2dAnimatedSprite sprite, int clipId) {
 			billingAnimatedSprite.Play("Billing");
 		};
+		
+		if(Mz_StorageManage._IsNoticeUser == false & Mz_StorageManage.AvailableMoney >= 350) {
+			Mz_StorageManage._IsNoticeUser = true;
+			
+			this.CreateNoticeUpgradeShopEvent();
+		}  
 
         //<!-- Clare resource data.
 		Destroy(packaging_Obj);
@@ -994,6 +1012,23 @@ public class SushiShop : Mz_BaseScene {
 
                 return;
 			}
+		}
+		
+		if (nameInput == "NoticeUpgradeButton")
+		{
+			if(Application.isLoadingLevel == false && _onDestroyScene == false) {
+				_onDestroyScene = true;
+				
+				base.extendsStorageManager.SaveDataToPermanentMemory();
+				this.PreparingToCloseShop();
+				
+				Mz_LoadingScreen.LoadSceneName = SceneNames.Sheepbank.ToString();
+				Application.LoadLevel(SceneNames.LoadingScene.ToString());
+				
+				return;
+			}
+			else
+				return;
 		}
 
         //<!-- Close shop button.
@@ -1422,15 +1457,20 @@ public class SushiShop : Mz_BaseScene {
     
     private void PreparingToCloseShop()
     {
-        this.OnDispose();
+		this.OnDispose();
+
+		audioEffect.PlayOnecWithOutStop(base.soundEffect_clips[0]);
+		slidingDoorLeft.SetActiveRecursively(true);
+		slidingDoorRight.SetActiveRecursively(true);
+
+		foreach (var item in list_newItemUI_obj) {
+			Destroy(item.gameObject);
+		}
+		NewItem_IDs.Clear();
 		
         iTween.MoveTo(slidingDoorLeft, iTween.Hash("position", new Vector3(-89f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine));
         iTween.MoveTo(slidingDoorRight, iTween.Hash("position", new Vector3(89f, 0f, 1), "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeInSine,
 			"oncomplete", "RollingDoor_close", "oncompletetarget", this.gameObject));
-		
-		audioEffect.PlayOnecWithOutStop(base.soundEffect_clips[0]);
-        slidingDoorLeft.SetActiveRecursively(true);
-		slidingDoorRight.SetActiveRecursively(true);
     }
 	
     private void RollingDoor_close() {
