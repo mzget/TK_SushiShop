@@ -160,11 +160,24 @@ public class Mz_BaseScene : MonoBehaviour {
 
     //<!--- GUI_identity.
     public GameObject identityGUI_obj;
-    public tk2dTextMesh usernameTextmesh;
-    public tk2dTextMesh shopnameTextmesh;
-    public tk2dTextMesh availableMoney;
-    protected IEnumerator InitializeIdentityGUI()
+    protected tk2dTextMesh usernameTextmesh;
+    protected tk2dTextMesh shopnameTextmesh;
+    protected tk2dTextMesh availableMoney_textmesh;
+    protected void InitializeIdentityGUI()
     {
+		if(usernameTextmesh == null) {
+			Transform username = identityGUI_obj.transform.Find("Username");
+			usernameTextmesh = username.GetComponent<tk2dTextMesh>();
+		}
+		if(shopnameTextmesh == null) {
+			Transform shopname = identityGUI_obj.transform.Find("Shopname");
+			shopnameTextmesh = shopname.GetComponent<tk2dTextMesh>();
+		}
+		if(availableMoney_textmesh == null) {
+			Transform availableMoney = identityGUI_obj.transform.Find("AvailableMoney");
+			availableMoney_textmesh = availableMoney.GetComponent<tk2dTextMesh>();
+		}
+		
         if (Mz_StorageManage.Username != string.Empty)
         {
             usernameTextmesh.text = Mz_StorageManage.Username;
@@ -173,17 +186,15 @@ public class Mz_BaseScene : MonoBehaviour {
             shopnameTextmesh.text = Mz_StorageManage.ShopName;
             shopnameTextmesh.Commit();
 
-            availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-            availableMoney.Commit();
+            availableMoney_textmesh.text = Mz_StorageManage.AvailableMoney.ToString();
+            availableMoney_textmesh.Commit();
         }
-
-        yield return null;
     }
    
 	internal void ReFreshAvailableMoney()
 	{
-		this.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-		this.availableMoney.Commit();
+		this.availableMoney_textmesh.text = Mz_StorageManage.AvailableMoney.ToString();
+		this.availableMoney_textmesh.Commit();
 	}
     
     /// <summary>

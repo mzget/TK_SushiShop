@@ -124,8 +124,9 @@ public class UpgradeOutsideManager : MonoBehaviour
 
 		for (int i = 0; i < upgrade_Objs.Length; i++) {
 			upgrade_sprites[i] = upgrade_Objs[i].GetComponent<tk2dSprite>();
+			itemPrice_textmesh[i].scale = Vector3.one * 80f;
 		}
-
+		
 		this.ReFreshAccountBalanceTextDisplay();
 	}
 
@@ -205,17 +206,17 @@ public class UpgradeOutsideManager : MonoBehaviour
 			upgrade_sprites[i].spriteId = upgrade_sprites [0].GetSpriteIdByName (roofData.NameSpecify [i]);
 			
 			if(UpgradeOutsideManager.CanDecorateRoof_list.Contains(i) == false) {
-				itemPrice_textmesh[i].gameObject.SetActiveRecursively(true);
+				itemPrice_textmesh[i].gameObject.SetActive(true);
 				itemPrice_textmesh[i].text = roofData.upgradePrice[i].ToString();
 				itemPrice_textmesh[i].Commit();
 			}
 			else {
-				itemPrice_textmesh[i].gameObject.SetActiveRecursively(false);
+				itemPrice_textmesh[i].gameObject.SetActive(false);
 			}
 		}
 
-		previousButton_Obj.active = false;
-		nextButton_Obj.active = false;
+		previousButton_Obj.SetActive(false);
+		nextButton_Obj.SetActive(false);
 
 		currentStateBehavior = StateBehavior.activeRoof;
 		currentPage = 0;

@@ -98,9 +98,9 @@ public class SheepBank : Mz_BaseScene {
 		
 		StartCoroutine_Auto(ReInitializeAudioClipData());
         StartCoroutine(this.InitializeAudio());
-        StartCoroutine(base.InitializeIdentityGUI());
         StartCoroutine(this.InitializeBankOfficer());
         this.InitializeGameEffectGenerator();
+        base.InitializeIdentityGUI();
 		
 		upgradeInsideManager = upgradeInside_window_Obj.GetComponent<UpgradeInsideManager>();
         donationManager = donationForm_group.GetComponent<DonationManager>();
@@ -109,7 +109,7 @@ public class SheepBank : Mz_BaseScene {
 		
 		if(MainMenu._HasNewGameEvent) {
 			shadowPlane_Obj.gameObject.active = true;
-			sheepBankTutor.Deposit_button_obj.transform.position += Vector3.back * 11;
+			sheepBankTutor.Deposit_button_obj.transform.position += Vector3.back * 12;
 			sheepBankTutor.Back_Button_obj.transform.position += Vector3.forward * 20;
 			this.CreateTutorObjectAtRuntime();
 		}
@@ -182,7 +182,7 @@ public class SheepBank : Mz_BaseScene {
 		SetActivateTotorObject(true);
 
 		shadowPlane_Obj.gameObject.active = true;
-		sheepBankTutor.UpgradeInside_button_obj.transform.position += Vector3.back * 11;
+		sheepBankTutor.UpgradeInside_button_obj.transform.position += Vector3.back * 12;
 		sheepBankTutor.Back_Button_obj.transform.position += Vector3.forward * 20;
 
 		handTutor.transform.localPosition = new Vector3(48f, 17f, 8f);
@@ -219,7 +219,7 @@ public class SheepBank : Mz_BaseScene {
         SetActivateTotorObject(true);
 
         shadowPlane_Obj.gameObject.active = true;
-        sheepBankTutor.UpgradeOutside_button_obj.transform.position += Vector3.back * 11;
+        sheepBankTutor.UpgradeOutside_button_obj.transform.position += Vector3.back * 12;
         sheepBankTutor.Back_Button_obj.transform.localPosition = new Vector3(-108f, -85f, -5);
 
         handTutor.transform.localPosition = new Vector3(93f, 17f, 8f);
@@ -401,8 +401,8 @@ public class SheepBank : Mz_BaseScene {
 
 	void ReDrawGUIIdentity ()
 	{
-		base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-		base.availableMoney.Commit();
+		base.availableMoney_textmesh.text = Mz_StorageManage.AvailableMoney.ToString();
+		base.availableMoney_textmesh.Commit();
 	}
 	
 	private void OnMoveDownComplete_event() {
@@ -410,7 +410,7 @@ public class SheepBank : Mz_BaseScene {
 		if(upgradeInside_window_Obj.active) {        
             currentGameStatus = GameSceneStatus.ShowUpgradeInside;
 
-			availabelMoneyBillboard_Obj.gameObject.SetActiveRecursively(true);
+			availabelMoneyBillboard_Obj.gameObject.SetActive(true);
 			this.ManageAvailabelMoneyBillBoard();
 
 //            upgradeInsideManager.ReInitializeData();
@@ -520,25 +520,27 @@ public class SheepBank : Mz_BaseScene {
             return;
         }
         else if (nameInput == BACK_BUTTON_NAME)
-        {
-            if (upgradeInside_window_Obj.active)
-            {
-                iTween.MoveTo(upgradeInside_window_Obj.gameObject, moveUp_hashdata);
-                return;
-            }
-            if (depositForm_Obj.gameObject.active)
+		{
+			if (upgradeInside_window_Obj.activeSelf)
+			{
+				iTween.MoveTo(upgradeInside_window_Obj.gameObject, moveUp_hashdata);
+				iTween.StopByName(depositIcon.gameObject, "ShakeDepositIcon");
+				depositIcon.active = false;
+				return;
+			}
+            if (depositForm_Obj.gameObject.activeSelf)
             {
                 iTween.MoveTo(depositForm_Obj.gameObject, moveUp_hashdata);
                 iTween.MoveTo(transactionForm_Obj.gameObject, moveUp_hashdata);
                 return;
             }
-            if (withdrawalForm_Obj.gameObject.active)
+            if (withdrawalForm_Obj.gameObject.activeSelf)
             {
                 iTween.MoveTo(withdrawalForm_Obj.gameObject, moveUp_hashdata);
                 iTween.MoveTo(transactionForm_Obj.gameObject, moveUp_hashdata);
                 return;
             }
-            else if (donationForm_group.active)
+            else if (donationForm_group.activeSelf)
             {
                 iTween.MoveTo(donationForm_group, moveUp_hashdata);
                 return;
@@ -549,7 +551,7 @@ public class SheepBank : Mz_BaseScene {
                 return;
             }
 
-            if (upgradeInside_window_Obj.active == false)
+            if (upgradeInside_window_Obj.activeSelf == false)
             {
                 if (Application.isLoadingLevel == false && _onDestroyScene == false) {
 					_onDestroyScene = true;
@@ -565,50 +567,50 @@ public class SheepBank : Mz_BaseScene {
 
         switch (currentGameStatus)
         {
-		case GameSceneStatus.ShowUpgradeInside:
-			if (nameInput == NextButtonName) { 
-				upgradeInsideManager.GotoNextPage();
-			}
-			else if (nameInput == PreviousButtonName) {
-				upgradeInsideManager.BackToPreviousPage();
-			}
-			else if (nameInput == YES_BUTTON_NAME) {
-				if (MainMenu._HasNewGameEvent)
-				{
-                        this.SetActivateTotorObject(false);
-                        upgradeInsideManager.UserComfirm(); 
-                        this.OnInput(BACK_BUTTON_NAME);
-                        this.CreateUpgradeOutsideTutorEvent();
+			case GameSceneStatus.ShowUpgradeInside :
+				if (nameInput == NextButtonName) { 
+					upgradeInsideManager.GotoNextPage();
+				}
+				else if (nameInput == PreviousButtonName) {
+					upgradeInsideManager.BackToPreviousPage();
+				}
+				else if (nameInput == YES_BUTTON_NAME) {
+					if (MainMenu._HasNewGameEvent)
+					{
+	                        this.SetActivateTotorObject(false);
+	                        upgradeInsideManager.UserComfirm(); 
+	                        this.OnInput(BACK_BUTTON_NAME);
+	                        this.CreateUpgradeOutsideTutorEvent();
+					}
+					else
+						upgradeInsideManager.UserComfirm(); 
+				}
+				else if (nameInput == NO_BUTTON_NAME) {
+					if(MainMenu._HasNewGameEvent)
+						this.audioEffect.PlayOnecWithOutStop(this.audioEffect.wrong_Clip);
+					else 
+						upgradeInsideManager.UnActiveComfirmationWindow(); 
+				}
+				else if(nameInput == depositIcon.name) {
+					iTween.MoveTo(upgradeInside_window_Obj.gameObject, moveUp_hashdata);
+					iTween.StopByName(depositIcon.gameObject, "ShakeDepositIcon");
+					depositIcon.SetActive(false);
+					
+					StartCoroutine_Auto(this.WaitForHookUPDepositFunction());
 				}
 				else
-					upgradeInsideManager.UserComfirm(); 
-			}
-			else if (nameInput == NO_BUTTON_NAME) {
-				if(MainMenu._HasNewGameEvent)
-					this.audioEffect.PlayOnecWithOutStop(this.audioEffect.wrong_Clip);
-				else 
-					upgradeInsideManager.UnActiveComfirmationWindow(); 
-			}
-			else if(nameInput == depositIcon.name) {
-				iTween.MoveTo(upgradeInside_window_Obj.gameObject, moveUp_hashdata);
-				iTween.StopByName(depositIcon.gameObject, "ShakeDepositIcon");
-				depositIcon.active = false;
-				
-				StartCoroutine_Auto(this.WaitForHookUPDepositFunction());
-			}
-			else
-	        {
-				    //<@-- Handle other name input.
-	            for (int i = 0; i < upgradeButtons.Length; i++)
-	            {
-	                if (nameInput == upgradeButtons[i].name)
-	                {
-	                    upgradeInsideManager.BuyingUpgradeMechanism(upgradeButtons[i].name);
-	                    break;
-	                }
-	            }
-	        }
-	        break;
+		        {
+					    //<@-- Handle other name input.
+		            for (int i = 0; i < upgradeButtons.Length; i++)
+		            {
+		                if (nameInput == upgradeButtons[i].name)
+		                {
+		                    upgradeInsideManager.BuyingUpgradeMechanism(upgradeButtons[i].name);
+		                    break;
+		                }
+		            }
+		        }
+	        	break;
             case GameSceneStatus.ShowDonationForm : {
 	                if (nameInput == PreviousButtonName)
 	                {

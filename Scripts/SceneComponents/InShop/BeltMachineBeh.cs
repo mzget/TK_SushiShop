@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BeltMachineBeh : ObjectsBeh
 {
-    public const string BeltMachineObjectName = "FoodBeltMachine";
     public const string CloseButtonName = "Close_button";
 
     public const string PATH_OF_INSTANT_FOOD = "Goods/InstantFood";
@@ -32,7 +32,68 @@ public class BeltMachineBeh : ObjectsBeh
     private Hashtable scaleUp_hash = new Hashtable();
     private Hashtable scaleDown_hash = new Hashtable();
     private const string OnScaleDownComplete = "OnPopupClosedComplete";
-	
+
+	public tk2dSprite[] arr_foodsSprite = new tk2dSprite[3];
+	public void InitializeSelf ()
+	{  
+		if(SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Ramen) &&
+		   SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Yaki_soba) &&
+		   SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Zaru_soba) &&
+		   SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Curry_with_rice) &&
+		   SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Tempura)) 
+		{
+			foreach(var obj in arr_foodsSprite)
+				obj.gameObject.SetActiveRecursively(false);
+			this.animatedSprite.Play("Play");
+			this.transform.position = new Vector3(136, 25, 10);
+		}
+		else {
+			this.animatedSprite.Play("Idle");
+			this.transform.position = new Vector3(108, 25, 10);
+			foreach(var obj in arr_foodsSprite)
+				obj.gameObject.SetActiveRecursively(false);
+
+			int ramen_id = (int)GoodDataStore.FoodMenuList.Ramen;
+			int yakizoba_id = (int)GoodDataStore.FoodMenuList.Yaki_soba;
+			int zaruzoba_id = (int)GoodDataStore.FoodMenuList.Zaru_soba;
+			int curry_id = (int)GoodDataStore.FoodMenuList.Curry_with_rice;
+			int tempura_id = (int)GoodDataStore.FoodMenuList.Tempura;
+			List<int> temp = new List<int>();
+			temp.Add(ramen_id);
+			temp.Add(yakizoba_id);
+			temp.Add(zaruzoba_id);
+			temp.Add(curry_id);
+			temp.Add(tempura_id);
+
+			for (int i = 0; i < 3; i++) {
+				if(SushiShop.NumberOfCansellItem.Contains(ramen_id) && temp.Contains(ramen_id)) {
+					arr_foodsSprite[i].gameObject.active = true;
+					arr_foodsSprite[i].spriteId = arr_foodsSprite[i].GetSpriteIdByName(GoodDataStore.FoodMenuList.Ramen.ToString());
+					temp.Remove(ramen_id);
+				}
+				else if(SushiShop.NumberOfCansellItem.Contains(yakizoba_id) && temp.Contains(yakizoba_id)) {
+					arr_foodsSprite[i].gameObject.active = true;
+					arr_foodsSprite[i].spriteId = arr_foodsSprite[i].GetSpriteIdByName(GoodDataStore.FoodMenuList.Yaki_soba.ToString());
+					temp.Remove(yakizoba_id);
+                }
+				else if(SushiShop.NumberOfCansellItem.Contains(zaruzoba_id) && temp.Contains(zaruzoba_id)) {
+					arr_foodsSprite[i].gameObject.active = true;
+					arr_foodsSprite[i].spriteId = arr_foodsSprite[i].GetSpriteIdByName(GoodDataStore.FoodMenuList.Zaru_soba.ToString());
+					temp.Remove(zaruzoba_id);
+                }
+                else if (SushiShop.NumberOfCansellItem.Contains(curry_id) && temp.Contains(curry_id)) {
+                    arr_foodsSprite[i].gameObject.active = true;
+                    arr_foodsSprite[i].spriteId = arr_foodsSprite[i].GetSpriteIdByName(GoodDataStore.FoodMenuList.Curry_with_rice.ToString());
+					temp.Remove(curry_id);
+                }
+                else if (SushiShop.NumberOfCansellItem.Contains(tempura_id) && temp.Contains(tempura_id)) {
+                    arr_foodsSprite[i].gameObject.active = true;
+                    arr_foodsSprite[i].spriteId = arr_foodsSprite[i].GetSpriteIdByName(GoodDataStore.FoodMenuList.Tempura.ToString());
+					temp.Remove(tempura_id);
+                }
+			}
+		}
+	}	
 
 	// Use this for initialization
 	protected override void Start ()
@@ -54,7 +115,7 @@ public class BeltMachineBeh : ObjectsBeh
         scaleDown_hash.Add("oncomplete", OnScaleDownComplete);
 	}
 	
-    private void Initializing()
+    private void InitializePopup()
     {
         if (SushiShop.NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Ramen)) {
             ramen_lockIcon.active = false;
@@ -105,7 +166,7 @@ public class BeltMachineBeh : ObjectsBeh
     internal void ActiveBeltMachinePopup()
     {
         beltMachinePopup_obj.SetActiveRecursively(true);
-        this.Initializing();
+        this.InitializePopup();
 		base.animatedSprite.Pause();
         iTween.ScaleTo(beltMachinePopup_obj, scaleUp_hash);
     }
@@ -125,7 +186,7 @@ public class BeltMachineBeh : ObjectsBeh
 			return;
 
 
-        if (nameInput == BeltMachineObjectName) {
+        if (nameInput == this.name) {
             if(foodInstance == null)
                 this.ActiveBeltMachinePopup();
 			else

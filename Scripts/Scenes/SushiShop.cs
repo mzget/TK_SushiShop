@@ -62,6 +62,7 @@ public class SushiShop : Mz_BaseScene {
 	public BinBeh binBeh;
 	public GameObject foodsTray_obj;
     internal FoodTrayBeh foodTrayBeh;
+	public GameObject brand_lable;
     public GameObject calculator_group_instance;
     public GameObject receiptGUIForm_groupObj;
     public GameObject giveTheChangeGUIForm_groupObj;
@@ -85,7 +86,7 @@ public class SushiShop : Mz_BaseScene {
     public tk2dSprite[] arr_orderingItems = new tk2dSprite[3];
 
     public static bool _CanCreateFoodBeltMachine = false;
-    public BeltMachineBeh beltMachine;
+    public BeltMachineBeh beltMachineBeh;
     public ManualBeh manualManager;
     private SushiProduction sushiProduction;
     private InstantFoodManager instantfoodManager = null;
@@ -156,10 +157,10 @@ public class SushiShop : Mz_BaseScene {
 
 	#endregion
 
-	
 	// Use this for initialization
 	IEnumerator Start () {				
 		haveNewItem_event = null;
+//		Mz_ResizeScale.ResizingScale(shop_background);
         yield return StartCoroutine(this.InitailizeSceneObject());
 
         this.OpenShop();
@@ -167,11 +168,9 @@ public class SushiShop : Mz_BaseScene {
 
     private IEnumerator InitailizeSceneObject()
     {
-        Mz_ResizeScale.ResizingScale(shop_background);
-
         foodTrayBeh = new FoodTrayBeh();
         goodDataStore = new GoodDataStore();
-        calculator_group_instance.SetActiveRecursively(false);
+        calculator_group_instance.SetActive(false);
         sushiProduction = this.GetComponent<SushiProduction>();
         instantfoodManager = this.GetComponent<InstantFoodManager>();
 		choppingBlock_sprite.spriteId = choppingBlock_sprite.GetSpriteIdByName("choppingBlock");		
@@ -357,12 +356,22 @@ public class SushiShop : Mz_BaseScene {
 	
 	IEnumerator InitailizeShopLabelGUI ()
 	{		
+		if(shopnameTextmesh == null) {
+			var shopname = brand_lable.transform.Find("Shopname_textmesh");
+			base.shopnameTextmesh = shopname.GetComponent<tk2dTextMesh>();
+		}
+		
+		if(availableMoney_textmesh == null) {
+			var money = brand_lable.transform.Find("AvailableMoney_textmesh");
+			base.availableMoney_textmesh = money.GetComponent<tk2dTextMesh>();
+		}
+		
 		if(Mz_StorageManage.Username != string.Empty) {
 			base.shopnameTextmesh.text = Mz_StorageManage.ShopName;
 			base.shopnameTextmesh.Commit();
 			
-			base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-			base.availableMoney.Commit();
+			base.availableMoney_textmesh.text = Mz_StorageManage.AvailableMoney.ToString();
+			base.availableMoney_textmesh.Commit();
 		}
 		yield return null;
 	}
@@ -421,6 +430,7 @@ public class SushiShop : Mz_BaseScene {
             NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Curry_with_rice) ||
             NumberOfCansellItem.Contains((int)GoodDataStore.FoodMenuList.Tempura)) {
             beltMachine_obj.gameObject.SetActiveRecursively(true);
+			beltMachineBeh.InitializeSelf();
         }
 	}
 
@@ -437,7 +447,7 @@ public class SushiShop : Mz_BaseScene {
 		
 		GameObject tutorText_0 = Instantiate(Resources.Load("Tutor_Objs/Tutor_description", typeof(GameObject))) as GameObject;
 		tutorText_0.transform.parent = cameraTutor_Obj.transform;
-		tutorText_0.transform.localPosition = new Vector3(-38f, 70f, 3f);
+		tutorText_0.transform.localPosition = new Vector3(-45f, 70f, 3f);
 		tutorText_0.transform.localScale = Vector3.one;
 
 		base.tutorDescriptions = new List<GameObject>();
@@ -972,8 +982,8 @@ public class SushiShop : Mz_BaseScene {
 
         this.CreateEarnTKCoin(currentCustomer.amount);        
         Mz_StorageManage.AvailableMoney += currentCustomer.amount;
-        base.availableMoney.text = Mz_StorageManage.AvailableMoney.ToString();
-        base.availableMoney.Commit();
+        base.availableMoney_textmesh.text = Mz_StorageManage.AvailableMoney.ToString();
+        base.availableMoney_textmesh.Commit();
 
 		char_animationManager.RandomPlayGoodAnimation();
 
@@ -1162,7 +1172,8 @@ public class SushiShop : Mz_BaseScene {
                         currentCustomer.PlayRampage_animation();
                         StartCoroutine(this.ExpelCustomer());
                         break;
-                    case "OrderingIcon": StartCoroutine(this.ShowOrderingGUI());
+                    case "OrderingIcon": 
+						StartCoroutine(this.ShowOrderingGUI());
                         break;
                     default:
                         break;
@@ -1184,8 +1195,8 @@ public class SushiShop : Mz_BaseScene {
 					sushiProduction.OnInput(ref nameInput);
                     return;
 				}
-                else if (nameInput == BeltMachineBeh.BeltMachineObjectName) {
-                    beltMachine.HandleOnInput(ref nameInput);
+                else if (nameInput == beltMachine_obj.name) {
+                    beltMachineBeh.HandleOnInput(ref nameInput);
                     return;
                 }
 				else if (nameInput == manualManager.name) {
@@ -1210,12 +1221,12 @@ public class SushiShop : Mz_BaseScene {
 					CheckingUnityAnimationComplete.TargetAnimationComplete_event += handle;
 				}
 				else if (nameInput == BeltMachineBeh.CloseButtonName) {
-					beltMachine.DeActiveBeltMachinePopup();
+					beltMachineBeh.DeActiveBeltMachinePopup();
 					return;
 				}
 				else if (nameInput == BeltMachineBeh.Ramen_UI || nameInput == BeltMachineBeh.CurryWithRice_UI || nameInput == BeltMachineBeh.Tempura_UI ||
 				         nameInput == BeltMachineBeh.YakiSoba_UI || nameInput == BeltMachineBeh.ZaruSoba_UI) {
-					beltMachine.HandleOnInput(ref nameInput);
+					beltMachineBeh.HandleOnInput(ref nameInput);
 					return;
 				}
             }

@@ -11,6 +11,9 @@ public class Main
     public const float FixedGameWidth = 1024f;
     public const float FixedGameHeight = 768f;
     public const float HD_HEIGHT = 720f;
+	
+	//<!-- Bakery shop id.
+	public const string AppleAppID = "626645567";
 
 
     public class Mz_AppVersion

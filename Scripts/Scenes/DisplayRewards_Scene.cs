@@ -25,7 +25,7 @@ public class DisplayRewards_Scene : Mz_BaseScene {
 	void Start () {
 		StartCoroutine(this.ReInitializeAudioClipData());
 		StartCoroutine(this.InitializeAudio());
-		StartCoroutine(base.InitializeIdentityGUI());
+		base.InitializeIdentityGUI();
 
         Mz_ResizeScale.ResizingScale(sceneBackground_transform);
         iTween.MoveTo(cloudAndFog_Objs[0].gameObject, iTween.Hash("y", 0f, "islocal", true, "time", 3f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong));

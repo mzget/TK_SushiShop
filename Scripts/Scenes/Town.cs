@@ -45,9 +45,6 @@ public class Town : Mz_BaseScene {
     internal GameObject pet;
 
     private bool _updatable = true;
-	public enum OnGUIState { none = 0, DrawEditShopname, };
-	public OnGUIState currentGUIState;
-	string shopname = "";
 	Rect editShop_Textfield_rect = new Rect( 50, 60, 200, 50);
 	Rect editShop_OKButton_rect = new Rect(10, 150, 100, 40);
 	Rect editShop_CancelButton_rect = new Rect(160, 150, 100, 40);
@@ -150,7 +147,7 @@ public class Town : Mz_BaseScene {
 
 		StartCoroutine(ReInitializeAudioClipData());
 		StartCoroutine(this.InitAudio());
-        StartCoroutine(base.InitializeIdentityGUI());
+        base.InitializeIdentityGUI();
 
         this.upgradeOutsideManager.InitializeDecorationObjects();
 		if (SheepBank.HaveUpgradeOutSide) {
@@ -444,16 +441,17 @@ public class Town : Mz_BaseScene {
         GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1, Screen.height / Main.GAMEHEIGHT, 1));    
 		
 		/// OnGUIState.DrawEditShopname.
-		if(currentGUIState == OnGUIState.DrawEditShopname)
-			this.DrawEditShopnameWindow();
+//		if(currentGUIState == OnGUIState.DrawEditShopname)
+//			this.DrawEditShopnameWindow();
 
         if (GUI.Button(new Rect(0, Main.FixedGameHeight / 2 - 25, 150 * Mz_OnGUIManager.Extend_heightScale, 50), "Swindle"))
         {
             Mz_StorageManage.AvailableMoney = 100000;
-            StartCoroutine(base.InitializeIdentityGUI());
+			base.ReFreshAvailableMoney();
         }
     }
 
+/*
 	void DrawEditShopnameWindow ()
 	{
 		GUI.BeginGroup(new Rect (Screen.width / 2 - 150, Main.GAMEHEIGHT / 2 - 100, 300, 200), "Edit shopname !", GUI.skin.window);
@@ -497,6 +495,7 @@ public class Town : Mz_BaseScene {
 		}
 		GUI.EndGroup();
 	}
+*/
 
 	public override void OnInput (string nameInput)
 	{

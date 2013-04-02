@@ -31,7 +31,7 @@ public class Dressing : Mz_BaseScene {
 	void Start () {
 		StartCoroutine_Auto (this.ReInitializeAudioClipData ());
         StartCoroutine(InitializeAudio());
-		StartCoroutine(base.InitializeIdentityGUI());
+		base.InitializeIdentityGUI();
 		
         Mz_ResizeScale.ResizingScale(background_transform);
         iTween.MoveTo(cloudAndFogs, iTween.Hash("x", -150f, "islocal", true, "time", 10f, "easetype", iTween.EaseType.easeInSine, "looptype", iTween.LoopType.pingPong)); 
