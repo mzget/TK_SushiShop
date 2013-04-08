@@ -160,7 +160,7 @@ public class SushiShop : Mz_BaseScene {
 	// Use this for initialization
 	IEnumerator Start () {				
 		haveNewItem_event = null;
-//		Mz_ResizeScale.ResizingScale(shop_background);
+		Mz_ResizeScale.ResizingScale(shop_background);
         yield return StartCoroutine(this.InitailizeSceneObject());
 
         this.OpenShop();
@@ -182,7 +182,7 @@ public class SushiShop : Mz_BaseScene {
         Debug.Log("CanSellGoodLists.Count : " + CanSellGoodLists.Count + " :: " + "NumberOfCansellItem.Count : " + NumberOfCansellItem.Count);
 		yield return StartCoroutine_Auto(this.CreateInstantFoodObject());
 
-		close_button.active = true;
+		close_button.SetActive(true);
     }
 
     private IEnumerator InitializeExternalfactor()
@@ -213,23 +213,24 @@ public class SushiShop : Mz_BaseScene {
 				
         nullCustomer_event += new EventHandler(Handle_nullCustomer_event);
 		OnNullCustomer_event(EventArgs.Empty);
+
+		this.NoticeUserWhenHaveNewItem();
 		
 		if(MainMenu._HasNewGameEvent == false) {
 			Destroy(shopTutor.greeting_textmesh);
 			shopTutor = null;
 		}
-		
-		if (SushiShop.NewItem_IDs.Count != 0) {
-			haveNewItem_event += Handle_haveNewItem_event;			
-			foreach (int item in NewItem_IDs) {
-				this.OnHaveNewItem_event(new NewItemEventArgs() { item_id = item, });
-			}
-
-			haveNewItem_event -= Handle_haveNewItem_event;
-		}
     }
 
 	private List<GameObject> list_newItemUI_obj = new List<GameObject>();
+	public void NoticeUserWhenHaveNewItem ()
+	{		
+		if (SushiShop.NewItem_IDs.Count != 0) {
+			haveNewItem_event += Handle_haveNewItem_event;		
+			this.OnHaveNewItem_event(new NewItemEventArgs() { item_id = NewItem_IDs[0], });
+			haveNewItem_event -= Handle_haveNewItem_event;
+		}
+	}
     void Handle_haveNewItem_event (object sender, NewItemEventArgs e)
     {
 		GameObject newItem_UI = Instantiate (Resources.Load ("Base_newitemUI", typeof(GameObject))) as GameObject;

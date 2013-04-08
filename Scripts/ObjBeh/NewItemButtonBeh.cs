@@ -34,6 +34,7 @@ public class NewItemButtonBeh : Base_ObjectBeh {
 		yield return new WaitForSeconds (0.5f);
 
 		SushiShop.NewItem_IDs.Remove(food_id);
+		stageManager.NoticeUserWhenHaveNewItem();
 		Destroy (this.gameObject);
 	}
 }

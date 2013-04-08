@@ -194,7 +194,7 @@ public class UpgradeInsideManager : MonoBehaviour {
                     upgradeInside_PriceTextmesh[i, j].text = firstPage_prices[i, j].ToString();
                     upgradeInside_PriceTextmesh[i, j].Commit();
 					
-					upgradeButton_Objs[i,j].active = true;
+					upgradeButton_Objs[i,j].SetActive(true);
 					upgradeButton_Sprites[i,j].spriteId = ActiveUpgradeButtonID;
                 }
             }			
@@ -204,7 +204,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if(SushiShop.NumberOfCansellItem.Contains(eel_sushi_id)) {
                     upgradeInsideSprite2D[0, 0].color = Color.grey;
-					upgradeButton_Objs[0,0].SetActiveRecursively(false);
+					upgradeButton_Objs[0,0].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,1]) {
@@ -212,7 +212,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if(SushiShop.NumberOfCansellItem.Contains(fattyTuna_sushi_id)) {
                     upgradeInsideSprite2D[0, 1].color = Color.grey;
-                    upgradeButton_Objs[0, 1].SetActiveRecursively(false);
+					upgradeButton_Objs[0, 1].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,2]) {
@@ -220,7 +220,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if(SushiShop.NumberOfCansellItem.Contains(octopus_sushi_id)) {
                     upgradeInsideSprite2D[0, 2].color = Color.grey;
-					upgradeButton_Objs[0,2].SetActiveRecursively(false);
+					upgradeButton_Objs[0,2].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[0,3]) {
@@ -228,7 +228,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (SushiShop.NumberOfCansellItem.Contains(prawn_sushi_id)) {
                     upgradeInsideSprite2D[0, 3].color = Color.grey;
-					upgradeButton_Objs[0,3].SetActiveRecursively(false);
+					upgradeButton_Objs[0,3].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,0]) {
@@ -236,7 +236,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (SushiShop.NumberOfCansellItem.Contains(salmon_sushi_id)) {
                     upgradeInsideSprite2D[1, 0].color = Color.grey;
-					upgradeButton_Objs[1,0].SetActiveRecursively(false);
+					upgradeButton_Objs[1,0].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(skipjackTuna_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,1]) {
@@ -244,7 +244,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (SushiShop.NumberOfCansellItem.Contains(skipjackTuna_sushi_id)) {
                     upgradeInsideSprite2D[1, 1].color = Color.grey;
-					upgradeButton_Objs[1,1].SetActiveRecursively(false);
+					upgradeButton_Objs[1,1].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(spicyShell_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,2]) {
@@ -252,7 +252,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (SushiShop.NumberOfCansellItem.Contains(spicyShell_sushi_id)) {
                     upgradeInsideSprite2D[1, 2].color = Color.grey;
-					upgradeButton_Objs[1,2].SetActiveRecursively(false);
+					upgradeButton_Objs[1,2].SetActive(false);
 				}
 			}
 			if(SushiShop.NumberOfCansellItem.Contains(sweetenedEgg_sushi_id) || Mz_StorageManage.AccountBalance < firstPage_prices[1,3])	{
@@ -260,7 +260,7 @@ public class UpgradeInsideManager : MonoBehaviour {
 
                 if (SushiShop.NumberOfCansellItem.Contains(sweetenedEgg_sushi_id)) {
                     upgradeInsideSprite2D[1, 3].color = Color.grey;
-					upgradeButton_Objs[1,3].SetActiveRecursively(false);
+					upgradeButton_Objs[1,3].SetActive(false);
 				}
             }
 
@@ -955,11 +955,12 @@ public class UpgradeInsideManager : MonoBehaviour {
         upgradeButton_Sprites[e.I, e.J].spriteId = UnActiveUpgradeButtonID;
         SushiShop.NumberOfCansellItem.Add(e.Item_id);
 		SushiShop.NewItem_IDs.Add (e.Item_id);
-		CalculateObjectsToDisplay();
-        
+		
 		sceneController.ManageAvailabelMoneyBillBoard();
         sceneController.gameEffectManager.Create2DSpriteAnimationEffect(GameEffectManager.BLOOMSTAR_EFFECT_PATH, upgradeButton_Objs[e.I, e.J].transform);
         sceneController.audioEffect.PlayOnecWithOutStop(sceneController.audioEffect.longBring_clip);
+
+        CalculateObjectsToDisplay();
 	}
 
 	void PlaySoundWarning ()

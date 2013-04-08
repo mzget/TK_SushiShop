@@ -10,7 +10,6 @@ public class BankOfficer {
 	public const string MAN_TALK = "man_talk";
 	public const string MAN_IDLE = "man_idle";
 
-
 	public tk2dAnimatedSprite woman_animated;
 	public tk2dAnimatedSprite man_animated;
 };
@@ -374,7 +373,7 @@ public class SheepBank : Mz_BaseScene {
 				upgradeInsideManager.upgradeButton_Objs[i,j] = upgradeInside_window_Obj.transform.Find("upgrade_" + i+j).gameObject;
 			}
 		}
-		upgradeInside_window_Obj.SetActiveRecursively(false);
+		upgradeInside_window_Obj.SetActive(false);
 		depositForm_Obj.gameObject.SetActiveRecursively(false);
 		withdrawalForm_Obj.gameObject.SetActiveRecursively(false);
 		transactionForm_Obj.gameObject.SetActiveRecursively(false);
@@ -407,7 +406,7 @@ public class SheepBank : Mz_BaseScene {
 	
 	private void OnMoveDownComplete_event() {
         shadowPlane_Obj.active = true;
-		if(upgradeInside_window_Obj.active) {        
+		if(upgradeInside_window_Obj.activeSelf) {        
             currentGameStatus = GameSceneStatus.ShowUpgradeInside;
 
 			availabelMoneyBillboard_Obj.gameObject.SetActive(true);
@@ -429,13 +428,13 @@ public class SheepBank : Mz_BaseScene {
 	}
 
     private void OnMoveUpComplete_event() {
-        upgradeInside_window_Obj.SetActiveRecursively(false);
+        upgradeInside_window_Obj.SetActive(false);
 		depositForm_Obj.gameObject.SetActiveRecursively(false);
 		withdrawalForm_Obj.gameObject.SetActiveRecursively(false);
 		transactionForm_Obj.gameObject.SetActiveRecursively(false);
         donationForm_group.SetActiveRecursively(false);
 		passbook_group.SetActiveRecursively(false);
-		availabelMoneyBillboard_Obj.SetActiveRecursively(false);
+		availabelMoneyBillboard_Obj.SetActive(false);
 
         currentGameStatus = GameSceneStatus.none;   
 		
@@ -447,7 +446,7 @@ public class SheepBank : Mz_BaseScene {
         this.AccountBalanceManager(Mz_StorageManage.AccountBalance);
 		
 		if(donationForm_group.active) {			
-			availabelMoneyBillboard_Obj.gameObject.SetActiveRecursively(true);
+			availabelMoneyBillboard_Obj.gameObject.SetActive(true);
 			this.ManageAvailabelMoneyBillBoard();
 		}
 	}
@@ -645,7 +644,7 @@ public class SheepBank : Mz_BaseScene {
 
     private IEnumerator ActiveUpgradeInsideForm()
     {
-		upgradeInside_window_Obj.SetActiveRecursively (true);
+		upgradeInside_window_Obj.SetActive (true);
 
         while (upgradeInsideManager._isInitialize == false)
         {

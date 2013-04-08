@@ -26,8 +26,7 @@ public class TK_news : MonoBehaviour {
 
     private void SynchronizeNewsTag()
     {
-        for (int i = 0; i < AMOUNT_OF_NEWS_TAG; i++)
-        {
+        for (int i = 0; i < AMOUNT_OF_NEWS_TAG; i++) {
             news_tags[i].spriteId = news_tags[i].GetSpriteIdByName(arr_NameOfNewsSprite[i + (currentPage * AMOUNT_OF_NEWS_TAG)]);
         }
     }

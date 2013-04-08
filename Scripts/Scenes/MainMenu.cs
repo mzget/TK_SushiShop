@@ -4,7 +4,7 @@ using System.Collections;
 
 public class MainMenu : Mz_BaseScene {
 	public const string TK_NEWS_BUTTON_NAME = "TK_news_button";
-	public const string FACEBOOK_LIKE_BUTTON_NAME = "Facebook_like_button";
+	public const string FACEBOOK_LIKE_BUTTON_NAME = "FacebookLike_button";
 	public const string FACEBOOK_FANPAGE_URL = "https://www.facebook.com/Taokaenoi.game";
 	public const string ITUNES_STORE_LINK = "http://itunes.apple.com/app/id";
 	public const string TK_BAKERY_SHOP_APP_ID = "626645567";
@@ -34,6 +34,19 @@ public class MainMenu : Mz_BaseScene {
             iTween.MoveTo(optionsManager.selectLanguage_Obj, iTween.Hash("y", 200f, "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeOutBounce));
         }
     }
+	
+	public TK_news tknewsManager;
+	private void SetActivateTKNews(bool activeState) {
+		if(activeState) {
+			plane_darkShadow.active = true;
+			iTween.MoveTo(tknewsManager.gameObject, iTween.Hash("y", 0f, "islocal", true, "time", 1f, "oncomplete", "ShakeFacebookButton", "oncompletetarget", tknewsManager.gameObject, "easetype", iTween.EaseType.easeOutBounce));
+		}
+		else {
+			plane_darkShadow.active = false;
+			tknewsManager.StopShakeFacebookButton();
+			iTween.MoveTo(tknewsManager.gameObject, iTween.Hash("y", 200f, "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeOutBounce));
+		}
+	}
         
     public Transform loadgame_Group;
     public GameObject back_button;
@@ -185,19 +198,6 @@ public class MainMenu : Mz_BaseScene {
 	private void PlayWelcomeEvent ()
 	{		
 		audioDescribe.PlayOnecSound(description_clips[0]);
-	}
-	
-	public TK_news tknewsManager;
-	private void SetActivateTKNews(bool activeState) {
-		if(activeState) {
-			plane_darkShadow.active = true;
-			iTween.MoveTo(tknewsManager.gameObject, iTween.Hash("y", 0f, "islocal", true, "time", 1f, "oncomplete", "ShakeFacebookButton", "oncompletetarget", tknewsManager.gameObject, "easetype", iTween.EaseType.easeOutBounce));
-		}
-		else {
-			plane_darkShadow.active = false;
-			tknewsManager.StopShakeFacebookButton();
-			iTween.MoveTo(tknewsManager.gameObject, iTween.Hash("y", 200f, "islocal", true, "time", 1f, "easetype", iTween.EaseType.easeOutBounce));
-		}
 	}
 	
 	// Update is called once per frame

@@ -22,8 +22,6 @@ public class Mz_GuiButtonBeh : Base_ObjectBeh {
 		collider.enabled = !pause;
 	}
 	
-	#region <!-- Handle OnInput Events.
-	
 	protected override void OnTouchBegan ()
 	{
 		base.OnTouchBegan ();
@@ -31,7 +29,7 @@ public class Mz_GuiButtonBeh : Base_ObjectBeh {
 		if(this.enablePlayAudio)
 			gameController.audioEffect.PlayOnecSound(gameController.audioEffect.buttonDown_Clip);
 
-        iTween.ShakeScale(this.gameObject, new Vector3(0.1f, 0.1f, 0), 0.3f);
+		this.transform.localScale = originalScale * 1.1f;
 	}
 	protected override void OnTouchDown ()
 	{
@@ -45,6 +43,4 @@ public class Mz_GuiButtonBeh : Base_ObjectBeh {
 		
         this.transform.localScale = originalScale;
 	}
-	
-	#endregion
 }

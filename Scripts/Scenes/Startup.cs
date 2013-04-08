@@ -9,7 +9,7 @@ public class Startup : Mz_BaseScene {
 		//<!-- get name quality.
 		//		qualities_list = QualitySettings.names;
 		this.AutomaticSetup_QualitySetting();
-		Handheld.PlayFullScreenMovie("Movies/LogoVista3D.mp4", Color.white, FullScreenMovieControlMode.Hidden, FullScreenMovieScalingMode.AspectFit);
+		Handheld.PlayFullScreenMovie("Movies/LogoVista.mp4", Color.white, FullScreenMovieControlMode.Hidden, FullScreenMovieScalingMode.AspectFit);
 		
 		if(Application.isLoadingLevel == false) {
 			Application.LoadLevelAsync(Mz_BaseScene.SceneNames.WaitForStart.ToString());
@@ -27,7 +27,7 @@ public class Startup : Mz_BaseScene {
 	}
 	
 	private void AutomaticSetup_QualitySetting() {
-		#if UNITY_IPHONE
+		#if UNITY_IOS
 		if(iPhone.generation == iPhoneGeneration.iPad1Gen ||
 		   iPhone.generation == iPhoneGeneration.iPhone3G || iPhone.generation == iPhoneGeneration.iPhone3GS) {
 			QualitySettings.SetQualityLevel(0);	

@@ -12,11 +12,11 @@ public class GameEffectManager : MonoBehaviour {
 //	
 //	}
 	
-	public void Create2DSpriteAnimationEffect(string targetName, Transform transform) {
-        GameObject effect = Instantiate(Resources.Load(targetName, typeof(GameObject)), transform.position, Quaternion.identity) as GameObject;
-        effect.transform.parent = transform;
-        effect.transform.localScale = Vector3.one;
-        effect.transform.position += Vector3.back;
+	public void Create2DSpriteAnimationEffect(string targetName, Transform p_transform) {
+        GameObject effect = Instantiate(Resources.Load(targetName, typeof(GameObject)), p_transform.position, Quaternion.identity) as GameObject;
+//        effect.transform.parent = transform;
+		effect.transform.localScale = Vector3.one;
+		effect.transform.position = p_transform.position + Vector3.back;
 		
 
         tk2dAnimatedSprite animatedSprite = effect.GetComponent<tk2dAnimatedSprite>();

@@ -38,7 +38,7 @@ public class CharacterCustomization : MonoBehaviour {
 		Vector3.zero,
 		Vector3.zero, // 5
 		Vector3.right,
-		new Vector3(0, -.095f, -4.5f),	
+		new Vector3(0, -.095f, 0f),	
 		Vector3.down * 6,
 		new Vector3(2.5f, -7f, 0f),	
 		new Vector3(0.8f, -7f, 0),	// 10.
@@ -94,7 +94,7 @@ public class CharacterCustomization : MonoBehaviour {
 		Mz_StorageManage.TK_clothe_id = arr_index;
     }
 
-	private Vector3 originalHatPosition = new Vector3(0, 0, -4.5f);
+	private Vector3 originalHatPosition = new Vector3(0, 0, -3f);
     public void ChangeHatAtRuntime(int arr_index) {
         if (arr_index >= AvailableHatNumber)
         {
