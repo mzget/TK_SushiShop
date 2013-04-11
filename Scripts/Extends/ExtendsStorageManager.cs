@@ -9,12 +9,25 @@ public class ExtendsStorageManager : Mz_StorageManage
     public const string KEY_PET_ID = "PET_ID";
 
 	public const string KEY_LIST_NEWITEM = "KEY_LIST_NEWITEM";
+	private const string KEY_IS_USER_PLAY_TUTOR = "KEY_IS_USER_PLAY_TUTOR";
 	
 	#region <@-- Load secsion.
 
 	public override void LoadSaveDataToGameStorage()
 	{
 		base.LoadSaveDataToGameStorage ();
+
+		//<!-- Load Data for check user play tutor complete or not ?
+		MainMenu._HasNewGameEvent = PlayerPrefsX.GetBool(SaveSlot + KEY_IS_USER_PLAY_TUTOR);
+		if(MainMenu._HasNewGameEvent == true) {
+			PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_MONEY, 1500);
+			PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_ACCOUNTBALANCE, 0);
+			
+			int[] IdOfCanSellItem = new int[] { 0, 5, 9, 18 };
+			PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CANSELLGOODSLIST, IdOfCanSellItem);
+			int[] roof_temp_arr = new int[1] { 255 };
+			PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ROOF_LIST, roof_temp_arr); 
+		}
 				
 		Mz_StorageManage.Username = PlayerPrefs.GetString(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_USERNAME);
 		Mz_StorageManage.ShopName = PlayerPrefs.GetString(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_SHOP_NAME);

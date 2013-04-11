@@ -3,11 +3,6 @@ using System;
 using System.Collections;
 
 public class MainMenu : Mz_BaseScene {
-	public const string TK_NEWS_BUTTON_NAME = "TK_news_button";
-	public const string FACEBOOK_LIKE_BUTTON_NAME = "FacebookLike_button";
-	public const string FACEBOOK_FANPAGE_URL = "https://www.facebook.com/Taokaenoi.game";
-	public const string ITUNES_STORE_LINK = "http://itunes.apple.com/app/id";
-	public const string TK_BAKERY_SHOP_APP_ID = "626645567";
 
     public GameObject cloud_Obj;
     public GameObject baseBuilding_Obj;
@@ -73,12 +68,13 @@ public class MainMenu : Mz_BaseScene {
     private string username = string.Empty;
 	private string shopName = string.Empty;
 	
-#if UNITY_IPHONE || UNITY_ANDROID
+#if UNITY_IOS || UNITY_ANDROID
 	
 	private TouchScreenKeyboard touchScreenKeyboard;
 	
 #endif
-	
+		
+	internal static bool _HasNewGameEvent = false;
     private bool _isNullUsernameNotification = false;
     private bool _isDuplicateUsername = false;
     private bool _isFullSaveGameSlot;
@@ -93,19 +89,6 @@ public class MainMenu : Mz_BaseScene {
 	float group_width = 400;
 	Rect showSaveGameSlot_GroupRect;
     Rect slot_1Rect, slot_2Rect, slot_3Rect;
-
-	#region <@-- Events Data.
-
-	internal static bool _HasNewGameEvent = false;
-	public event EventHandler NewGame_event;
-	void OnNewGameEvent (EventArgs e)
-	{
-		if(NewGame_event != null) {
-			NewGame_event(this, e);
-		}
-	}
-
-	#endregion
 	
 	// Use this for initialization
 	void Start () {
@@ -131,7 +114,6 @@ public class MainMenu : Mz_BaseScene {
 
 		//<@-- Add new game eventhandle. 
 		_HasNewGameEvent = false;
-		this.NewGame_event += Handle_NewGame_event;
 	}
 	
 	protected IEnumerator PreparingAudio ()
@@ -586,14 +568,20 @@ public class MainMenu : Mz_BaseScene {
                 StartCoroutine(this.ReInitializeAudioClipData());
                 this.SetActivateGUIOptionsGroup(false);
 				break;
-			case TK_NEWS_BUTTON_NAME :
+			case "TK_news_button" :
 				this.SetActivateTKNews(true);
 				break;
 			case "Close_button":
 				this.SetActivateTKNews(false);
 				break;
-			case FACEBOOK_LIKE_BUTTON_NAME:
-				Application.OpenURL(FACEBOOK_FANPAGE_URL);
+			case "FacebookLike_button":
+				Application.OpenURL(TK_news.FACEBOOK_FANPAGE_URL);
+				break;
+			case "Bakery Shop" :
+				TK_news.GotoiTunes_ViewSoftware(TK_news.TK_BAKERY_SHOP_APP_ID);
+				break;
+			case "Sushi Shop":
+				TK_news.GoToiTunes_UserReview(TK_news.TK_SUSHI_SHOP_APP_ID);
 				break;
 			case "Up_button":
 				tknewsManager.MoveUpPage();
@@ -676,11 +664,6 @@ public class MainMenu : Mz_BaseScene {
 				initializeNewShop.HaveChangeLogoColor("Yellow");
 			}
         }
-    }
-
-    void Handle_NewGame_event (object sender, EventArgs e)
-    {
-		_HasNewGameEvent = true;
     }
 
     private IEnumerator ShowInitializeNewShop()
