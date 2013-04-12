@@ -219,9 +219,12 @@ public class SushiShop : Mz_BaseScene {
 		if(MainMenu._HasNewGameEvent == false) {
 			Destroy(shopTutor.greeting_textmesh);
 			shopTutor = null;
+			darkShadowPlane.transform.localPosition = new Vector3(0,0,95);
 		}
     }
-
+	
+	#region <@-- New item available for sell notification.
+	
 	private List<GameObject> list_newItemUI_obj = new List<GameObject>();
 	public void NoticeUserWhenHaveNewItem ()
 	{		
@@ -246,6 +249,8 @@ public class SushiShop : Mz_BaseScene {
 		NewItemButtonBeh newItem_button = newItem_UI.GetComponent<NewItemButtonBeh>();
 		newItem_button.food_id = e.item_id;
     }
+	
+	#endregion
    
 	private IEnumerator SceneInitializeAudio()
 	{
@@ -459,8 +464,8 @@ public class SushiShop : Mz_BaseScene {
 
 	void CreateGreetingCustomerTutorEvent()
     {
-		shopTutor.greeting_textSprite.active = false;
-        shopTutor.greeting_textmesh.active = true;
+		shopTutor.greeting_textSprite.SetActive(false);
+        shopTutor.greeting_textmesh.SetActive(true);
 
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().text = "GREETINGS";
         tutorDescriptions[0].GetComponent<tk2dTextMesh>().Commit();
@@ -471,8 +476,8 @@ public class SushiShop : Mz_BaseScene {
 	void CreateAcceptOrdersTutorEvent ()
     {
 		this.SetActivateTotorObject(true);
-		shopTutor.goaway_button_obj.active = false;
-//		darkShadowPlane.transform.position += Vector3.forward * 3;
+		shopTutor.goaway_button_obj.SetActive(false);
+		darkShadowPlane.transform.position += Vector3.forward * 4;
 		
 		handTutor.transform.localPosition = new Vector3(-62f, -13f, 3f);
 		
@@ -601,8 +606,7 @@ public class SushiShop : Mz_BaseScene {
 	IEnumerator WaitForCreateCustomer ()
 	{
 		yield return StartCoroutine(this.CreateCustomer());
-		darkShadowPlane.active = true;
-		darkShadowPlane.transform.position += Vector3.back * 2f;
+		darkShadowPlane.SetActive(true);
 		this.CreateTutorObjectAtRuntime();
 		this.CreateGreetingCustomerTutorEvent();
 	}

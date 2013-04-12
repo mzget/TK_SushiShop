@@ -32,6 +32,8 @@ public class Mz_StorageManage : MonoBehaviour
 	
 	public static bool _IsNoticeUser = false;
 	public static string KEY_NOTICE_USER_TO_UPGRADE = "NOTICE_USER_TO_UPGRADE";
+	
+	public const string KEY_IS_USER_PLAY_TUTOR = "KEY_IS_USER_PLAY_TUTOR";
 
 	/// <summary>
 	/// Storage data key.
@@ -77,7 +79,7 @@ public class Mz_StorageManage : MonoBehaviour
 
 	public virtual void LoadSaveDataToGameStorage()
 	{		
-		Debug.Log("Load storage data to static variable complete.");
+		Debug.Log("Load storage data to static variable.");
 	}
 
     public virtual void SaveDataToPermanentMemory() {

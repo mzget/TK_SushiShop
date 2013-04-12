@@ -419,12 +419,10 @@ public class MainMenu : Mz_BaseScene {
 		
 		//<!-- Notice user to upgrade them shop.
 		PlayerPrefsX.SetBool(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_NOTICE_USER_TO_UPGRADE, false);
+		//<!-- Force User to play tutor before.
+		PlayerPrefsX.SetBool(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_IS_USER_PLAY_TUTOR, true);
 
         Debug.Log("Store new player data complete.");
-
-        base.extendsStorageManager.LoadSaveDataToGameStorage();
-
-        this.LoadSceneTarget();
     }
 
     private void LoadSceneTarget() {
@@ -632,8 +630,9 @@ public class MainMenu : Mz_BaseScene {
 				if(shopName != "") {
                     this.characterAnimationManager.RandomPlayGoodAnimation();
                     audioEffect.PlayOnecWithOutStop(audioEffect.correct_Clip);
-					OnNewGameEvent(EventArgs.Empty);
-                	this.SaveNewPlayer();
+                	this.SaveNewPlayer();				
+					base.extendsStorageManager.LoadSaveDataToGameStorage();
+					this.LoadSceneTarget();
 				}
                 else{
                     this.characterAnimationManager.PlayEyeAnimation(CharacterAnimationManager.NameAnimationsList.agape);

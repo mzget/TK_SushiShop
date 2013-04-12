@@ -9,7 +9,6 @@ public class ExtendsStorageManager : Mz_StorageManage
     public const string KEY_PET_ID = "PET_ID";
 
 	public const string KEY_LIST_NEWITEM = "KEY_LIST_NEWITEM";
-	private const string KEY_IS_USER_PLAY_TUTOR = "KEY_IS_USER_PLAY_TUTOR";
 	
 	#region <@-- Load secsion.
 
@@ -23,7 +22,8 @@ public class ExtendsStorageManager : Mz_StorageManage
 			PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_MONEY, 1500);
 			PlayerPrefs.SetInt(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_ACCOUNTBALANCE, 0);
 			
-			int[] IdOfCanSellItem = new int[] { 0, 5, 9, 18 };
+			// <@-- Initialize can sell goods.
+			int[] IdOfCanSellItem = new int[] { 3, 12, 22, 23 };
 			PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CANSELLGOODSLIST, IdOfCanSellItem);
 			int[] roof_temp_arr = new int[1] { 255 };
 			PlayerPrefsX.SetIntArray(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_CAN_DECORATE_ROOF_LIST, roof_temp_arr); 
@@ -222,6 +222,8 @@ public class ExtendsStorageManager : Mz_StorageManage
 		
 		//<!-- Notice user to upgrade them shop.
 		PlayerPrefsX.SetBool(Mz_StorageManage.SaveSlot + Mz_StorageManage.KEY_NOTICE_USER_TO_UPGRADE, Mz_StorageManage._IsNoticeUser);
+		//<!-- Save user play tutor complete or not ?
+		PlayerPrefsX.SetBool(SaveSlot + KEY_IS_USER_PLAY_TUTOR, MainMenu._HasNewGameEvent);
 
 		if(SushiShop.NumberOfCansellItem.Count != 0)
 			this.SaveCanSellGoodListData();
